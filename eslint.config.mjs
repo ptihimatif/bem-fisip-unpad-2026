@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Project-local third-party agent tooling is not application source.
+    ".agents/skills/impeccable/**",
   ]),
 ]);
 
