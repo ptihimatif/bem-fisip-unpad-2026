@@ -6,4 +6,9 @@ import { client } from './client'
 
 export const { sanityFetch, SanityLive } = defineLive({
   client,
+  // Public routes must never resolve drafts or depend on an accidentally
+  // exposed preview token. Preview can be added explicitly in a later task.
+  serverToken: false,
+  browserToken: false,
+  strict: true,
 });

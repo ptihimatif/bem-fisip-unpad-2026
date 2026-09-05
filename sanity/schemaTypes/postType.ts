@@ -1,63 +1,25 @@
-import { defineField, defineType } from "sanity";
+import { defineArrayMember, defineField, defineType } from "sanity";
+import { displayOrderField, httpsUrlField, imageField, termField } from "./shared";
 
 export const postType = defineType({
-  name: "post", 
-  title: "Post",
+  name: "post",
+  title: "Publication",
   type: "document",
   fields: [
-    defineField({
-      name: "postCategory",
-      title: "Tipe Post",
-      type: "string",
-      options: {
-        list: [
-          { title: "Artikel", value: "artikel" },
-          { title: "Kajian", value: "kajian" }
-        ],
-        layout: "radio"
-      },
-      validation: (Rule) => Rule.required()
-    }),
-    defineField({
-      name: "judul",
-      type: "string",
-      validation: (rule) => rule.required()
-    }),
-    defineField({
-      name: "slug",
-      type: "slug",
-      options: { source: "judul" },
-      validation: (rule) => rule.required()
-    }),
-    defineField({
-      name: "publishedAt",
-      type: "datetime",
-      initialValue: () => new Date().toISOString(),
-      validation: (rule) => rule.required()
-    }),
-    defineField({
-      name: "image",
-      type: "image"
-    }),
-    defineField({
-      name: "body",
-      type: "array",
-      of: [{ type: "block" }]
-    }),
-    defineField({
-      name: "instagramUrl",
-      title: "Instagram URL",
-      type: "url",
-      description:
-        "Paste the full link (e.g., https://www.instagram.com/username)",
-      validation: (rule) => rule.required()
-    })
+    termField(),
+    defineField({ name: "postCategory", title: "Category", type: "string", options: { list: [{ title: "Artikel", value: "artikel" }, { title: "Kajian", value: "kajian" }], layout: "radio" }, validation: (rule) => rule.required() }),
+    defineField({ name: "judul", title: "Title", type: "string", validation: (rule) => rule.required() }),
+    defineField({ name: "slug", title: "Slug", type: "slug", options: { source: "judul" }, validation: (rule) => rule.required() }),
+    defineField({ name: "publishedAt", title: "Published At", type: "datetime", validation: (rule) => rule.required() }),
+    defineField({ name: "excerpt", title: "Card Excerpt", type: "text", validation: (rule) => rule.max(240).warning("Keep this concise for cards.") }),
+    imageField("image", "Cover Image"),
+    defineField({ name: "body", title: "Body", type: "array", of: [defineArrayMember({ type: "block" })], validation: (rule) => rule.required() }),
+    httpsUrlField("instagramUrl", "Official Instagram URL"),
+    defineField({ name: "seoTitle", title: "SEO Title", type: "string", validation: (rule) => rule.max(60) }),
+    defineField({ name: "seoDescription", title: "SEO Description", type: "text", validation: (rule) => rule.max(160) }),
+    imageField("seoImage", "SEO Image"),
+    defineField({ name: "isFeatured", title: "Featured", type: "boolean", initialValue: false }),
+    displayOrderField(),
   ],
-  preview: {
-    select: {
-      title: "judul",
-      subtitle: "postCategory",
-      media: "image"
-    }
-  }
+  preview: { select: { title: "judul", subtitle: "postCategory", media: "image" } },
 });

@@ -1,5 +1,6 @@
 import { PortableText, type PortableTextComponents } from "next-sanity";
 import type { PortableTextBlock } from "next-sanity";
+import { safeExternalUrl } from "@/sanity/lib/urls";
 
 // Centralized custom components for rendering PortableText across the application
 export const customComponents: PortableTextComponents = {
@@ -8,7 +9,7 @@ export const customComponents: PortableTextComponents = {
     h2: ({ children }) => <h2 className="text-2xl font-bold text-blue-500 mt-5 mb-3">{children}</h2>,
     normal: ({ children }) => <p className="text-gray-700 leading-relaxed mb-4">{children}</p>,
     blockquote: ({ children }) => (
-      <blockquote className="border-l-4 border-blue-500 pl-4 italic text-gray-600 bg-blue-50 py-2 my-4 rounded-r-md">
+      <blockquote className="rounded-md bg-blue-50 p-4 italic text-blue-950 my-4">
         {children}
       </blockquote>
     ),
@@ -21,12 +22,13 @@ export const customComponents: PortableTextComponents = {
     strong: ({ children }) => <strong className="font-bold text-gray-900">{children}</strong>,
     em: ({ children }) => <em className="italic text-gray-800">{children}</em>,
     link: ({ value, children }) => {
-      const target = (value?.href || "").startsWith("http") ? "_blank" : undefined;
+      const href = safeExternalUrl(value?.href);
+      if (!href) return <>{children}</>;
       return (
         <a
-          href={value?.href}
-          target={target}
-          rel={target === "_blank" ? "noopener noreferrer" : undefined}
+          href={href}
+          target="_blank"
+          rel="noopener noreferrer"
           className="text-blue-600 underline hover:text-blue-800 transition-colors"
         >
           {children}

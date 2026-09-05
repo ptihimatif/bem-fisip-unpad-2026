@@ -18,7 +18,13 @@ export default defineConfig({
   projectId,
   dataset,
   // Add and edit the content schema in the './sanity/schemaTypes' folder
-  schema,
+  schema: {
+    ...schema,
+    templates: (templates) =>
+      templates.filter(
+        (template) => !['siteSettings', 'cabinetProfile'].includes(template.schemaType),
+      ),
+  },
   plugins: [
     structureTool({structure}),
     // Vision is for querying with GROQ from inside the Studio

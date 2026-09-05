@@ -1,21 +1,21 @@
 # Current state
 
-Last updated: 2026-09-04
+Last updated: 2026-09-05
 
 ## Current milestone
 
-Agentic workflow foundation and the project-local Impeccable integration are complete on the local dev branch. The application remains the default Create Next App scaffold; feature migration and Sanity setup have not begun.
+The Sanity schema foundation, data layer (GROQ queries/TypeScript interfaces), and real-time dashboard UI prototype are complete. The application now successfully integrates with a Sanity Content Lake and strictly typed Server Components.
 
 ## Repository baseline
 
-- Local branch: dev at initial commit f8fa341.
-- main and origin/main point to the same initial commit.
-- No remote dev branch was observed during discovery.
-- Stack currently installed: Next.js 16.3.4, React 19.2.8, TypeScript 5.9.3, Tailwind CSS 4.3.3.
+- Local branch: dev.
+- Stack currently installed: Next.js 16.3.4, React 19.2.8, TypeScript 5.9.3, Tailwind CSS 4.3.3, next-sanity.
 - Runtime observed during discovery: Node.js 22.14.0 and pnpm 11.1.2.
 - The package declares pnpm, while the brief recommends npm; no package-manager decision has been approved.
-- The application, README, metadata, fonts, styling, and public assets remain starter defaults.
-- There is no Sanity Studio, schema source, query layer, CI workflow, test suite, environment example, or runtime pin.
+- Brand tokens (Inter font, brand-blue, brand-yellow) have been implemented in `app/globals.css`.
+- Sanity Studio configuration, 8 core schemas, GROQ query layer, and strict types are fully implemented.
+- A functional real-time preview dashboard exists in `app/page.tsx`.
+- CI workflow and test suites remain unconfigured.
 
 ## Workflow foundation
 
@@ -52,6 +52,10 @@ The approved workflow task intentionally recreates AGENTS.md and CLAUDE.md. It m
 
 ## Open decisions and blockers
 
+- Local Sanity integration hardening is complete. Deploying its term-scoped schemas still requires confirmation that the target dataset is isolated for 2026 and that a recoverable 2025 export exists; no Sanity service state was changed.
+- The configured dataset currently has legacy content but no term-2026 documents or required term-2026 singleton documents. The local home route fetches successfully and shows empty states until approved 2026 content is present.
+- The homepage member data contract is now rendered as cards; the local Press Release model was removed. An Instagram integration remains an approved future direction, not an implemented service connection.
+- Integration hardening remediation is complete locally: published-only Sanity Live, same-term references, generated image types, 2025-compatible route slices, CMS metadata/footer wiring, isolated dummy fixtures, and CI quality workflow are in place.
 - Final institutional repository owner and branch protection.
 - npm versus pnpm and the associated lockfile/CI strategy.
 - Supported Node runtime pin (`>=22.18.0` is required by the installed Impeccable release).
