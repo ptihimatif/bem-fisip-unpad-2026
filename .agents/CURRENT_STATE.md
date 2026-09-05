@@ -49,6 +49,7 @@ The approved workflow task intentionally recreates AGENTS.md and CLAUDE.md. It m
 - Impeccable doctor reports no context/config/hook drift, and the hook passed simulated Codex PostToolUse and Stop events.
 - The manual Impeccable detector reports one existing warning for Arial in the unchanged starter's `app/globals.css`; no application change was authorized in the integration task.
 - The pinned Impeccable installer declares Node `>=22.18.0`; its local tools passed under the current Node `22.14.0`, but the future runtime pin should meet the declared minimum.
+- CI/test Sanity fallback is now hardened: missing public identifiers no longer fail module collection or trigger placeholder network requests; production remains strict.
 
 ## Open decisions and blockers
 
