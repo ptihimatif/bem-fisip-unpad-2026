@@ -9,7 +9,7 @@ export const customComponents: PortableTextComponents = {
     h2: ({ children }) => <h2 className="text-2xl font-bold text-blue-500 mt-5 mb-3">{children}</h2>,
     normal: ({ children }) => <p className="text-gray-700 leading-relaxed mb-4">{children}</p>,
     blockquote: ({ children }) => (
-      <blockquote className="rounded-md bg-blue-50 p-4 italic text-blue-950 my-4">
+      <blockquote className="border-l-4 border-blue-600 bg-blue-50 p-4 italic text-blue-950 my-4">
         {children}
       </blockquote>
     ),

@@ -4,6 +4,7 @@ import "./globals.css";
 import { SanityLive } from "@/sanity/lib/live";
 import { sanityFetch } from "@/sanity/lib/live";
 import { CONTENT_TERM, SITE_SETTINGS_QUERY } from "@/sanity/lib/queries";
+import Navbar from "@/components/Navbar";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -28,8 +29,11 @@ export async function generateMetadata(): Promise<Metadata> {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="id" className={`${inter.variable} h-full antialiased`}>
-      <body className="min-h-full flex flex-col font-sans">
-        {children}
+      <body className="min-h-full flex flex-col font-sans bg-[#000c23] text-white">
+        <Navbar />
+        <main className="flex-1">
+          {children}
+        </main>
         <SanityLive includeDrafts={false} />
       </body>
     </html>
