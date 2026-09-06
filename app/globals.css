@@ -2,13 +2,14 @@
 
 @theme {
   --color-brand-blue: #003089;
-  --color-brand-yellow: #FFBA3A;
+  --color-brand-yellow: #ffba3a;
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --letter-spacing-base: 0.02em;
 }
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #000c23;
+  --foreground: #ffffff; /* default text colour */
 }
 
 body {
@@ -16,4 +17,32 @@ body {
   color: var(--foreground);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  letter-spacing: calc(var(--letter-spacing-base) * 0.5);
+}
+
+.text-depth {
+  -webkit-text-stroke: 0.2px rgba(0, 0, 0, 0.18);
+  text-shadow:
+    0 -1px 0 rgba(0, 0, 0, 0.34),
+    0 1px 0 rgba(255, 255, 255, 0.2),
+    0 2px 5px rgba(0, 0, 0, 0.28);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* Hide scrollbar while keeping scroll behaviour */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
 }
