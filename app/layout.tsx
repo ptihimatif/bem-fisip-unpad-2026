@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { SanityLive } from "@/sanity/lib/live";
-import { sanityFetch } from "@/sanity/lib/live";
+import { SanityLive, sanityFetch } from "@/sanity/lib/live";
+import { isSanityConfigured } from "@/sanity/env";
 import { CONTENT_TERM, SITE_SETTINGS_QUERY } from "@/sanity/lib/queries";
 import Navbar from "@/components/Navbar";
 
@@ -21,20 +21,26 @@ export async function generateMetadata(): Promise<Metadata> {
   });
 
   return {
-    title: settings?.seoTitle ?? settings?.organizationName ?? "BEM FISIP Unpad 2026",
-    description: settings?.seoDescription ?? "Official Website of BEM FISIP Unpad 2026",
+    title:
+      settings?.seoTitle ??
+      settings?.organizationName ??
+      "BEM FISIP Unpad 2026",
+    description:
+      settings?.seoDescription ?? "Official Website of BEM FISIP Unpad 2026",
   };
 }
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="id" className={`${inter.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col font-sans bg-[#000c23] text-white">
         <Navbar />
-        <main className="flex-1">
-          {children}
-        </main>
-        <SanityLive includeDrafts={false} />
+        <main className="flex-1">{children}</main>
+        {isSanityConfigured && <SanityLive includeDrafts={false} />}
       </body>
     </html>
   );

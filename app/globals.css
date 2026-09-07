@@ -28,6 +28,32 @@ body {
     0 2px 5px rgba(0, 0, 0, 0.28);
 }
 
+.infinite-carousel-track {
+  animation: infinite-carousel-scroll 32s linear infinite;
+  backface-visibility: hidden;
+  will-change: transform;
+}
+
+.infinite-carousel:hover .infinite-carousel-track,
+.infinite-carousel:focus-within .infinite-carousel-track {
+  animation-play-state: paused;
+}
+
+.infinite-carousel--always-moving:hover .infinite-carousel-track,
+.infinite-carousel--always-moving:focus-within .infinite-carousel-track {
+  animation-play-state: running;
+}
+
+@keyframes infinite-carousel-scroll {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
+
 html {
   scroll-behavior: smooth;
 }
@@ -35,6 +61,10 @@ html {
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+
+  .infinite-carousel-track {
+    animation: none;
   }
 }
 

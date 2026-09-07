@@ -2,8 +2,10 @@ import Link from "next/link";
 import Image from "next/image";
 import { SanityImage } from "@/components/SanityImage";
 import Footer from "@/components/Footer";
+import InfiniteCarousel from "@/components/InfiniteCarousel";
 import ScrollToSectionButton from "@/components/ScrollToSectionButton";
 import { sanityFetch } from "@/sanity/lib/live";
+import { safeExternalUrl } from "@/sanity/lib/urls";
 import type {
   FEATURED_PROGRAMS_QUERY_RESULT,
   MAPRES_QUERY_RESULT,
@@ -135,8 +137,16 @@ export default async function Home() {
       {/* MENGAPA PENDAR MENTARI */}
       <section
         id="mengapa-pendar-mentari"
-        className="relative scroll-mt-8 max-w-6xl mx-auto px-6 py-24 grid lg:grid-cols-2 gap-16 items-center"
+        className="relative isolate scroll-mt-8 max-w-7xl mx-auto px-6 py-24 grid lg:grid-cols-2 gap-16 items-center"
       >
+        <Image
+          src="/assets/home/asset1.png"
+          alt=""
+          width={864}
+          height={960}
+          className="pointer-events-none absolute right-[-18%] top-1/2 z-0 h-[125%] w-[62%] max-w-none -translate-y-1/2 object-contain opacity-75 lg:right-[-8%] lg:h-[145%] lg:w-[48%]"
+          aria-hidden="true"
+        />
         <div className="space-y-6">
           <h2
             className="text-depth text-4xl sm:text-5xl font-bold text-white leading-tight"
@@ -144,11 +154,19 @@ export default async function Home() {
           >
             Mengapa Pendar Mentari?
           </h2>
-          <p className="leading-8 text-base text-white sm:text-lg">
+          <p className=" text-base text-white sm:text-lg">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer
             vitae justo nec arcu tincidunt consequat. Sed at libero vel nisl
             posuere facilisis, sementara semangat kolaborasi terus tumbuh di
-            tengah mahasiswa FISIP.
+            tengah mahasiswa FISIP. Lorem ipsum dolor sit amet, consectetur
+            adipiscing elit. Integer vitae justo nec arcu tincidunt consequat.
+            Sed at libero vel nisl posuere facilisis, sementara semangat
+            kolaborasi terus tumbuh di tengah mahasiswa FISIP.
+          </p>
+          <p className="text-base text-white sm:text-lg">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer
+            vitae justo nec arcu tincidunt consequat. Sed at libero vel nisl
+            posuere facilisis.
           </p>
           <Link
             href="/about"
@@ -171,9 +189,9 @@ export default async function Home() {
             </svg>
           </Link>
         </div>
-        <div className="relative aspect-video overflow-hidden border border-white/15 lg:h-80 lg:aspect-auto">
+        <div className="relative z-10 aspect-video w-full overflow-hidden border border-white/15 lg:h-80 lg:w-[84%] lg:justify-self-start lg:aspect-auto">
           <iframe
-            className="absolute inset-0 h-full w-full"
+            className="absolute inset-0 z-10 h-full w-full"
             src="https://www.youtube.com/embed/znT9GP-2LYo"
             title="Video profil BEM FISIP UNPAD"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -193,45 +211,53 @@ export default async function Home() {
           </h2>
         </div>
         {programs.length > 0 ? (
-          <div className="flex gap-5 overflow-x-auto scrollbar-hide px-6 max-w-6xl mx-auto pb-4">
-            {programs.map((program: FEATURED_PROGRAMS_QUERY_RESULT[number]) => (
-              <article
-                key={program._id}
-                className="flex-none w-72 overflow-hidden group"
-                style={{
-                  background: "rgba(255,255,255,0.04)",
-                  border: "1px solid rgba(255,255,255,0.1)",
-                }}
-              >
-                <div className="relative aspect-video overflow-hidden">
-                  <SanityImage
-                    value={program.coverImage}
-                    width={576}
-                    height={324}
-                    sizes="288px"
-                    fallbackAlt={`Gambar ${program.name}`}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                  <div
-                    className="absolute bottom-0 left-0 right-0 h-1"
-                    style={{
-                      background: "linear-gradient(90deg, #FFBA3A, #FFF9EE)",
-                    }}
-                  />
-                </div>
-                <div className="p-4 space-y-2">
-                  <h3 className="text-depth font-bold text-white text-sm leading-snug">
-                    {program.name}
-                  </h3>
-                  {program.shortDescription && (
-                    <p className="text-white text-xs leading-relaxed line-clamp-2">
-                      {program.shortDescription}
-                    </p>
-                  )}
-                </div>
-              </article>
-            ))}
-          </div>
+          <InfiniteCarousel ariaLabel="Program unggulan">
+            {programs.map((program: FEATURED_PROGRAMS_QUERY_RESULT[number]) => {
+              const programUrl = safeExternalUrl(program.externalLink);
+              const card = (
+                <article
+                  key={program._id}
+                  className="group relative w-72 flex-none overflow-hidden"
+                >
+                  <div className="relative aspect-video overflow-hidden">
+                    <SanityImage
+                      value={program.coverImage}
+                      width={576}
+                      height={324}
+                      sizes="288px"
+                      fallbackAlt={`Gambar ${program.name}`}
+                      className="h-full w-full object-cover opacity-55 transition-opacity duration-300 group-hover:opacity-100"
+                    />
+                    <div className="absolute inset-x-0 bottom-0 bg-linear-to-t from-black/85 via-black/45 to-transparent px-4 pb-4 pt-16">
+                      <h3 className="text-depth font-bold text-white text-sm leading-snug">
+                        {program.name}
+                      </h3>
+                      {program.shortDescription && (
+                        <p className="text-white text-xs leading-relaxed line-clamp-2">
+                          {program.shortDescription}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                </article>
+              );
+
+              return programUrl ? (
+                <a
+                  key={program._id}
+                  href={programUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`Buka program ${program.name}`}
+                  className="flex-none cursor-pointer rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-yellow"
+                >
+                  {card}
+                </a>
+              ) : (
+                card
+              );
+            })}
+          </InfiniteCarousel>
         ) : (
           <EmptyState text="Belum ada program yang dipublikasikan." />
         )}
@@ -248,45 +274,60 @@ export default async function Home() {
           </h2>
         </div>
         {mapres.length > 0 ? (
-          <div className="flex gap-5 overflow-x-auto scrollbar-hide px-6 max-w-6xl mx-auto pb-4">
-            {mapres.map((item: MAPRES_QUERY_RESULT[number]) => (
-              <article
-                key={item._id}
-                className="flex-none w-64 overflow-hidden shadow-[0_5px_12px_rgba(0,0,0,0.25)] group"
-                style={{
-                  background: "rgba(255,255,255,0.04)",
-                  border: "1px solid rgba(255,186,58,0.15)",
-                }}
-              >
-                <div className="relative w-full aspect-3/4 overflow-hidden">
-                  <SanityImage
-                    value={item.image}
-                    width={384}
-                    height={512}
-                    sizes="256px"
-                    fallbackAlt={`Foto ${item.nama_mapres}`}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                  <div
-                    className="absolute bottom-0 left-0 right-0 h-1"
-                    style={{
-                      background: "linear-gradient(90deg, #FFBA3A, #FFF9EE)",
-                    }}
-                  />
-                </div>
-                <div className="p-4">
-                  <h3 className="text-depth font-bold text-white text-sm">
-                    {item.nama_mapres}
-                  </h3>
-                  {item.achievementTitle && (
-                    <p className="text-white text-xs mt-1 line-clamp-2">
-                      {item.achievementTitle}
-                    </p>
-                  )}
-                </div>
-              </article>
-            ))}
-          </div>
+          <InfiniteCarousel ariaLabel="Mahasiswa berprestasi">
+            {mapres.map((item: MAPRES_QUERY_RESULT[number]) => {
+              const dimensions = item.image.asset?.metadata?.dimensions;
+              const aspectRatio = dimensions
+                ? `${dimensions.width} / ${dimensions.height}`
+                : "3 / 4";
+              const profileUrl = safeExternalUrl(item.instagramUrl);
+
+              const card = (
+                <article
+                  key={item._id}
+                  className="group relative h-72 flex-none overflow-hidden sm:h-80 lg:h-96"
+                  style={{ aspectRatio }}
+                >
+                  <div className="absolute inset-0">
+                    <SanityImage
+                      value={item.image}
+                      width={384}
+                      height={512}
+                      sizes="(min-width: 1024px) 288px, 240px"
+                      fallbackAlt={`Foto ${item.nama_mapres}`}
+                      className="h-full w-full bg-black/10 object-contain opacity-55 transition-opacity duration-300 group-hover:opacity-100"
+                      preserveAspectRatio
+                    />
+                    <div className="absolute inset-x-0 bottom-0 bg-linear-to-t from-black/85 via-black/45 to-transparent px-4 pb-4 pt-16">
+                      <h3 className="text-depth font-bold text-white text-sm">
+                        {item.nama_mapres}
+                      </h3>
+                      {item.achievementTitle && (
+                        <p className="text-white text-xs mt-1 line-clamp-2">
+                          {item.achievementTitle}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                </article>
+              );
+
+              return profileUrl ? (
+                <a
+                  key={item._id}
+                  href={profileUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`Lihat profil Instagram ${item.nama_mapres}`}
+                  className="flex-none cursor-pointer rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-yellow"
+                >
+                  {card}
+                </a>
+              ) : (
+                card
+              );
+            })}
+          </InfiniteCarousel>
         ) : (
           <EmptyState text="Belum ada data prestasi yang dipublikasikan." />
         )}
