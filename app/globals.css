@@ -29,9 +29,29 @@ body {
 }
 
 .infinite-carousel-track {
-  animation: infinite-carousel-scroll 32s linear infinite;
+  animation: infinite-carousel-scroll 48s linear infinite;
   backface-visibility: hidden;
   will-change: transform;
+}
+
+.program-carousel-track--selected {
+  animation-play-state: paused;
+}
+
+.program-description-panel {
+  animation: program-description-reveal 350ms ease-out both;
+}
+
+@keyframes program-description-reveal {
+  from {
+    opacity: 0;
+    transform: translateX(0.75rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 .infinite-carousel:hover .infinite-carousel-track,
