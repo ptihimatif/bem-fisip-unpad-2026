@@ -27,7 +27,7 @@ export const CABINET_PROFILE_QUERY = defineQuery(`
 export const FEATURED_PROGRAMS_QUERY = defineQuery(`
   *[_type == "program" && term == $term && isFeatured == true && organizationUnit->term == $term]
   | order(displayOrder asc, name asc)[0...6]{
-    _id, name, "slug": slug.current, shortDescription, coverImage {${IMAGE_FIELDS}},
+    _id, name, "slug": slug.current, shortDescription, description, coverImage {${IMAGE_FIELDS}},
     externalLink, "organizationUnit": organizationUnit->{_id, officialName, abbreviation, "slug": slug.current}
   }
 `);
@@ -57,8 +57,15 @@ export const PUBLICATION_PAGE_QUERY = defineQuery(`
 `);
 
 export function publicationPageQuery(start: number, end: number) {
-  if (!Number.isInteger(start) || !Number.isInteger(end) || start < 0 || end <= start) {
-    throw new Error("Publication pagination bounds must be safe, increasing integers.");
+  if (
+    !Number.isInteger(start) ||
+    !Number.isInteger(end) ||
+    start < 0 ||
+    end <= start
+  ) {
+    throw new Error(
+      "Publication pagination bounds must be safe, increasing integers.",
+    );
   }
 
   return defineQuery(`

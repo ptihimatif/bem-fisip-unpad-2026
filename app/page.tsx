@@ -1,8 +1,11 @@
 import Link from "next/link";
 import Image from "next/image";
+import ArticleCard from "@/components/ArticleCard";
 import { SanityImage } from "@/components/SanityImage";
 import Footer from "@/components/Footer";
 import InfiniteCarousel from "@/components/InfiniteCarousel";
+import InstagramEmbed from "@/components/InstagramEmbed";
+import ProgramCarousel from "@/components/ProgramCarousel";
 import ScrollToSectionButton from "@/components/ScrollToSectionButton";
 import { sanityFetch } from "@/sanity/lib/live";
 import { safeExternalUrl } from "@/sanity/lib/urls";
@@ -63,7 +66,8 @@ export default async function Home() {
 
   const settings = settingsResult.data;
   const cabinet = cabinetResult.data;
-  const programs = programsResult.data ?? [];
+  const programs = (programsResult.data ??
+    []) as FEATURED_PROGRAMS_QUERY_RESULT;
   const posts = postsResult.data ?? [];
   const mapres = mapresResult.data ?? [];
 
@@ -144,7 +148,7 @@ export default async function Home() {
           alt=""
           width={864}
           height={960}
-          className="pointer-events-none absolute right-[-18%] top-1/2 z-0 h-[125%] w-[62%] max-w-none -translate-y-1/2 object-contain opacity-75 lg:right-[-8%] lg:h-[145%] lg:w-[48%]"
+          className="hidden lg:block pointer-events-none absolute right-[-18%] top-[56%] z-0 h-[105%] w-[52%] max-w-none -translate-y-1/2 object-contain opacity-75 lg:right-[-8%] lg:top-[56%] lg:h-[120%] lg:w-[42%]"
           aria-hidden="true"
         />
         <div className="space-y-6">
@@ -201,7 +205,7 @@ export default async function Home() {
       </section>
 
       {/* PROGRAM KAMI */}
-      <section className="py-20">
+      <section className="py-20 mt-20">
         <div className="max-w-6xl mx-auto px-6 mb-10 text-center">
           <h2
             className="text-depth text-5xl sm:text-6xl font-bold text-white"
@@ -211,60 +215,14 @@ export default async function Home() {
           </h2>
         </div>
         {programs.length > 0 ? (
-          <InfiniteCarousel ariaLabel="Program unggulan">
-            {programs.map((program: FEATURED_PROGRAMS_QUERY_RESULT[number]) => {
-              const programUrl = safeExternalUrl(program.externalLink);
-              const card = (
-                <article
-                  key={program._id}
-                  className="group relative w-72 flex-none overflow-hidden"
-                >
-                  <div className="relative aspect-video overflow-hidden">
-                    <SanityImage
-                      value={program.coverImage}
-                      width={576}
-                      height={324}
-                      sizes="288px"
-                      fallbackAlt={`Gambar ${program.name}`}
-                      className="h-full w-full object-cover opacity-55 transition-opacity duration-300 group-hover:opacity-100"
-                    />
-                    <div className="absolute inset-x-0 bottom-0 bg-linear-to-t from-black/85 via-black/45 to-transparent px-4 pb-4 pt-16">
-                      <h3 className="text-depth font-bold text-white text-sm leading-snug">
-                        {program.name}
-                      </h3>
-                      {program.shortDescription && (
-                        <p className="text-white text-xs leading-relaxed line-clamp-2">
-                          {program.shortDescription}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                </article>
-              );
-
-              return programUrl ? (
-                <a
-                  key={program._id}
-                  href={programUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={`Buka program ${program.name}`}
-                  className="flex-none cursor-pointer rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-yellow"
-                >
-                  {card}
-                </a>
-              ) : (
-                card
-              );
-            })}
-          </InfiniteCarousel>
+          <ProgramCarousel programs={programs} />
         ) : (
           <EmptyState text="Belum ada program yang dipublikasikan." />
         )}
       </section>
 
       {/* MAHASISWA BERPRESTASI */}
-      <section className="py-20">
+      <section className="py-20 mb-20">
         <div className="max-w-6xl mx-auto px-6 mb-10 text-center">
           <h2
             className="text-depth text-5xl sm:text-6xl font-bold text-white"
@@ -333,59 +291,18 @@ export default async function Home() {
         )}
       </section>
 
-      {/* SIARAN PERS */}
-      {posts.length > 0 && (
-        <section className="py-20">
-          <div className="max-w-6xl mx-auto px-6 mb-10 text-center">
-            <h2
-              className="text-depth text-5xl sm:text-6xl font-bold text-white"
-              style={{ letterSpacing: "-0.05em" }}
-            >
-              Siaran Pers
-            </h2>
-          </div>
-          <div className="flex gap-5 overflow-x-auto scrollbar-hide px-6 max-w-6xl mx-auto pb-4">
-            {posts
-              .slice(0, 6)
-              .map((post: PUBLICATION_CARDS_QUERY_RESULT[number]) => (
-                <Link
-                  key={post._id}
-                  href={`/post/${post.slug ?? post._id}`}
-                  className="flex-none w-72 overflow-hidden group"
-                  style={{
-                    background: "rgba(255,255,255,0.04)",
-                    border: "1px solid rgba(255,255,255,0.1)",
-                  }}
-                >
-                  <div className="relative aspect-video overflow-hidden">
-                    <SanityImage
-                      value={post.image}
-                      width={576}
-                      height={324}
-                      sizes="288px"
-                      fallbackAlt={`Gambar ${post.judul}`}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    />
-                    <div
-                      className="absolute bottom-0 left-0 right-0 h-1"
-                      style={{
-                        background: "linear-gradient(90deg, #FFBA3A, #FFF9EE)",
-                      }}
-                    />
-                  </div>
-                  <div className="p-4 space-y-1">
-                    <span className="text-xs font-bold text-white uppercase tracking-widest">
-                      {post.postCategory}
-                    </span>
-                    <h3 className="text-depth font-bold text-white text-sm leading-snug line-clamp-2">
-                      {post.judul}
-                    </h3>
-                  </div>
-                </Link>
-              ))}
-          </div>
-        </section>
-      )}
+      {/* INSTAGRAM */}
+      <section className="py-20">
+        <div className="max-w-6xl mx-auto px-6 mb-10 text-center">
+          <h2
+            className="text-depth text-5xl sm:text-6xl font-bold text-white"
+            style={{ letterSpacing: "-0.05em" }}
+          >
+            Siaran Pers
+          </h2>
+        </div>
+        <InstagramEmbed />
+      </section>
 
       {/* ARTIKEL DAN KAJIAN */}
       <section className="py-20">
@@ -399,68 +316,9 @@ export default async function Home() {
           {allArticles.length > 0 ? (
             <div className="flex flex-col gap-6">
               {allArticles.map(
-                (post: PUBLICATION_CARDS_QUERY_RESULT[number]) => {
-                  const isKajian = post.postCategory
-                    ?.toLowerCase()
-                    .includes("kajian");
-                  return (
-                    <Link
-                      key={post._id}
-                      href={`/post/${post.slug ?? post._id}`}
-                      className="flex gap-0 overflow-hidden group"
-                      style={{
-                        background: "rgba(255,255,255,0.05)",
-                        border: "1px solid rgba(255,255,255,0.08)",
-                      }}
-                    >
-                      <div
-                        className="w-1.5 flex-none"
-                        style={{ background: isKajian ? "#FF7700" : "#8CFF00" }}
-                      />
-                      <div className="flex-1 p-6 space-y-2">
-                        <div className="flex items-center gap-3">
-                          <span
-                            className="text-xs font-bold uppercase tracking-widest px-2 py-0.5"
-                            style={{
-                              background: "rgba(255,255,255,0.12)",
-                              color: "#FFFFFF",
-                            }}
-                          >
-                            {isKajian ? "Kajian" : "Artikel"}
-                          </span>
-                          <span className="text-white text-xs">
-                            {post.postCategory}
-                          </span>
-                        </div>
-                        <h3 className="text-depth font-bold text-white text-lg leading-snug group-hover:text-white transition-colors line-clamp-2">
-                          {post.judul}
-                        </h3>
-                        {post.excerpt && (
-                          <p className="text-white text-sm leading-relaxed line-clamp-3">
-                            {post.excerpt}
-                          </p>
-                        )}
-                        {post.publishedAt && (
-                          <p className="text-white text-xs">
-                            {new Intl.DateTimeFormat("id-ID", {
-                              dateStyle: "long",
-                            }).format(new Date(post.publishedAt))}
-                          </p>
-                        )}
-                      </div>
-                      <div className="relative w-48 flex-none hidden sm:block overflow-hidden">
-                        <SanityImage
-                          value={post.image}
-                          width={384}
-                          height={244}
-                          sizes="192px"
-                          fallbackAlt={`Gambar ${post.judul}`}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                        />
-                      </div>
-                    </Link>
-                  );
-                },
+                (post: PUBLICATION_CARDS_QUERY_RESULT[number]) => (
+                  <ArticleCard key={post._id} post={post} />
+                ),
               )}
             </div>
           ) : (

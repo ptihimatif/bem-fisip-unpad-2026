@@ -1,3 +1,19 @@
+import LoadingSpinner from "@/components/LoadingSpinner";
+
 export default function Loading() {
-  return <main className="mx-auto max-w-6xl space-y-6 px-6 py-24" aria-busy="true" aria-live="polite"><p className="text-sm font-medium text-slate-600">Memuat konten BEM FISIP Unpad…</p><div className="h-40 animate-pulse bg-slate-200" /><div className="h-72 animate-pulse bg-slate-200" /></main>;
+  return (
+    <main
+      className="fixed inset-0 z-[9999] flex min-h-screen items-center justify-center bg-[#000c23]"
+      aria-busy="true"
+      aria-live="polite"
+    >
+      <div className="flex flex-col items-center gap-6">
+        <LoadingSpinner />
+
+        <p className="text-md font-bold text-white">
+          MEMUAT
+        </p>
+      </div>
+    </main>
+  );
 }
