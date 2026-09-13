@@ -147,7 +147,7 @@ export type OrganizationUnit = {
   officialName: string;
   abbreviation?: string;
   slug: Slug;
-  unitKind: "biro" | "departemen";
+  unitKind: "biro" | "departemen" | "pengurus_inti" | "bidang";
   description: string;
   coverImage?: {
     asset?: SanityImageAssetReference;
@@ -190,7 +190,6 @@ export type CabinetProfile = {
   _rev: string;
   term: "2026";
   cabinetName: string;
-  tagline?: string;
   overview?: Array<{
     children?: Array<{
       marks?: Array<string>;
@@ -540,7 +539,7 @@ export type CABINET_PROFILE_QUERY_RESULT =
   | {
       _id: string;
       cabinetName: string;
-      tagline: string | null;
+      tagline: null;
       overview: Array<{
         children?: Array<{
           marks?: Array<string>;
@@ -752,7 +751,7 @@ export type ORGANIZATION_UNIT_BY_SLUG_QUERY_RESULT = {
   officialName: string;
   abbreviation: string | null;
   slug: string;
-  unitKind: "biro" | "departemen";
+  unitKind: "bidang" | "biro" | "departemen" | "pengurus_inti";
   description: string;
   coverImage: {
     asset: {
@@ -940,7 +939,7 @@ export type ORGANIZATION_UNITS_QUERY_RESULT = Array<{
   officialName: string;
   abbreviation: string | null;
   slug: string;
-  unitKind: "biro" | "departemen";
+  unitKind: "bidang" | "biro" | "departemen" | "pengurus_inti";
   description: string;
   coverImage: {
     asset: {
