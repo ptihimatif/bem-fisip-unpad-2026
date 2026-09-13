@@ -884,6 +884,14 @@
             {
               "type": "string",
               "value": "departemen"
+            },
+            {
+              "type": "string",
+              "value": "pengurus_inti"
+            },
+            {
+              "type": "string",
+              "value": "bidang"
             }
           ]
         },
@@ -1162,13 +1170,6 @@
           "type": "string"
         },
         "optional": false
-      },
-      "tagline": {
-        "type": "objectAttribute",
-        "value": {
-          "type": "string"
-        },
-        "optional": true
       },
       "overview": {
         "type": "objectAttribute",
