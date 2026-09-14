@@ -44,3 +44,5 @@ next-env.d.ts
 /.impeccable/config.local.json
 /.impeccable/hook.cache.json
 /.impeccable/hook.pending.json
+
+docs/Booklet Rekrutmen Staf.pdf

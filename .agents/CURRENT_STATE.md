@@ -4,18 +4,17 @@ Last updated: 2026-09-05
 
 ## Current milestone
 
-The Sanity schema foundation, data layer (GROQ queries/TypeScript interfaces), and real-time dashboard UI prototype are complete. The application now successfully integrates with a Sanity Content Lake and strictly typed Server Components.
+The headless CMS schema foundation and the official frontend implementation of the Homepage (Navbar, Footer, Hero, Mengapa Pendar Mentari, Mapres, and Publikasi) have been completed and merged into the `dev` branch.
 
 ## Repository baseline
 
-- Local branch: dev.
+- Local branch: dev (recently merged PRs #1, #2, and #3).
 - Stack currently installed: Next.js 16.3.4, React 19.2.8, TypeScript 5.9.3, Tailwind CSS 4.3.3, next-sanity.
 - Runtime observed during discovery: Node.js 22.14.0 and pnpm 11.1.2.
-- The package declares pnpm, while the brief recommends npm; no package-manager decision has been approved.
 - Brand tokens (Inter font, brand-blue, brand-yellow) have been implemented in `app/globals.css`.
 - Sanity Studio configuration, 8 core schemas, GROQ query layer, and strict types are fully implemented.
-- A functional real-time preview dashboard exists in `app/page.tsx`.
-- CI workflow and test suites remain unconfigured.
+- Production Homepage UI (`app/page.tsx`) replaces the old debug dashboard, utilizing real Sanity data.
+- CI workflow passes tests.
 
 ## Workflow foundation
 

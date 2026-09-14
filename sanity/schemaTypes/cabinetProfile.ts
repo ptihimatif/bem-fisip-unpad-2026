@@ -10,7 +10,6 @@ export const cabinetProfile = defineType({
   fields: [
     termField(),
     defineField({ name: "cabinetName", title: "Cabinet Name", type: "string", validation: (rule) => rule.required() }),
-    defineField({ name: "tagline", title: "Tagline", type: "string" }),
     defineField({ name: "overview", title: "Overview", type: "array", of: [defineArrayMember({ type: "block" })] }),
     httpsUrlField("profileVideoUrl", "Profile Video URL"),
     defineField({ name: "vision", title: "Vision", type: "text" }),
