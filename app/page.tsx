@@ -141,7 +141,7 @@ export default async function Home() {
       {/* MENGAPA PENDAR MENTARI */}
       <section
         id="mengapa-pendar-mentari"
-        className="relative isolate scroll-mt-8 max-w-7xl mx-auto px-6 py-24 grid lg:grid-cols-2 gap-16 items-center"
+        className="relative isolate scroll-mt-8 max-w-7xl mx-auto px-6 py-24 flex flex-col lg:grid lg:grid-cols-2 gap-8 lg:gap-16 items-center"
       >
         <Image
           src="/assets/home/asset1.png"
@@ -151,14 +151,36 @@ export default async function Home() {
           className="hidden lg:block pointer-events-none absolute right-[-18%] top-[56%] z-0 h-[105%] w-[52%] max-w-none -translate-y-1/2 object-contain opacity-75 lg:right-[-8%] lg:top-[56%] lg:h-[120%] lg:w-[42%]"
           aria-hidden="true"
         />
-        <div className="space-y-6">
+
+        {/* Heading khusus Mobile & Tablet (Muncul pertama, order-1) */}
+        <h2
+          className="text-depth text-4xl sm:text-5xl font-bold text-white leading-tight lg:hidden order-1"
+          style={{ letterSpacing: "-0.05em" }}
+        >
+          Mengapa Pendar Mentari?
+        </h2>
+
+        {/* Video YouTube (Urutan kedua di sm/md, urutan kanan di lg) */}
+        <div className="relative z-10 w-full aspect-video overflow-hidden border border-white/15 lg:h-80 lg:w-[84%] lg:justify-self-start lg:aspect-auto order-2 lg:order-2">
+          <iframe
+            className="absolute inset-0 z-10 h-full w-full"
+            src="https://www.youtube.com/embed/znT9GP-2LYo"
+            title="Video profil BEM FISIP UNPAD"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowFullScreen
+          />
+        </div>
+
+        {/* Deskripsi Teks (Urutan ketiga di sm/md, urutan kiri di lg) */}
+        <div className="space-y-6 order-3 lg:order-1">
+          {/* Heading khusus Desktop */}
           <h2
-            className="text-depth text-4xl sm:text-5xl font-bold text-white leading-tight"
+            className="hidden lg:block text-depth text-4xl sm:text-5xl font-bold text-white leading-tight"
             style={{ letterSpacing: "-0.05em" }}
           >
             Mengapa Pendar Mentari?
           </h2>
-          <p className=" text-base text-white sm:text-lg">
+          <p className="text-base text-white sm:text-lg">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer
             vitae justo nec arcu tincidunt consequat. Sed at libero vel nisl
             posuere facilisis, sementara semangat kolaborasi terus tumbuh di
@@ -193,20 +215,19 @@ export default async function Home() {
             </svg>
           </Link>
         </div>
-        <div className="relative z-10 aspect-video w-full overflow-hidden border border-white/15 lg:h-80 lg:w-[84%] lg:justify-self-start lg:aspect-auto">
-          <iframe
-            className="absolute inset-0 z-10 h-full w-full"
-            src="https://www.youtube.com/embed/znT9GP-2LYo"
-            title="Video profil BEM FISIP UNPAD"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            allowFullScreen
-          />
-        </div>
       </section>
 
       {/* PROGRAM KAMI */}
-      <section className="py-20 mt-20">
-        <div className="max-w-6xl mx-auto px-6 mb-10 text-center">
+      <section className="relative isolate py-20 mt-20 overflow-hidden">
+        <Image
+          src="/assets/home/asset2.png"
+          alt=""
+          width={864}
+          height={960}
+          className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-full w-auto max-w-none object-contain z-0 opacity-80"
+          aria-hidden="true"
+        />
+        <div className="relative z-10 max-w-6xl mx-auto px-6 mb-10 text-center">
           <h2
             className="text-depth text-5xl sm:text-6xl font-bold text-white"
             style={{ letterSpacing: "-0.05em" }}
@@ -214,16 +235,18 @@ export default async function Home() {
             Program Kami
           </h2>
         </div>
-        {programs.length > 0 ? (
-          <ProgramCarousel programs={programs} />
-        ) : (
-          <EmptyState text="Belum ada program yang dipublikasikan." />
-        )}
+        <div className="relative z-100">
+          {programs.length > 0 ? (
+            <ProgramCarousel programs={programs} />
+          ) : (
+            <EmptyState text="Belum ada program yang dipublikasikan." />
+          )}
+        </div>
       </section>
 
       {/* MAHASISWA BERPRESTASI */}
-      <section className="py-20 mb-20">
-        <div className="max-w-6xl mx-auto px-6 mb-10 text-center">
+      <section className="relative isolate overflow-hidden py-20 mb-20">
+        <div className="relative z-10 max-w-6xl mx-auto px-6 mb-10 text-center pt-20">
           <h2
             className="text-depth text-5xl sm:text-6xl font-bold text-white"
             style={{ letterSpacing: "-0.05em" }}
@@ -231,64 +254,66 @@ export default async function Home() {
             Mahasiswa Berprestasi
           </h2>
         </div>
-        {mapres.length > 0 ? (
-          <InfiniteCarousel ariaLabel="Mahasiswa berprestasi">
-            {mapres.map((item: MAPRES_QUERY_RESULT[number]) => {
-              const dimensions = item.image.asset?.metadata?.dimensions;
-              const aspectRatio = dimensions
-                ? `${dimensions.width} / ${dimensions.height}`
-                : "3 / 4";
-              const profileUrl = safeExternalUrl(item.instagramUrl);
+        <div className="relative z-10">
+          {mapres.length > 0 ? (
+            <InfiniteCarousel ariaLabel="Mahasiswa berprestasi">
+              {mapres.map((item: MAPRES_QUERY_RESULT[number]) => {
+                const dimensions = item.image.asset?.metadata?.dimensions;
+                const aspectRatio = dimensions
+                  ? `${dimensions.width} / ${dimensions.height}`
+                  : "3 / 4";
+                const profileUrl = safeExternalUrl(item.instagramUrl);
 
-              const card = (
-                <article
-                  key={item._id}
-                  className="group relative h-72 flex-none overflow-hidden sm:h-80 lg:h-96"
-                  style={{ aspectRatio }}
-                >
-                  <div className="absolute inset-0">
-                    <SanityImage
-                      value={item.image}
-                      width={384}
-                      height={512}
-                      sizes="(min-width: 1024px) 288px, 240px"
-                      fallbackAlt={`Foto ${item.nama_mapres}`}
-                      className="h-full w-full bg-black/10 object-contain opacity-55 transition-opacity duration-300 group-hover:opacity-100"
-                      preserveAspectRatio
-                    />
-                    <div className="absolute inset-x-0 bottom-0 bg-linear-to-t from-black/85 via-black/45 to-transparent px-4 pb-4 pt-16">
-                      <h3 className="text-depth font-bold text-white text-sm">
-                        {item.nama_mapres}
-                      </h3>
-                      {item.achievementTitle && (
-                        <p className="text-white text-xs mt-1 line-clamp-2">
-                          {item.achievementTitle}
-                        </p>
-                      )}
+                const card = (
+                  <article
+                    key={item._id}
+                    className="group relative h-72 flex-none overflow-hidden sm:h-80 lg:h-96"
+                    style={{ aspectRatio }}
+                  >
+                    <div className="absolute inset-0">
+                      <SanityImage
+                        value={item.image}
+                        width={384}
+                        height={512}
+                        sizes="(min-width: 1024px) 288px, 240px"
+                        fallbackAlt={`Foto ${item.nama_mapres}`}
+                        className="h-full w-full bg-black/10 object-contain brightness-70 transition-brightness duration-300 group-hover:brightness-100"
+                        preserveAspectRatio
+                      />
+                      <div className="absolute inset-x-0 bottom-0 bg-linear-to-t from-black/85 via-black/45 to-transparent px-4 pb-4 pt-16">
+                        <h3 className="text-depth font-bold text-white text-sm">
+                          {item.nama_mapres}
+                        </h3>
+                        {item.achievementTitle && (
+                          <p className="text-white text-xs mt-1 line-clamp-5">
+                            {item.achievementTitle}
+                          </p>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                </article>
-              );
+                  </article>
+                );
 
-              return profileUrl ? (
-                <a
-                  key={item._id}
-                  href={profileUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={`Lihat profil Instagram ${item.nama_mapres}`}
-                  className="flex-none cursor-pointer rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-yellow"
-                >
-                  {card}
-                </a>
-              ) : (
-                card
-              );
-            })}
-          </InfiniteCarousel>
-        ) : (
-          <EmptyState text="Belum ada data prestasi yang dipublikasikan." />
-        )}
+                return profileUrl ? (
+                  <a
+                    key={item._id}
+                    href={profileUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={`Lihat profil Instagram ${item.nama_mapres}`}
+                    className="flex-none cursor-pointer rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-yellow"
+                  >
+                    {card}
+                  </a>
+                ) : (
+                  card
+                );
+              })}
+            </InfiniteCarousel>
+          ) : (
+            <EmptyState text="Belum ada data prestasi yang dipublikasikan." />
+          )}
+        </div>
       </section>
 
       {/* INSTAGRAM */}
@@ -305,14 +330,27 @@ export default async function Home() {
       </section>
 
       {/* ARTIKEL DAN KAJIAN */}
-      <section className="py-20">
-        <div className="max-w-6xl mx-auto px-6">
-          <h2
-            className="text-depth text-5xl sm:text-6xl font-bold text-white mb-12"
-            style={{ letterSpacing: "-0.05em" }}
-          >
-            Artikel dan Kajian
-          </h2>
+      <section className="relative isolate overflow-hidden py-20">
+        <Image
+          src="/assets/home/asset5.png"
+          alt=""
+          width={1200}
+          height={1200}
+          className="pointer-events-none absolute -left-1/2 top-1/2 -translate-y-1/2 h-full w-auto max-w-none object-contain z-0 opacity-80"
+        />
+        <div className="relative z-10 max-w-6xl mx-auto px-6 ">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-12">
+            <h2
+              className="text-depth text-5xl sm:text-6xl font-bold text-white"
+              style={{ letterSpacing: "-0.05em" }}
+            >
+              <Link href="/article">Artikel dan Kajian</Link>
+            </h2>
+            <p className="text-white text-base sm:text-lg underline text-left md:text-right shrink-0">
+              <Link href="/article">Lihat semua</Link>
+            </p>
+          </div>
+
           {allArticles.length > 0 ? (
             <div className="flex flex-col gap-6">
               {allArticles.map(
@@ -324,28 +362,6 @@ export default async function Home() {
           ) : (
             <EmptyState text="Belum ada artikel atau kajian yang dipublikasikan." />
           )}
-          <div className="mt-10 text-center">
-            <Link
-              href="/article"
-              className="inline-flex items-center gap-2 px-8 py-3 font-bold text-sm text-white bg-brand-yellow hover:bg-[#ffd27a] transition-colors shadow-lg"
-            >
-              Lihat Semua Publikasi
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-4 w-4"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 5l7 7-7 7"
-                />
-              </svg>
-            </Link>
-          </div>
         </div>
       </section>
 

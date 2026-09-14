@@ -1,12 +1,10 @@
-"use client";
-
 import Script from "next/script";
 
 const instagramUrl = "https://www.instagram.com/bemfisipunpad/";
 
 export default function InstagramEmbed() {
   return (
-    <div className="mx-auto flex md:max-w-xl justify-center bg-linear-to-b from-[#FFBA3A] to-white p-3">
+    <div className="mx-auto flex w-full max-w-xl justify-center overflow-hidden bg-linear-to-b from-[#FFBA3A] to-white p-3 sm:p-5">
       <blockquote
         className="instagram-media"
         data-instgrm-permalink={instagramUrl}
@@ -24,10 +22,9 @@ export default function InstagramEmbed() {
         }}
       >
         <a href={instagramUrl} target="_blank" rel="noopener noreferrer">
-          Lihat profil BEM FISIP UNPAD
+          Lihat profil BEM FISIP UNPAD di Instagram
         </a>
       </blockquote>
-
       <Script
         src="https://www.instagram.com/embed.js"
         strategy="afterInteractive"
