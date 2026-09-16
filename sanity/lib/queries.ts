@@ -125,6 +125,6 @@ export const MEMBERS_QUERY = defineQuery(`
 export const STUDENT_ASSOCIATIONS_QUERY = defineQuery(`
   *[_type == "studentAssociation" && term == $term]
   | order(displayOrder asc, officialName asc){
-    _id, officialName, abbreviation, studyProgram, logo {${IMAGE_FIELDS}}, officialLink
+    _id, officialName, abbreviation, studyProgram, cabinetName, description, logo {${IMAGE_FIELDS}}, officialLink, socialLinks[]{platform, url}
   }
 `);

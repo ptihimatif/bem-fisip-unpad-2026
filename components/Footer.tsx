@@ -1,13 +1,11 @@
 import Link from "next/link";
 import Image from "next/image";
-import { safeExternalUrl, safeMailto } from "@/sanity/lib/urls";
+import { safeExternalUrl } from "@/sanity/lib/urls";
 
 interface FooterProps {
   settings?: {
-    officialEmail?: string | null;
     fisipCareCenterUrl?: string | null;
   } | null;
-  officialEmail?: string | null;
   careCenterUrl?: string | null;
 }
 
@@ -48,13 +46,10 @@ const socialItems = [
 
 export default function Footer({
   settings,
-  officialEmail,
   careCenterUrl,
 }: FooterProps = {}) {
-  const email = settings?.officialEmail ?? officialEmail;
   const rawCareCenter = settings?.fisipCareCenterUrl ?? careCenterUrl;
   const safeCareCenter = safeExternalUrl(rawCareCenter);
-  const safeEmail = safeMailto(email);
 
   return (
     <footer className="border-t py-12 text-white">
@@ -70,14 +65,7 @@ export default function Footer({
                 className="h-40 w-auto max-w-full object-contain object-left"
               />
             </div>
-            {safeEmail && email && (
-              <a
-                href={safeEmail}
-                className="text-sm text-white/50 transition-colors hover:text-white"
-              >
-                {email}
-              </a>
-            )}
+
           </div>
 
           <nav
@@ -97,21 +85,6 @@ export default function Footer({
             ))}
           </nav>
 
-          {safeCareCenter && (
-            <div className="flex flex-col gap-3 md:items-end">
-              <span className="mb-1 text-xs font-bold uppercase tracking-widest text-white/40">
-                Sosial & Layanan
-              </span>
-              <a
-                href={safeCareCenter}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-sm font-bold text-brand-yellow transition-colors hover:text-[#ffd27a]"
-              >
-                FISIP Care Center
-              </a>
-            </div>
-          )}
         </div>
 
         <div className="mt-12 flex flex-col-reverse items-start justify-between gap-10 sm:flex-row sm:items-center sm:gap-6 md:border-t md:border-white/10 md:pt-6">

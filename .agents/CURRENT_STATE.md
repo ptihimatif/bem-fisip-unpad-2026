@@ -1,6 +1,6 @@
 # Current state
 
-Last updated: 2026-09-05
+Last updated: 2026-09-16
 
 ## Current milestone
 
@@ -38,6 +38,7 @@ The approved workflow task intentionally recreates AGENTS.md and CLAUDE.md. It m
 
 ## Known verification baseline
 
+- The Hima/Huria gallery now uses the supplied Instagram SVG, evenly distributed card spacing, and a compact mobile layout. Lint, direct TypeScript checking, and the Impeccable detector passed. The production build remains blocked by the existing inability to fetch the Google-hosted Inter font in this network environment.
 - pnpm lint passed after the workflow changes.
 - Direct TypeScript checking passed with pnpm exec tsc --noEmit --incremental false.
 - The production build passed after network access was permitted for the unchanged starter's Google Fonts.
