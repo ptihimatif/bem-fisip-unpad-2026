@@ -98,6 +98,20 @@
         },
         "optional": false
       },
+      "cabinetName": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "description": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
       "logo": {
         "type": "objectAttribute",
         "value": {
@@ -165,6 +179,80 @@
           "type": "string"
         },
         "optional": false
+      },
+      "socialLinks": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "array",
+          "of": {
+            "type": "object",
+            "attributes": {
+              "platform": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "union",
+                  "of": [
+                    {
+                      "type": "string",
+                      "value": "instagram"
+                    },
+                    {
+                      "type": "string",
+                      "value": "tiktok"
+                    },
+                    {
+                      "type": "string",
+                      "value": "youtube"
+                    },
+                    {
+                      "type": "string",
+                      "value": "linkedin"
+                    },
+                    {
+                      "type": "string",
+                      "value": "x"
+                    },
+                    {
+                      "type": "string",
+                      "value": "line"
+                    },
+                    {
+                      "type": "string",
+                      "value": "website"
+                    }
+                  ]
+                },
+                "optional": false
+              },
+              "url": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "string"
+                },
+                "optional": true
+              },
+              "_type": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "string",
+                  "value": "socialLink"
+                }
+              }
+            },
+            "rest": {
+              "type": "object",
+              "attributes": {
+                "_key": {
+                  "type": "objectAttribute",
+                  "value": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "optional": true
       },
       "displayOrder": {
         "type": "objectAttribute",

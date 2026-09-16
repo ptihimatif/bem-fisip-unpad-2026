@@ -32,6 +32,8 @@ export type StudentAssociation = {
   officialName: string;
   abbreviation?: string;
   studyProgram: string;
+  cabinetName?: string;
+  description?: string;
   logo?: {
     asset?: SanityImageAssetReference;
     media?: unknown;
@@ -42,6 +44,19 @@ export type StudentAssociation = {
     _type: "image";
   };
   officialLink: string;
+  socialLinks?: Array<{
+    platform:
+      | "instagram"
+      | "tiktok"
+      | "youtube"
+      | "linkedin"
+      | "x"
+      | "line"
+      | "website";
+    url?: string;
+    _type: "socialLink";
+    _key: string;
+  }>;
   displayOrder?: number;
 };
 
@@ -479,6 +494,28 @@ export type SITE_SETTINGS_QUERY_RESULT =
       _id: string;
       organizationName: null;
       term: "2026";
+      seoTitle: null;
+      seoDescription: null;
+      ogImage: null;
+      officialEmail: null;
+      officialAddress: null;
+      socialLinks: Array<{
+        platform:
+          | "instagram"
+          | "line"
+          | "linkedin"
+          | "tiktok"
+          | "website"
+          | "x"
+          | "youtube";
+        url: string | null;
+      }> | null;
+      fisipCareCenterUrl: null;
+    }
+  | {
+      _id: string;
+      organizationName: null;
+      term: "2026";
       seoTitle: string | null;
       seoDescription: string | null;
       ogImage: null;
@@ -570,11 +607,23 @@ export type CABINET_PROFILE_QUERY_RESULT =
         description: string;
       }> | null;
     }
+  | {
+      _id: string;
+      cabinetName: string | null;
+      tagline: null;
+      overview: null;
+      profileVideoUrl: null;
+      vision: null;
+      missions: null;
+      values: null;
+      workCulture: null;
+      logoPhilosophy: null;
+    }
   | null;
 
 // Source: sanity/lib/queries.ts
 // Variable: FEATURED_PROGRAMS_QUERY
-// Query: *[_type == "program" && term == $term && isFeatured == true && organizationUnit->term == $term]  | order(displayOrder asc, name asc)[0...6]{    _id, name, "slug": slug.current, shortDescription, coverImage {  asset->{_id, url, metadata {lqip, dimensions {width, height}}},  alt,  attribution,  crop,  hotspot},    externalLink, "organizationUnit": organizationUnit->{_id, officialName, abbreviation, "slug": slug.current}  }
+// Query: *[_type == "program" && term == $term && isFeatured == true && organizationUnit->term == $term]  | order(displayOrder asc, name asc)[0...6]{    _id, name, "slug": slug.current, shortDescription, description, coverImage {  asset->{_id, url, metadata {lqip, dimensions {width, height}}},  alt,  attribution,  crop,  hotspot},    externalLink, "organizationUnit": organizationUnit->{_id, officialName, abbreviation, "slug": slug.current}  }
 export type FEATURED_PROGRAMS_QUERY_RESULT = Array<{
   _id: string;
   name: string;
@@ -996,12 +1045,14 @@ export type MEMBERS_QUERY_RESULT = Array<{
 
 // Source: sanity/lib/queries.ts
 // Variable: STUDENT_ASSOCIATIONS_QUERY
-// Query: *[_type == "studentAssociation" && term == $term]  | order(displayOrder asc, officialName asc){    _id, officialName, abbreviation, studyProgram, logo {  asset->{_id, url, metadata {lqip, dimensions {width, height}}},  alt,  attribution,  crop,  hotspot}, officialLink  }
+// Query: *[_type == "studentAssociation" && term == $term]  | order(displayOrder asc, officialName asc){    _id, officialName, abbreviation, studyProgram, cabinetName, description, logo {  asset->{_id, url, metadata {lqip, dimensions {width, height}}},  alt,  attribution,  crop,  hotspot}, officialLink, socialLinks[]{platform, url}  }
 export type STUDENT_ASSOCIATIONS_QUERY_RESULT = Array<{
   _id: string;
   officialName: string;
   abbreviation: string | null;
   studyProgram: string;
+  cabinetName: string | null;
+  description: string | null;
   logo: {
     asset: {
       _id: string;
@@ -1020,6 +1071,17 @@ export type STUDENT_ASSOCIATIONS_QUERY_RESULT = Array<{
     hotspot: SanityImageHotspot | null;
   } | null;
   officialLink: string;
+  socialLinks: Array<{
+    platform:
+      | "instagram"
+      | "line"
+      | "linkedin"
+      | "tiktok"
+      | "website"
+      | "x"
+      | "youtube";
+    url: string | null;
+  }> | null;
 }>;
 
 // Query TypeMap
@@ -1027,7 +1089,7 @@ declare global {
   interface SanityQueries {
     '\n  *[_id == "siteSettings-2026" && term == $term][0]{\n    _id, organizationName, term, seoTitle, seoDescription, ogImage {\n  asset->{_id, url, metadata {lqip, dimensions {width, height}}},\n  alt,\n  attribution,\n  crop,\n  hotspot\n},\n    officialEmail, officialAddress, socialLinks[]{platform, url}, fisipCareCenterUrl\n  }\n': SITE_SETTINGS_QUERY_RESULT;
     '\n  *[_id == "cabinetProfile-2026" && term == $term][0]{\n    _id, cabinetName, tagline, overview, profileVideoUrl, vision, missions, values,\n    workCulture, logoPhilosophy[]{_key, title, description}\n  }\n': CABINET_PROFILE_QUERY_RESULT;
-    '\n  *[_type == "program" && term == $term && isFeatured == true && organizationUnit->term == $term]\n  | order(displayOrder asc, name asc)[0...6]{\n    _id, name, "slug": slug.current, shortDescription, coverImage {\n  asset->{_id, url, metadata {lqip, dimensions {width, height}}},\n  alt,\n  attribution,\n  crop,\n  hotspot\n},\n    externalLink, "organizationUnit": organizationUnit->{_id, officialName, abbreviation, "slug": slug.current}\n  }\n': FEATURED_PROGRAMS_QUERY_RESULT;
+    '\n  *[_type == "program" && term == $term && isFeatured == true && organizationUnit->term == $term]\n  | order(displayOrder asc, name asc)[0...6]{\n    _id, name, "slug": slug.current, shortDescription, description, coverImage {\n  asset->{_id, url, metadata {lqip, dimensions {width, height}}},\n  alt,\n  attribution,\n  crop,\n  hotspot\n},\n    externalLink, "organizationUnit": organizationUnit->{_id, officialName, abbreviation, "slug": slug.current}\n  }\n': FEATURED_PROGRAMS_QUERY_RESULT;
     '\n  *[_type == "program" && term == $term && slug.current == $slug && organizationUnit->term == $term][0]{\n    _id, name, "slug": slug.current, shortDescription, description, coverImage {\n  asset->{_id, url, metadata {lqip, dimensions {width, height}}},\n  alt,\n  attribution,\n  crop,\n  hotspot\n},\n    startDate, endDate, externalLink,\n    "organizationUnit": organizationUnit->{_id, officialName, abbreviation, "slug": slug.current}\n  }\n': PROGRAM_BY_SLUG_QUERY_RESULT;
     '\n  *[_type == "post" && term == $term && defined(slug.current)]\n  | order(publishedAt desc)[0...6]{\n    _id, judul, "slug": slug.current, postCategory, publishedAt, excerpt,\n    image {\n  asset->{_id, url, metadata {lqip, dimensions {width, height}}},\n  alt,\n  attribution,\n  crop,\n  hotspot\n}, instagramUrl\n  }\n': PUBLICATION_CARDS_QUERY_RESULT;
     '\n  *[_type == "post" && term == $term && defined(slug.current)]\n  | order(publishedAt desc)[0...12]{\n    _id, judul, "slug": slug.current, postCategory, publishedAt, excerpt,\n    image {\n  asset->{_id, url, metadata {lqip, dimensions {width, height}}},\n  alt,\n  attribution,\n  crop,\n  hotspot\n}, instagramUrl\n  }\n': PUBLICATION_PAGE_QUERY_RESULT;
@@ -1037,7 +1099,7 @@ declare global {
     '\n  *[_type == "mapres" && term == $term]\n  | order(displayOrder asc, achievementYear desc, nama_mapres asc)[0...12]{\n    _id, nama_mapres, achievementTitle, achievementYear, image {\n  asset->{_id, url, metadata {lqip, dimensions {width, height}}},\n  alt,\n  attribution,\n  crop,\n  hotspot\n}, instagramUrl\n  }\n': MAPRES_QUERY_RESULT;
     '\n  *[_type == "organizationUnit" && term == $term && defined(slug.current)]\n  | order(displayOrder asc, officialName asc){\n    _id, officialName, abbreviation, "slug": slug.current, unitKind, description,\n    coverImage {\n  asset->{_id, url, metadata {lqip, dimensions {width, height}}},\n  alt,\n  attribution,\n  crop,\n  hotspot\n}\n  }\n': ORGANIZATION_UNITS_QUERY_RESULT;
     '\n  *[_type == "member" && term == $term && organizationUnit->term == $term]\n  | order(isLeader desc, displayOrder asc, name asc){\n    _id, name, role, photo {\n  asset->{_id, url, metadata {lqip, dimensions {width, height}}},\n  alt,\n  attribution,\n  crop,\n  hotspot\n}, socialLink, isLeader,\n    "organizationUnit": organizationUnit->{_id, officialName, abbreviation, "slug": slug.current}\n  }\n': MEMBERS_QUERY_RESULT;
-    '\n  *[_type == "studentAssociation" && term == $term]\n  | order(displayOrder asc, officialName asc){\n    _id, officialName, abbreviation, studyProgram, logo {\n  asset->{_id, url, metadata {lqip, dimensions {width, height}}},\n  alt,\n  attribution,\n  crop,\n  hotspot\n}, officialLink\n  }\n': STUDENT_ASSOCIATIONS_QUERY_RESULT;
+    '\n  *[_type == "studentAssociation" && term == $term]\n  | order(displayOrder asc, officialName asc){\n    _id, officialName, abbreviation, studyProgram, cabinetName, description, logo {\n  asset->{_id, url, metadata {lqip, dimensions {width, height}}},\n  alt,\n  attribution,\n  crop,\n  hotspot\n}, officialLink, socialLinks[]{platform, url}\n  }\n': STUDENT_ASSOCIATIONS_QUERY_RESULT;
   }
 }
 // Lets @sanity/client releases that predate the global registry read it too

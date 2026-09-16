@@ -1,0 +1,175 @@
+"use client";
+
+import { useState } from "react";
+import Image from "next/image";
+import { SanityImage } from "@/components/SanityImage";
+import { safeExternalUrl } from "@/sanity/lib/urls";
+import type { STUDENT_ASSOCIATIONS_QUERY_RESULT } from "@/sanity.types";
+
+interface HimaGalleryProps {
+  associations: STUDENT_ASSOCIATIONS_QUERY_RESULT;
+}
+
+export default function HimaGallery({ associations }: HimaGalleryProps) {
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+
+  if (!associations || associations.length === 0) {
+    return (
+      <p className="mt-10 bg-white p-4 text-white">
+        Belum ada organisasi mahasiswa yang dipublikasikan.
+      </p>
+    );
+  }
+
+  const selectedAssociation =
+    selectedIndex !== null ? associations[selectedIndex] : null;
+
+  return (
+    <div className="mt-8 flex flex-col-reverse lg:flex-col gap-8 sm:mt-10 sm:gap-10">
+      {/* 
+        Menambahkan CSS Keyframes secara langsung ke dalam komponen 
+        agar animasi muncul (fade-in & slide down) berjalan mulus 
+      */}
+      <style>{`
+        @keyframes smoothAppear {
+          0% { opacity: 0; transform: translateY(-15px); }
+          100% { opacity: 1; transform: translateY(0); }
+        }
+        .animate-smooth-appear {
+          animation: smoothAppear 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+      `}</style>
+
+      {/* Grid of logos */}
+      <div className="flex w-full flex-col gap-4 sm:gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6 w-full">
+          {associations.map((item, index) => {
+            const isSelected = selectedIndex === index;
+            return (
+              <button
+                key={item._id}
+                onClick={() => setSelectedIndex(index)}
+                className={`cursor-pointer relative flex w-full aspect-square items-center justify-center bg-white p-3 transition-all duration-250 hover:brightness-100 brightness-75 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-brand-yellow)] sm:p-4 lg:p-5 ${
+                  isSelected
+                    ? "scale-105 z-10 brightness-100"
+                    : "shadow-sm hover:shadow-md"
+                }`}
+              >
+                {item.logo ? (
+                  <SanityImage
+                    value={item.logo}
+                    width={200}
+                    height={200}
+                    sizes="(min-width: 640px) 200px, 150px"
+                    fallbackAlt={`Logo ${item.officialName}`}
+                    className="mx-auto h-auto max-w-[80%] object-contain"
+                  />
+                ) : (
+                  <span className="font-bold text-[#003089] text-center text-sm md:text-base">
+                    {item.abbreviation || item.officialName}
+                  </span>
+                )}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Expanded Detail Panel */}
+      {selectedAssociation && (
+        <div
+          // KEY ini sangat penting! Mengubah key memaksa React me-render ulang card
+          // dari nol setiap kali logo baru diklik, sehingga animasinya selalu jalan
+          key={selectedIndex}
+          className="animate-smooth-appear group relative flex w-full flex-col overflow-hidden bg-gradient-to-r from-[#001949] to-[#ffc26d] text-white shadow-md md:h-auto md:flex-row"
+        >
+          {/* Left Side: White Logo Box */}
+          <div className="relative flex h-48 w-full flex-none items-center justify-center border-b border-gray-100/20 bg-white sm:h-56 md:h-auto md:w-[280px] lg:w-[320px] md:border-r md:border-b-0 p-4 sm:p-6">
+            {selectedAssociation.logo ? (
+              <SanityImage
+                value={selectedAssociation.logo}
+                width={300}
+                height={300}
+                sizes="(min-width: 768px) 300px, 200px"
+                fallbackAlt={`Logo ${selectedAssociation.officialName}`}
+                className="mx-auto h-auto max-h-40 w-auto max-w-[85%] object-contain transition-transform duration-250 md:max-h-52 lg:max-h-60"
+                priority={true}
+              />
+            ) : (
+              <span className="font-bold text-[#003089] text-3xl text-center">
+                {selectedAssociation.abbreviation ||
+                  selectedAssociation.officialName}
+              </span>
+            )}
+          </div>
+
+          {/* Right Side: Details */}
+          {/* Right Side: Details */}
+          <div className="flex min-w-0 flex-1 flex-col justify-between p-5 sm:p-6 md:px-8 md:py-6">
+            <div>
+              <h3
+                style={{ letterSpacing: "-0.05em" }}
+                className="mb-1 break-words text-2xl font-bold tracking-tight sm:text-3xl md:text-[36px] leading-tight"
+              >
+                {selectedAssociation.abbreviation ||
+                  selectedAssociation.officialName}
+              </h3>
+              <h4
+                style={{ letterSpacing: "-0.05em" }}
+                className="text-sm font-bold leading-snug sm:text-base md:text-[18px] text-white/90"
+              >
+                {selectedAssociation.officialName}
+                <br />
+                <span className="font-normal text-white/80">
+                  {selectedAssociation.cabinetName ||
+                    selectedAssociation.studyProgram}
+                </span>
+              </h4>
+
+              {selectedAssociation.description && (
+                <p className="mt-3 mb-3 max-w-[800px] text-xs leading-relaxed text-white/90 sm:text-sm">
+                  {selectedAssociation.description}
+                </p>
+              )}
+            </div>
+
+            {/* Instagram Link (Legacy) - Otomatis terdorong ke bawah */}
+            {selectedAssociation.officialLink && (
+              <div className="mt-4 flex items-center pt-2">
+                {(() => {
+                  const href = safeExternalUrl(
+                    selectedAssociation.officialLink,
+                  );
+                  if (!href) return null;
+                  return (
+                    <a
+                      href={href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-2 text-white transition-colors hover:text-white/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                      aria-label="Instagram Resmi"
+                    >
+                      <Image
+                        src="/assets/logo/ig.svg"
+                        alt="Instagram"
+                        width={24}
+                        height={24}
+                        className="size-6"
+                      />
+                      <span
+                        style={{ letterSpacing: "-0.05em" }}
+                        className="text-xs sm:text-sm font-semibold underline underline-offset-4"
+                      >
+                        Kunjungi Instagram Resmi
+                      </span>
+                    </a>
+                  );
+                })()}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
