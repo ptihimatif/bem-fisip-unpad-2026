@@ -25,7 +25,7 @@ export default function LoadingSpinner() {
   return (
     <div
       ref={spinnerRef}
-      className="loading-spinner h-20 w-20 rounded-full border-5 border-white/20 border-t-[#FFBA3A]"
+      className="loading-spinner h-20 w-20 rounded-full border-5 border-white/20 border-t-brand-yellow"
       aria-hidden="true"
     />
   );

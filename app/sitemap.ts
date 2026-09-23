@@ -58,7 +58,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ];
 
   // Dynamic post routes
-  const postRoutes = (posts || []).map((post: { slug: string; _updatedAt?: string; publishedAt?: string }) => ({
+  const postRoutes = (Array.isArray(posts) ? posts : []).map((post: { slug: string; _updatedAt?: string; publishedAt?: string }) => ({
     url: `${baseUrl}/post/${post.slug}`,
     lastModified: new Date(post._updatedAt || post.publishedAt || Date.now()),
     changeFrequency: "weekly" as const,
@@ -66,9 +66,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }));
 
   // Dynamic birdep routes
-  const unitRoutes = (units || []).map((unit: { slug: string; _updatedAt?: string }) => ({
+  const unitRoutes = (Array.isArray(units) ? units : []).map((unit: { slug: string; _updatedAt?: string }) => ({
     url: `${baseUrl}/penjelasan/${unit.slug}`,
-    lastModified: new Date(unit._updatedAt),
+    lastModified: new Date(unit._updatedAt || Date.now()),
     changeFrequency: "monthly" as const,
     priority: 0.5,
   }));
