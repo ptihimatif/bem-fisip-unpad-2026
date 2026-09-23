@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import gsap from "gsap";
 import { SanityImage } from "@/components/SanityImage";
 import { SanityPortableText } from "@/components/SanityPortableText";
@@ -19,10 +19,10 @@ export default function ProgramCarousel({ programs }: ProgramCarouselProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const itemRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
-  // Duplicate the programs array 15 times to create a massive track.
+  // Duplicate the programs array 4 times to create a massive track.
   // Combined with the scroll-reset logic below, it creates a true infinite loop.
-  const MULTIPLIER = 15;
-  const infinitePrograms = Array(MULTIPLIER).fill(programs).flat();
+  const MULTIPLIER = 4;
+  const infinitePrograms = useMemo(() => Array(MULTIPLIER).fill(programs).flat(), [programs]);
 
   useEffect(() => {
     // Memindahkan posisi carousel ke tengah tanpa membuat seluruh layar web ikut turun

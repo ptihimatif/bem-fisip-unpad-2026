@@ -20,13 +20,34 @@ export async function generateMetadata(): Promise<Metadata> {
     stega: false,
   });
 
+  const title =
+    settings?.seoTitle ??
+    settings?.organizationName ??
+    "BEM FISIP Unpad 2026";
+  const description =
+    settings?.seoDescription ?? "Official Website of BEM FISIP Unpad 2026";
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://bemfisipunpad.com";
+
   return {
-    title:
-      settings?.seoTitle ??
-      settings?.organizationName ??
-      "BEM FISIP Unpad 2026",
-    description:
-      settings?.seoDescription ?? "Official Website of BEM FISIP Unpad 2026",
+    metadataBase: new URL(baseUrl),
+    title,
+    description,
+    alternates: {
+      canonical: "/",
+    },
+    openGraph: {
+      title,
+      description,
+      url: baseUrl,
+      siteName: "BEM FISIP Unpad 2026",
+      locale: "id_ID",
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+    },
   };
 }
 
@@ -35,8 +56,29 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://bemfisipunpad.com";
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "BEM FISIP Unpad 2026",
+    url: baseUrl,
+    logo: `${baseUrl}/assets/LOGO%20KABINET/logo-full.png`,
+    sameAs: [
+      "https://www.instagram.com/bemfisipunpad",
+      "https://www.tiktok.com/@bemfisipunpad",
+      "https://www.linkedin.com/company/bem-fisip-unpad",
+      "https://www.youtube.com/@BEMFISIPUNPAD",
+    ],
+  };
+
   return (
     <html lang="id" data-scroll-behavior="smooth" className={`${inter.variable} h-full antialiased`}>
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      </head>
       <body className="min-h-full flex flex-col font-sans bg-[#000c23] text-white">
         <Navbar />
         <main className="flex-1">{children}</main>

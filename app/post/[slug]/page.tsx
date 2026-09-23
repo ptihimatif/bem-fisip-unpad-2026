@@ -30,12 +30,33 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const post = await getPost(slug);
-  return post
-    ? {
-        title: post.seoTitle ?? post.judul,
-        description: post.seoDescription ?? post.excerpt ?? undefined,
-      }
-    : { title: "Publikasi tidak ditemukan" };
+  if (!post) {
+    return { title: "Publikasi tidak ditemukan" };
+  }
+
+  const title = post.seoTitle ?? post.judul;
+  const description = post.seoDescription ?? post.excerpt ?? undefined;
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://bemfisipunpad.com";
+
+  return {
+    title,
+    description,
+    alternates: {
+      canonical: `${baseUrl}/post/${slug}`,
+    },
+    openGraph: {
+      title,
+      description,
+      type: "article",
+      url: `${baseUrl}/post/${slug}`,
+      publishedTime: post.publishedAt ?? undefined,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+    },
+  };
 }
 
 export default async function PostPage({
@@ -163,9 +184,6 @@ export default async function PostPage({
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 px-8 py-3 font-bold text-sm text-white tracking-tight bg-brand-yellow brightness-75 hover:brightness-100 transition-all duration-300 shadow-md"
               >
-                <span className="sr-only">
-                  Lihat Unggahan Resmi di Instagram
-                </span>
                 Lihat Unggahan Resmi di Instagram
               </a>
             </div>

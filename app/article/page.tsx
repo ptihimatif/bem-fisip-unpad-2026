@@ -119,20 +119,7 @@ export default async function ArticlePage(props: {
   );
 
   return (
-    <div
-      className="relative overflow-hidden text-white pt-24"
-      style={{
-        backgroundImage: `
-    radial-gradient(ellipse 100% 35% at 50% 20%, rgba(0, 48, 137, 0.85) 0%, transparent 70%),
-    radial-gradient(ellipse 90% 30% at 20% 45%, rgba(0, 102, 204, 0.55) 0%, transparent 65%),
-    radial-gradient(ellipse 70% 25% at 80% 60%, rgba(90, 140, 255, 0.45) 0%, transparent 65%),
-    radial-gradient(ellipse 80% 30% at 40% 90%, rgba(0, 30, 90, 0.95) 0%, transparent 70%),
-    radial-gradient(circle at 10% 75%, rgba(255, 186, 58, 0.25) 0%, transparent 20%),
-    radial-gradient(circle at 90% 30%, rgba(255, 138, 0, 0.25) 0%, transparent 20%),
-    linear-gradient(180deg, #000c23 0%, #003089 45%, #000c23 100%)
-  `,
-      }}
-    >
+    <div className="relative overflow-hidden text-white pt-24 bg-brand-gradient">
       {/* Tambahkan relative z-10 di sini agar semua konten berada di atas gambar */}
       <main className="relative z-10 mx-auto max-w-6xl px-6 py-12">
         {/* HEADER SECTION */}
@@ -194,6 +181,7 @@ export default async function ArticlePage(props: {
                 key={num}
                 href={buildUrl({ page: num })}
                 className={`transition-colors ${num === validCurrentPage ? "text-brand-yellow" : "hover:text-brand-yellow"}`}
+                aria-current={num === validCurrentPage ? "page" : undefined}
               >
                 {num}
               </Link>
