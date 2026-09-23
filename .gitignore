@@ -45,4 +45,6 @@ next-env.d.ts
 /.impeccable/hook.cache.json
 /.impeccable/hook.pending.json
 
+.lighthouse
+
 docs/Booklet Rekrutmen Staf.pdf

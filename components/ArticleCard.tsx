@@ -20,7 +20,7 @@ export default function ArticleCard({ post }: ArticleCardProps) {
     ? dateFormatter.format(new Date(post.publishedAt))
     : "";
 
-return (
+  return (
     <Link
       href={`/post/${post.slug ?? post._id}`}
       className="group relative flex flex-col md:flex-row md:min-h-60 w-full overflow-hidden bg-white text-black shadow-sm transition-shadow hover:shadow-md"
@@ -41,9 +41,9 @@ return (
       <div className="flex min-w-0 flex-1 flex-col justify-between p-4 sm:p-5 order-2 md:order-1">
         <div>
           {/* Judul: Lebih kecil di hp/tablet (text-lg/xl), normal kembali di md/lg ([24px]) */}
-          <h3 className="text-lg sm:text-xl md:text-[24px] line-clamp-2 font-bold group-hover:text-[#5a64b4] transition-colors leading-snug">
+          <h2 className="text-lg sm:text-xl md:text-[24px] line-clamp-2 font-bold group-hover:text-[#5a64b4] transition-colors leading-snug">
             {post.judul}
-          </h3>
+          </h2>
           {post.excerpt && (
             <p className="mt-2 sm:mt-3 mb-4 lg:line-clamp-4 line-clamp-2 text-sm sm:text-sm md:text-md font-normal leading-relaxed warp-break-word text-gray-700">
               {post.excerpt}
@@ -65,4 +65,5 @@ return (
         </div>
       </div>
     </Link>
-  )};
+  );
+}

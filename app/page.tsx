@@ -4,8 +4,9 @@ import ArticleCard from "@/components/ArticleCard";
 import { SanityImage } from "@/components/SanityImage";
 import Footer from "@/components/Footer";
 import InfiniteCarousel from "@/components/InfiniteCarousel";
-import InstagramEmbed from "@/components/InstagramEmbed";
-import ProgramCarousel from "@/components/ProgramCarousel";
+import dynamic from "next/dynamic";
+const ProgramCarousel = dynamic(() => import("@/components/ProgramCarousel"));
+const InstagramEmbed = dynamic(() => import("@/components/InstagramEmbed"));
 import ScrollToSectionButton from "@/components/ScrollToSectionButton";
 import { sanityFetch } from "@/sanity/lib/live";
 import { safeExternalUrl } from "@/sanity/lib/urls";
@@ -102,12 +103,12 @@ export default async function Home() {
         />
         <div className="relative z-10 flex flex-col items-center gap-0">
           <h1
-            className="text-depth text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-[0.18em] text-white leading-tight"
+            className="text-depth text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-[0.10em] text-white leading-tight"
             style={{ textShadow: "0 4px 24px rgba(0,0,0,0.35)" }}
           >
             BEM FISIP UNPAD 2026
           </h1>
-          <p className="text-depth text-lg tracking-[0.18em] text-white sm:text-xl">
+          <p className="text-depth text-lg text-white sm:text-xl">
             {cabinet?.cabinetName ?? "Kabinet Pendar Mentari"} · 2026
           </p>
         </div>
@@ -115,7 +116,7 @@ export default async function Home() {
           <div className="flex items-center">
             <ScrollToSectionButton
               targetId="mengapa-pendar-mentari"
-              className="group inline-flex flex-col items-center gap-2 text-sm font-bold text-white transition-colors hover:text-white"
+              className="group inline-flex flex-col items-center gap-0 text-sm font-bold text-white transition-colors hover:text-white"
             >
               Lebih Lanjut Tentang Kami
               <svg
@@ -130,7 +131,7 @@ export default async function Home() {
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   strokeWidth={2}
-                  d="M12 5v14m7-7-7 7-7-7"
+                  d="m7 10 5 5 5-5"
                 />
               </svg>
             </ScrollToSectionButton>
@@ -180,7 +181,7 @@ export default async function Home() {
           >
             Mengapa Pendar Mentari?
           </h2>
-          <p className="text-base text-white sm:text-lg">
+          <p className="text-base text-white sm:text-lg text-justify">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer
             vitae justo nec arcu tincidunt consequat. Sed at libero vel nisl
             posuere facilisis, sementara semangat kolaborasi terus tumbuh di
@@ -189,7 +190,7 @@ export default async function Home() {
             Sed at libero vel nisl posuere facilisis, sementara semangat
             kolaborasi terus tumbuh di tengah mahasiswa FISIP.
           </p>
-          <p className="text-base text-white sm:text-lg">
+          <p className="text-base text-white sm:text-lg text-justify">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer
             vitae justo nec arcu tincidunt consequat. Sed at libero vel nisl
             posuere facilisis.
@@ -218,15 +219,18 @@ export default async function Home() {
       </section>
 
       {/* PROGRAM KAMI */}
-      <section className="relative isolate py-20 mt-20 overflow-hidden">
-        <Image
-          src="/assets/home/asset2.png"
-          alt=""
-          width={864}
-          height={960}
-          className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-full w-auto max-w-none object-contain z-0 opacity-80"
-          aria-hidden="true"
-        />
+      <section className="relative py-20 mt-20">
+        <div className="pointer-events-none absolute inset-0 overflow-hidden">
+          <Image
+            src="/assets/home/asset2.png"
+            alt=""
+            width={864}
+            height={960}
+            className="absolute left-1/2 top-1/2 z-0 h-full w-auto max-w-none -translate-x-1/2 -translate-y-1/2 object-contain opacity-80"
+            aria-hidden="true"
+          />
+        </div>
+
         <div className="relative z-10 max-w-6xl mx-auto px-6 mb-10 text-center">
           <h2
             className="text-depth text-5xl sm:text-6xl font-bold text-white"
@@ -235,7 +239,8 @@ export default async function Home() {
             Program Kami
           </h2>
         </div>
-        <div className="relative z-100">
+
+        <div className="relative z-20">
           {programs.length > 0 ? (
             <ProgramCarousel programs={programs} />
           ) : (
@@ -246,7 +251,7 @@ export default async function Home() {
 
       {/* MAHASISWA BERPRESTASI */}
       <section className="relative isolate overflow-hidden py-20 mb-20">
-        <div className="relative z-10 max-w-6xl mx-auto px-6 mb-10 text-center pt-20">
+        <div className="relative z-5 max-w-6xl mx-auto px-6 mb-10 text-center pt-20">
           <h2
             className="text-depth text-5xl sm:text-6xl font-bold text-white"
             style={{ letterSpacing: "-0.05em" }}
@@ -270,7 +275,7 @@ export default async function Home() {
                     className="group relative h-72 flex-none overflow-hidden sm:h-80 lg:h-96"
                     style={{ aspectRatio }}
                   >
-                    <div className="absolute inset-0">
+                    <div className="absolute inset-0 flex items-center justify-center">
                       <SanityImage
                         value={item.image}
                         width={384}
@@ -317,7 +322,7 @@ export default async function Home() {
       </section>
 
       {/* INSTAGRAM */}
-      <section className="py-20">
+      <section className="relative z-10 py-5">
         <div className="max-w-6xl mx-auto px-6 mb-10 text-center">
           <h2
             className="text-depth text-5xl sm:text-6xl font-bold text-white"
@@ -330,13 +335,13 @@ export default async function Home() {
       </section>
 
       {/* ARTIKEL DAN KAJIAN */}
-      <section className="relative isolate overflow-hidden py-20">
+      <section className="relative isolate z-1 overflow py-20">
         <Image
           src="/assets/home/asset5.png"
           alt=""
           width={1200}
           height={1200}
-          className="pointer-events-none absolute -left-1/2 top-1/2 -translate-y-1/2 h-full w-auto max-w-none object-contain z-0 opacity-80"
+          className="pointer-events-none absolute -left-1/4 top-1/2 translate-y-[-60%] h-[125%] w-auto max-w-none z-0 opacity-80"
         />
         <div className="relative z-10 max-w-6xl mx-auto px-6 ">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-12">

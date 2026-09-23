@@ -1,5 +1,7 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import ArticleCard from "@/components/ArticleCard";
+import ArticleFilterSort from "@/components/ArticleFilterSort";
 import Footer from "@/components/Footer";
 import { sanityFetch } from "@/sanity/lib/live";
 import {
@@ -11,6 +13,12 @@ import {
 import type { PUBLICATION_CARDS_QUERY_RESULT } from "@/sanity.types";
 
 // Mendukung tipe searchParams untuk Next.js 14 maupun 15
+export const metadata: Metadata = {
+  title: "Artikel dan Kajian — BEM FISIP Unpad 2026",
+  description:
+    "Baca artikel dan kajian terbaru dari BEM FISIP Unpad 2026. Publikasi resmi, kebijakan, dan pemikiran kritis dari kabinet Pendar Mentari.",
+};
+
 export default async function ArticlePage(props: {
   searchParams?:
     | Promise<{ [key: string]: string | string[] | undefined }>
@@ -110,157 +118,110 @@ export default async function ArticlePage(props: {
     (_, i) => startPage + i,
   );
 
-return (
-  <div
-    className="relative overflow-hidden text-white pt-24"
-    style={{
-      background:
-        "linear-gradient(180deg, #FFBA3A 0%, #003089 30%, #000c23 100%)",
-    }}
-  >
-    {/* Tambahkan relative z-10 di sini agar semua konten berada di atas gambar */}
-    <main className="relative z-10 mx-auto max-w-6xl px-6 py-12">
-      {/* HEADER SECTION */}
-      <section aria-labelledby="publication-title" className="">
-        <h1
-          id="publication-title"
-          className="text-depth text-4xl sm:text-6xl font-extrabold mt-2"
-          style={{ letterSpacing: "-0.05em" }}
-        >
-          Artikel dan Kajian
-        </h1>
-      </section>
-      {/* GARIS LURUS FULL WIDTH */}
-      <div
-        className="border-t border-white mt-2.5 mb-10"
-        style={{
-          position: "relative",
-          width: "100vw",
-          left: "50%",
-          marginLeft: "-50vw",
-        }}
-      />{" "}
-      {/* FILTER & SORT BUTTONS */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
-        {/* Grup Kategori */}
-        <div className="flex border border-white bg-[#9ca3af]">
-          <Link
-            href={buildUrl({ category: "semua" })}
-            className={`px-5 py-1.5 text-sm font-bold transition-colors ${
-              currentCategory === "semua"
-                ? "bg-[#001746] text-white"
-                : "bg-transparent text-gray-700 hover:bg-white/20"
-            }`}
+  return (
+    <div
+      className="relative overflow-hidden text-white pt-24"
+      style={{
+        backgroundImage: `
+    radial-gradient(ellipse 100% 35% at 50% 20%, rgba(0, 48, 137, 0.85) 0%, transparent 70%),
+    radial-gradient(ellipse 90% 30% at 20% 45%, rgba(0, 102, 204, 0.55) 0%, transparent 65%),
+    radial-gradient(ellipse 70% 25% at 80% 60%, rgba(90, 140, 255, 0.45) 0%, transparent 65%),
+    radial-gradient(ellipse 80% 30% at 40% 90%, rgba(0, 30, 90, 0.95) 0%, transparent 70%),
+    radial-gradient(circle at 10% 75%, rgba(255, 186, 58, 0.25) 0%, transparent 20%),
+    radial-gradient(circle at 90% 30%, rgba(255, 138, 0, 0.25) 0%, transparent 20%),
+    linear-gradient(180deg, #000c23 0%, #003089 45%, #000c23 100%)
+  `,
+      }}
+    >
+      {/* Tambahkan relative z-10 di sini agar semua konten berada di atas gambar */}
+      <main className="relative z-10 mx-auto max-w-6xl px-6 py-12">
+        {/* HEADER SECTION */}
+        <section aria-labelledby="publication-title" className="">
+          <h1
+            id="publication-title"
+            className="text-depth text-4xl sm:text-6xl font-extrabold mt-2"
+            style={{ letterSpacing: "-0.05em" }}
           >
-            Semua
-          </Link>
-          <Link
-            href={buildUrl({ category: "artikel" })}
-            className={`border-l border-white px-5 py-1.5 text-sm font-bold transition-colors ${
-              currentCategory === "artikel"
-                ? "bg-[#001746] text-white"
-                : "bg-transparent text-gray-700 hover:bg-white/20"
-            }`}
-          >
-            Artikel
-          </Link>
-          <Link
-            href={buildUrl({ category: "kajian" })}
-            className={`border-l border-white px-5 py-1.5 text-sm font-bold transition-colors ${
-              currentCategory === "kajian"
-                ? "bg-[#001746] text-white"
-                : "bg-transparent text-gray-700 hover:bg-white/20"
-            }`}
-          >
-            Kajian
-          </Link>
-        </div>
-
-        {/* Grup Sort (Waktu) */}
-        <div className="flex border border-white bg-[#9ca3af]">
-          <Link
-            href={buildUrl({ sort: "terbaru" })}
-            className={`px-5 py-1.5 text-sm font-bold transition-colors ${
-              currentSort === "terbaru"
-                ? "bg-[#001746] text-white"
-                : "bg-transparent text-gray-700 hover:bg-white/20"
-            }`}
-          >
-            Terbaru
-          </Link>
-          <Link
-            href={buildUrl({ sort: "terlama" })}
-            className={`border-l border-white px-5 py-1.5 text-sm font-bold transition-colors ${
-              currentSort === "terlama"
-                ? "bg-[#001746] text-white"
-                : "bg-transparent text-gray-700 hover:bg-white/20"
-            }`}
-          >
-            Terlama
-          </Link>
-        </div>
-      </div>
-      {/* LIST ARTICLE CARDS */}
-      {paginatedPosts.length === 0 ? (
-        <EmptyState text="Data publikasi tidak ditemukan." />
-      ) : (
-        <div className="flex flex-col gap-6">
-          {paginatedPosts.map((post) => (
-            <ArticleCard key={post._id} post={post} />
-          ))}
-        </div>
-      )}
-      {/* PAGINATION NUMBERS */}
-      {totalPages > 1 && (
-        <div className="mt-16 flex items-center justify-center gap-3 sm:gap-6 text-lg sm:text-xl font-bold text-white">
-          <Link
-            href={buildUrl({ page: 1 })}
-            className="hover:text-brand-yellow transition-colors"
-            aria-label="First Page"
-          >
-            &lt;&lt;
-          </Link>
-          <Link
-            href={buildUrl({ page: Math.max(1, validCurrentPage - 1) })}
-            className="hover:text-brand-yellow transition-colors"
-            aria-label="Previous Page"
-          >
-            &lt;
-          </Link>
-
-          {pageNumbers.map((num) => (
+            Artikel dan Kajian
+          </h1>
+        </section>
+        {/* GARIS LURUS FULL WIDTH */}
+        <div
+          className="border-t border-white mt-2.5 mb-10"
+          style={{
+            position: "relative",
+            width: "100vw",
+            left: "50%",
+            marginLeft: "-50vw",
+          }}
+        />{" "}
+         {/* FILTER & SORT BUTTONS */}
+         <ArticleFilterSort
+           currentCategory={currentCategory}
+           currentSort={currentSort}
+           buildUrl={buildUrl}
+         />
+        {/* LIST ARTICLE CARDS */}
+        {paginatedPosts.length === 0 ? (
+          <EmptyState text="Data publikasi tidak ditemukan." />
+        ) : (
+          <div className="flex flex-col gap-6">
+            {paginatedPosts.map((post) => (
+              <ArticleCard key={post._id} post={post} />
+            ))}
+          </div>
+        )}
+        {/* PAGINATION NUMBERS */}
+        {totalPages > 1 && (
+          <div className="mt-16 flex items-center justify-center gap-3 sm:gap-6 text-lg sm:text-xl font-bold text-white">
             <Link
-              key={num}
-              href={buildUrl({ page: num })}
-              className={`transition-colors ${num === validCurrentPage ? "text-brand-yellow" : "hover:text-brand-yellow"}`}
+              href={buildUrl({ page: 1 })}
+              className="hover:text-brand-yellow transition-colors"
+              aria-label="First Page"
             >
-              {num}
+              &lt;&lt;
             </Link>
-          ))}
+            <Link
+              href={buildUrl({ page: Math.max(1, validCurrentPage - 1) })}
+              className="hover:text-brand-yellow transition-colors"
+              aria-label="Previous Page"
+            >
+              &lt;
+            </Link>
 
-          <Link
-            href={buildUrl({
-              page: Math.min(totalPages, validCurrentPage + 1),
-            })}
-            className="hover:text-brand-yellow transition-colors"
-            aria-label="Next Page"
-          >
-            &gt;
-          </Link>
-          <Link
-            href={buildUrl({ page: totalPages })}
-            className="hover:text-brand-yellow transition-colors"
-            aria-label="Last Page"
-          >
-            &gt;&gt;
-          </Link>
-        </div>
-      )}
-    </main>
+            {pageNumbers.map((num) => (
+              <Link
+                key={num}
+                href={buildUrl({ page: num })}
+                className={`transition-colors ${num === validCurrentPage ? "text-brand-yellow" : "hover:text-brand-yellow"}`}
+              >
+                {num}
+              </Link>
+            ))}
 
-    <Footer settings={settingsResult.data} />
-  </div>
-);
+            <Link
+              href={buildUrl({
+                page: Math.min(totalPages, validCurrentPage + 1),
+              })}
+              className="hover:text-brand-yellow transition-colors"
+              aria-label="Next Page"
+            >
+              &gt;
+            </Link>
+            <Link
+              href={buildUrl({ page: totalPages })}
+              className="hover:text-brand-yellow transition-colors"
+              aria-label="Last Page"
+            >
+              &gt;&gt;
+            </Link>
+          </div>
+        )}
+      </main>
+
+      <Footer settings={settingsResult.data} />
+    </div>
+  );
 }
 
 function EmptyState({ text }: { text: string }) {
