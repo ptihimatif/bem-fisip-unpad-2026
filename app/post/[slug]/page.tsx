@@ -71,8 +71,15 @@ export default async function PostPage({
     <div
       className="relative overflow-x-hidden min-h-screen text-white pt-24"
       style={{
-        background:
-          "linear-gradient(180deg, #000c23 0%, #003089 50%, #000c23 100%)",
+        backgroundImage: `
+    radial-gradient(ellipse 80% 55% at 110% 15%, rgba(0, 48, 137, 0.85) 0%, transparent 65%),
+    radial-gradient(ellipse 55% 70% at -10% 40%, rgba(0, 102, 204, 0.55) 0%, transparent 65%),
+    radial-gradient(ellipse 45% 35% at 55% 10%, rgba(90, 140, 255, 0.45) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 60% at 85% 110%, rgba(0, 30, 90, 0.95) 0%, transparent 65%),
+    radial-gradient(circle at 25% 75%, rgba(255, 186, 58, 0.25) 0%, transparent 18%),
+    radial-gradient(circle at 65% 65%, rgba(255, 138, 0, 0.25) 0%, transparent 15%),
+    linear-gradient(160deg, #000c23 0%, #003089 45%, #000c23 100%)
+  `,
       }}
     >
       <main className="relative z-10 mx-auto max-w-6xl px-6 py-12">
@@ -136,6 +143,7 @@ export default async function PostPage({
               sizes="(min-width: 768px) 672px, 100vw"
               fallbackAlt={`Gambar ${post.judul}`}
               className="aspect-video h-auto w-full object-cover border border-white/15 bg-white/5 shadow-md"
+              priority
             />
           </div>
 
@@ -153,24 +161,12 @@ export default async function PostPage({
                 href={socialLink}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-8 py-3 font-bold text-sm text-white bg-brand-yellow hover:bg-[#ffd27a] transition-colors shadow-md"
+                className="inline-flex items-center gap-2 px-8 py-3 font-bold text-sm text-white tracking-tight bg-brand-yellow brightness-75 hover:brightness-100 transition-all duration-300 shadow-md"
               >
-                <span className="sr-only">Lihat Unggahan Resmi di Instagram</span>
+                <span className="sr-only">
+                  Lihat Unggahan Resmi di Instagram
+                </span>
                 Lihat Unggahan Resmi di Instagram
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-4 w-4"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                  />
-                </svg>
               </a>
             </div>
           )}

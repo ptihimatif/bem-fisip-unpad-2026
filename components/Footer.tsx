@@ -1,6 +1,5 @@
 import Link from "next/link";
 import Image from "next/image";
-import { safeExternalUrl } from "@/sanity/lib/urls";
 
 interface FooterProps {
   settings?: {
@@ -44,28 +43,21 @@ const socialItems = [
   },
 ];
 
-export default function Footer({
-  settings,
-  careCenterUrl,
-}: FooterProps = {}) {
-  const rawCareCenter = settings?.fisipCareCenterUrl ?? careCenterUrl;
-  const safeCareCenter = safeExternalUrl(rawCareCenter);
-
+export default function Footer({}: FooterProps = {}) {
   return (
     <footer className="border-t py-12 text-white">
-      <div className="w-full px-6 sm:px-8">
+      <div className="w-full px-6 sm:px-8 lg:px-16 xl:px-24 2xl:px-32">
         <div className="flex flex-col items-stretch justify-between gap-14 md:flex-row md:gap-10">
-          <div className="flex flex-1 flex-col justify-between gap-8 md:gap-6">
+          <div className="flex flex-1 flex-col justify-between items-center gap-8 md:gap-6">
             <div className="flex min-h-40 items-center gap-4 md:self-stretch">
               <Image
                 src="/assets/LOGO%20KABINET/logo-gabungan.png"
                 alt="Logo Pendar Mentari BEM FISIP UNPAD"
                 width={480}
                 height={160}
-                className="h-40 w-auto max-w-full object-contain object-left"
+                className="h-40 w-auto max-w-full object-contain object-center lg:object-left"
               />
             </div>
-
           </div>
 
           <nav
@@ -84,11 +76,10 @@ export default function Footer({
               </Link>
             ))}
           </nav>
-
         </div>
 
         <div className="mt-12 flex flex-col-reverse items-start justify-between gap-10 sm:flex-row sm:items-center sm:gap-6 md:border-t md:border-white/10 md:pt-6">
-          <p className="w-full border-t border-white/10 pt-6 text-xs text-white/50 sm:w-auto sm:border-t-0 sm:pt-0">
+          <p className="w-full border-t border-white/10 pt-6 text-xs text-white sm:w-auto sm:border-t-0 sm:pt-0 tracking-tighter">
             &copy; {new Date().getFullYear()} BEM FISIP UNPAD. All Rights
             Reserved.
           </p>

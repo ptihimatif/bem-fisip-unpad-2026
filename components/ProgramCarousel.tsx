@@ -24,49 +24,50 @@ export default function ProgramCarousel({ programs }: ProgramCarouselProps) {
   const MULTIPLIER = 15;
   const infinitePrograms = Array(MULTIPLIER).fill(programs).flat();
 
-useEffect(() => {
-  // Memindahkan posisi carousel ke tengah tanpa membuat seluruh layar web ikut turun
-  if (scrollRef.current && itemRefs.current.length > 0) {
-    const middleIndex = Math.floor((programs.length * MULTIPLIER) / 2);
-    const targetItem = itemRefs.current[middleIndex];
-    const container = scrollRef.current;
+  useEffect(() => {
+    // Memindahkan posisi carousel ke tengah tanpa membuat seluruh layar web ikut turun
+    if (scrollRef.current && itemRefs.current.length > 0) {
+      const middleIndex = Math.floor((programs.length * MULTIPLIER) / 2);
+      const targetItem = itemRefs.current[middleIndex];
+      const container = scrollRef.current;
 
-    if (targetItem && container) {
-      // Hitung posisi horizontal elemen agar berada di tengah container
-      const centerPosition =
-        targetItem.offsetLeft -
-        container.clientWidth / 2 +
-        targetItem.clientWidth / 2;
-      container.scrollLeft = centerPosition;
+      if (targetItem && container) {
+        // Hitung posisi horizontal elemen agar berada di tengah container
+        const centerPosition =
+          targetItem.offsetLeft -
+          container.clientWidth / 2 +
+          targetItem.clientWidth / 2;
+        container.scrollLeft = centerPosition;
+      }
     }
-  }
-}, [programs.length]);
+  }, [programs.length]);
 
-const handleScroll = () => {
-  if (!scrollRef.current) return;
-  const { scrollLeft, scrollWidth} = scrollRef.current;
+  const handleScroll = () => {
+    if (!scrollRef.current) return;
+    const { scrollLeft, scrollWidth } = scrollRef.current;
 
-  const threshold = scrollWidth / MULTIPLIER;
-  if (scrollLeft < threshold || scrollLeft > scrollWidth - threshold * 2) {
-    scrollRef.current.style.scrollBehavior = "auto";
+    const threshold = scrollWidth / MULTIPLIER;
+    if (scrollLeft < threshold || scrollLeft > scrollWidth - threshold * 2) {
+      scrollRef.current.style.scrollBehavior = "auto";
 
-    const middleIndex = Math.floor((programs.length * MULTIPLIER) / 2);
-    const targetItem = itemRefs.current[middleIndex];
-    const container = scrollRef.current;
+      const middleIndex = Math.floor((programs.length * MULTIPLIER) / 2);
+      const targetItem = itemRefs.current[middleIndex];
+      const container = scrollRef.current;
 
-    if (targetItem && container) {
-      const centerPosition =
-        targetItem.offsetLeft -
-        container.clientWidth / 2 +
-        targetItem.clientWidth / 2;
-      container.scrollLeft = centerPosition;
+      if (targetItem && container) {
+        const centerPosition =
+          targetItem.offsetLeft -
+          container.clientWidth / 2 +
+          targetItem.clientWidth / 2;
+        container.scrollLeft = centerPosition;
+      }
+
+      setTimeout(() => {
+        if (scrollRef.current)
+          scrollRef.current.style.scrollBehavior = "smooth";
+      }, 50);
     }
-
-    setTimeout(() => {
-      if (scrollRef.current) scrollRef.current.style.scrollBehavior = "smooth";
-    }, 50);
-  }
-};
+  };
 
   const handleNext = () => {
     if (scrollRef.current) {
@@ -99,7 +100,7 @@ const handleScroll = () => {
       {/* Desktop Navigation Buttons - Hidden on sm and md */}
       <button
         onClick={handlePrev}
-        className="absolute -left-12 top-1/2 z-10 -translate-y-1/2 hidden lg:flex cursor-pointer items-center justify-center text-white transition-transform hover:scale-110 hover:text-brand-yellow focus:outline-none"
+        className="absolute -left-12 top-1/2 z-10 -translate-y-1/2 hidden lg:flex cursor-pointer items-center justify-center text-white transition-transform hover:text-brand-yellow focus:outline-none"
         aria-label="Previous programs"
       >
         <svg
@@ -120,7 +121,7 @@ const handleScroll = () => {
 
       <button
         onClick={handleNext}
-        className="absolute -right-12 top-1/2 z-10 -translate-y-1/2 hidden lg:flex cursor-pointer items-center justify-center text-white transition-transform hover:scale-110 hover:text-brand-yellow focus:outline-none"
+        className="absolute -right-12 top-1/2 z-10 -translate-y-1/2 hidden lg:flex cursor-pointer items-center justify-center text-white transition-transform hover:text-brand-yellow focus:outline-none"
         aria-label="Next programs"
       >
         <svg
@@ -210,6 +211,7 @@ function ProgramModal({
   const cardContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
 
     gsap.fromTo(
@@ -231,7 +233,7 @@ function ProgramModal({
     );
 
     return () => {
-      document.body.style.overflow = "auto";
+      document.body.style.overflow = previousOverflow;
     };
   }, []);
 
@@ -252,16 +254,16 @@ function ProgramModal({
   return (
     <div
       ref={overlayRef}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm"
+      className="fixed inset-0 z-999 flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm"
       onClick={handleClose}
     >
       <div
         style={{ perspective: "1000px" }}
-        className="w-full max-w-2xl h-[85vh] md:h-[600px]"
+        className="w-full max-w-2xl h-auto"
       >
         <div
           ref={cardContainerRef}
-          className="relative h-full w-full bg-white shadow-2xl flex flex-col"
+          className="pb-10 relative h-full w-full bg-white shadow-2xl flex flex-col"
           onClick={(e) => e.stopPropagation()}
         >
           <div className="relative h-48 sm:h-64 shrink-0 bg-slate-100">
@@ -277,7 +279,7 @@ function ProgramModal({
             {/* Unshaped 'X' Close Button with custom cursor on hover */}
             <button
               onClick={handleClose}
-              className="absolute right-5 top-5 cursor-pointer text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] transition-colors hover:text-brand-yellow focus:outline-none"
+              className="absolute right-5 top-5 cursor-pointer text-white drop-shadow-[0_1px_9px_rgba(0,0,0,0.5)] transition-all hover:drop-shadow-[0_4px_8px_rgba(0,0,0,0.2)] hover:scale-110 hover:text-white focus:outline-none"
               aria-label="Tutup"
             >
               <svg
@@ -290,7 +292,7 @@ function ProgramModal({
                 <path
                   strokeLinecap="square"
                   strokeLinejoin="bevel"
-                  strokeWidth={2.5}
+                  strokeWidth={4}
                   d="M6 18L18 6M6 6l12 12"
                 />
               </svg>
@@ -298,7 +300,7 @@ function ProgramModal({
           </div>
 
           <div className="flex-1 overflow-y-auto p-6 sm:p-8 text-[#000c23]">
-            <h3 className="mb-4 text-2xl font-extrabold sm:text-3xl text-brand-blue">
+            <h3 className="mb-4 text-3xl font-extrabold pr-4 text-brand-blue">
               {program.name}
             </h3>
 
@@ -313,7 +315,7 @@ function ProgramModal({
                 />
               </div>
             ) : (
-              <p className="text-black leading-relaxed">
+              <p className="text-black tracking-normal ">
                 {program.shortDescription ??
                   "Deskripsi program belum tersedia."}
               </p>

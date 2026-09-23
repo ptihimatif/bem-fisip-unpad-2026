@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Image from "next/image";
 import { SanityImage } from "@/components/SanityImage";
 import { safeExternalUrl } from "@/sanity/lib/urls";
@@ -13,6 +13,8 @@ interface HimaGalleryProps {
 export default function HimaGallery({ associations }: HimaGalleryProps) {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 
+  const detailCardRef = useRef<HTMLDivElement>(null);
+
   if (!associations || associations.length === 0) {
     return (
       <p className="mt-10 bg-white p-4 text-white">
@@ -24,12 +26,22 @@ export default function HimaGallery({ associations }: HimaGalleryProps) {
   const selectedAssociation =
     selectedIndex !== null ? associations[selectedIndex] : null;
 
+  const handleSelect = (index: number) => {
+    setSelectedIndex(index);
+
+    // Auto-scroll HANYA berjalan jika lebar layar di bawah 1024px (artinya khusus sm dan md)
+    if (window.innerWidth < 1024) {
+      setTimeout(() => {
+        detailCardRef.current?.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
+      }, 50);
+    }
+  };
+
   return (
     <div className="mt-8 flex flex-col-reverse lg:flex-col gap-8 sm:mt-10 sm:gap-10">
-      {/* 
-        Menambahkan CSS Keyframes secara langsung ke dalam komponen 
-        agar animasi muncul (fade-in & slide down) berjalan mulus 
-      */}
       <style>{`
         @keyframes smoothAppear {
           0% { opacity: 0; transform: translateY(-15px); }
@@ -48,10 +60,10 @@ export default function HimaGallery({ associations }: HimaGalleryProps) {
             return (
               <button
                 key={item._id}
-                onClick={() => setSelectedIndex(index)}
+                onClick={() => handleSelect(index)}
                 className={`cursor-pointer relative flex w-full aspect-square items-center justify-center bg-white p-3 transition-all duration-250 hover:brightness-100 brightness-75 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-brand-yellow)] sm:p-4 lg:p-5 ${
                   isSelected
-                    ? "scale-105 z-10 brightness-100"
+                    ? "scale-102 md:scale-105 z-10 brightness-100"
                     : "shadow-sm hover:shadow-md"
                 }`}
               >
@@ -78,10 +90,9 @@ export default function HimaGallery({ associations }: HimaGalleryProps) {
       {/* Expanded Detail Panel */}
       {selectedAssociation && (
         <div
-          // KEY ini sangat penting! Mengubah key memaksa React me-render ulang card
-          // dari nol setiap kali logo baru diklik, sehingga animasinya selalu jalan
+          ref={detailCardRef}
           key={selectedIndex}
-          className="animate-smooth-appear group relative flex w-full flex-col overflow-hidden bg-gradient-to-r from-[#001949] to-[#ffc26d] text-white shadow-md md:h-auto md:flex-row"
+          className="animate-smooth-appear group relative flex w-full flex-col overflow-hidden bg-gradient-to-r from-[#001949] to-[#fffff] text-white shadow-md md:h-auto md:flex-row scroll-mt-28"
         >
           {/* Left Side: White Logo Box */}
           <div className="relative flex h-48 w-full flex-none items-center justify-center border-b border-gray-100/20 bg-white sm:h-56 md:h-auto md:w-[280px] lg:w-[320px] md:border-r md:border-b-0 p-4 sm:p-6">
@@ -104,23 +115,22 @@ export default function HimaGallery({ associations }: HimaGalleryProps) {
           </div>
 
           {/* Right Side: Details */}
-          {/* Right Side: Details */}
           <div className="flex min-w-0 flex-1 flex-col justify-between p-5 sm:p-6 md:px-8 md:py-6">
             <div>
               <h3
                 style={{ letterSpacing: "-0.05em" }}
-                className="mb-1 break-words text-2xl font-bold tracking-tight sm:text-3xl md:text-[36px] leading-tight"
+                className="-mt-4 mb-1 break-words text-[40px] sm:text-[50px] md:text-[60px] font-bold tracking-tight leading-tight"
               >
                 {selectedAssociation.abbreviation ||
                   selectedAssociation.officialName}
               </h3>
               <h4
                 style={{ letterSpacing: "-0.05em" }}
-                className="text-sm font-bold leading-snug sm:text-base md:text-[18px] text-white/90"
+                className="-mt-3 text-sm font-bold leading-snug sm:text-base md:text-[18px] text-white"
               >
                 {selectedAssociation.officialName}
                 <br />
-                <span className="font-normal text-white/80">
+                <span className="font-normal text-white">
                   {selectedAssociation.cabinetName ||
                     selectedAssociation.studyProgram}
                 </span>
@@ -133,9 +143,9 @@ export default function HimaGallery({ associations }: HimaGalleryProps) {
               )}
             </div>
 
-            {/* Instagram Link (Legacy) - Otomatis terdorong ke bawah */}
+            {/* Instagram Link (Legacy) */}
             {selectedAssociation.officialLink && (
-              <div className="mt-4 flex items-center pt-2">
+              <div className="mt-8 flex -mb-2.5 items-center pt-2">
                 {(() => {
                   const href = safeExternalUrl(
                     selectedAssociation.officialLink,

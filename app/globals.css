@@ -4,7 +4,7 @@
   --color-brand-blue: #003089;
   --color-brand-yellow: #ffba3a;
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-  --letter-spacing-base: 0.02em;
+  --letter-spacing-base: 0.001em;
 }
 
 :root {
@@ -23,8 +23,7 @@ body {
 .text-depth {
   -webkit-text-stroke: 0.2px rgba(0, 0, 0, 0.18);
   text-shadow:
-    0 -1px 0 rgba(0, 0, 0, 0.34),
-    0 1px 0 rgba(255, 255, 255, 0.2),
+    0 2px 3 rgba(0, 0, 0, 0.54),
     0 2px 5px rgba(0, 0, 0, 0.28);
 }
 
@@ -39,7 +38,7 @@ body {
 }
 
 .program-description-panel {
-  animation: program-description-reveal 350ms ease-out both;
+  animation: program-description-reveal 250ms ease-out both;
 }
 
 @keyframes program-description-reveal {

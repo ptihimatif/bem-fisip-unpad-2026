@@ -36,6 +36,12 @@ export function SanityImage({
     : imageBuilder.height(height).fit(fit).auto("format").url();
   const dimensions = value.asset.metadata?.dimensions;
 
+  // Calculate aspect ratio to prevent CLS on lazy-loaded images
+  const aspectRatio =
+    preserveAspectRatio && dimensions
+      ? `${dimensions.width} / ${dimensions.height}`
+      : `${width} / ${height}`;
+
   return (
     <Image
       src={src}
@@ -47,6 +53,7 @@ export function SanityImage({
       priority={priority}
       placeholder={value.asset.metadata?.lqip ? "blur" : "empty"}
       blurDataURL={value.asset.metadata?.lqip ?? undefined}
+      style={{ aspectRatio }}
     />
   );
 }
