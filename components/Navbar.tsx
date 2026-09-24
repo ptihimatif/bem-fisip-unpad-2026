@@ -3,7 +3,6 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
 
 const navItems = [
   { href: "/", label: "Beranda" },
@@ -18,14 +17,7 @@ const navItems = [
 ];
 
 export default function Navbar() {
-  const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
-  const [prevPathname, setPrevPathname] = useState(pathname);
-
-  if (pathname !== prevPathname) {
-    setMenuOpen(false);
-    setPrevPathname(pathname);
-  }
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-998 w-full bg-[#000c23]/25 backdrop-blur-lg">

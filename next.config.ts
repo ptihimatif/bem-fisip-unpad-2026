@@ -14,7 +14,7 @@ const nextConfig: NextConfig = {
   },
   poweredByHeader: false,
   async headers() {
-    return [
+    const baseHeaders = [
       {
         source: "/(.*)",
         headers: [
@@ -24,21 +24,10 @@ const nextConfig: NextConfig = {
         ],
       },
     ];
-  },
-};
 
-export default nextConfig;
-// Add CSP header for production security
-if (process.env.NODE_ENV === "production") {
-  const originalHeaders = nextConfig.headers;
-  // Monkey‑patch headers to inject CSP
-  nextConfig.headers = async () => {
-    const base = (await (originalHeaders ? originalHeaders() : [])) as Awaited<
-      ReturnType<NonNullable<typeof nextConfig.headers>>
-    >;
-    return [
-      ...base,
-      {
+    // Add CSP header for production security
+    if (process.env.NODE_ENV === "production") {
+      baseHeaders.push({
         source: "/(.*)",
         headers: [
           {
@@ -47,7 +36,11 @@ if (process.env.NODE_ENV === "production") {
               "default-src 'self'; script-src 'self' https://www.instagram.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://cdn.sanity.io https://www.instagram.com; connect-src 'self' https://*.sanity.io; font-src 'self';",
           },
         ],
-      },
-    ];
-  };
-}
+      });
+    }
+
+    return baseHeaders;
+  },
+};
+
+export default nextConfig;
