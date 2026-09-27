@@ -759,7 +759,7 @@ export type PUBLICATION_CARDS_QUERY_RESULT = Array<{
 
 // Source: sanity/lib/queries.ts
 // Variable: PUBLICATION_PAGE_QUERY
-// Query: *[_type == "post" && term == $term && defined(slug.current)]  | order(publishedAt desc)[0...12]{    _id, judul, "slug": slug.current, postCategory, publishedAt, excerpt,    image {  asset->{_id, url, metadata {lqip, dimensions {width, height}}},  alt,  attribution,  crop,  hotspot}, instagramUrl  }
+// Query: *[_type == "post" && term == $term && defined(slug.current)]  | order(publishedAt desc){    _id, judul, "slug": slug.current, postCategory, publishedAt, excerpt,    image {  asset->{_id, url, metadata {lqip, dimensions {width, height}}},  alt,  attribution,  crop,  hotspot}, instagramUrl  }
 export type PUBLICATION_PAGE_QUERY_RESULT = Array<{
   _id: string;
   judul: string;
@@ -788,9 +788,21 @@ export type PUBLICATION_PAGE_QUERY_RESULT = Array<{
 }>;
 
 // Source: sanity/lib/queries.ts
-// Variable: PUBLICATION_COUNT_QUERY
-// Query: count(*[_type == "post" && term == $term && defined(slug.current)])
-export type PUBLICATION_COUNT_QUERY_RESULT = number;
+// Variable: SITEMAP_POSTS_QUERY
+// Query: *[_type == "post" && term == $term && defined(slug.current)]{    "slug": slug.current, publishedAt, _updatedAt  }
+export type SITEMAP_POSTS_QUERY_RESULT = Array<{
+  slug: string;
+  publishedAt: string;
+  _updatedAt: string;
+}>;
+
+// Source: sanity/lib/queries.ts
+// Variable: SITEMAP_UNITS_QUERY
+// Query: *[_type == "organizationUnit" && term == $term && defined(slug.current)]{    "slug": slug.current, _updatedAt  }
+export type SITEMAP_UNITS_QUERY_RESULT = Array<{
+  slug: string;
+  _updatedAt: string;
+}>;
 
 // Source: sanity/lib/queries.ts
 // Variable: ORGANIZATION_UNIT_BY_SLUG_QUERY
@@ -1092,8 +1104,9 @@ declare global {
     '\n  *[_type == "program" && term == $term && isFeatured == true && organizationUnit->term == $term]\n  | order(displayOrder asc, name asc)[0...6]{\n    _id, name, "slug": slug.current, shortDescription, description, coverImage {\n  asset->{_id, url, metadata {lqip, dimensions {width, height}}},\n  alt,\n  attribution,\n  crop,\n  hotspot\n},\n    externalLink, "organizationUnit": organizationUnit->{_id, officialName, abbreviation, "slug": slug.current}\n  }\n': FEATURED_PROGRAMS_QUERY_RESULT;
     '\n  *[_type == "program" && term == $term && slug.current == $slug && organizationUnit->term == $term][0]{\n    _id, name, "slug": slug.current, shortDescription, description, coverImage {\n  asset->{_id, url, metadata {lqip, dimensions {width, height}}},\n  alt,\n  attribution,\n  crop,\n  hotspot\n},\n    startDate, endDate, externalLink,\n    "organizationUnit": organizationUnit->{_id, officialName, abbreviation, "slug": slug.current}\n  }\n': PROGRAM_BY_SLUG_QUERY_RESULT;
     '\n  *[_type == "post" && term == $term && defined(slug.current)]\n  | order(publishedAt desc)[0...6]{\n    _id, judul, "slug": slug.current, postCategory, publishedAt, excerpt,\n    image {\n  asset->{_id, url, metadata {lqip, dimensions {width, height}}},\n  alt,\n  attribution,\n  crop,\n  hotspot\n}, instagramUrl\n  }\n': PUBLICATION_CARDS_QUERY_RESULT;
-    '\n  *[_type == "post" && term == $term && defined(slug.current)]\n  | order(publishedAt desc)[0...12]{\n    _id, judul, "slug": slug.current, postCategory, publishedAt, excerpt,\n    image {\n  asset->{_id, url, metadata {lqip, dimensions {width, height}}},\n  alt,\n  attribution,\n  crop,\n  hotspot\n}, instagramUrl\n  }\n': PUBLICATION_PAGE_QUERY_RESULT;
-    '\n  count(*[_type == "post" && term == $term && defined(slug.current)])\n': PUBLICATION_COUNT_QUERY_RESULT;
+    '\n  *[_type == "post" && term == $term && defined(slug.current)]\n  | order(publishedAt desc){\n    _id, judul, "slug": slug.current, postCategory, publishedAt, excerpt,\n    image {\n  asset->{_id, url, metadata {lqip, dimensions {width, height}}},\n  alt,\n  attribution,\n  crop,\n  hotspot\n}, instagramUrl\n  }\n': PUBLICATION_PAGE_QUERY_RESULT;
+    '\n  *[_type == "post" && term == $term && defined(slug.current)]{\n    "slug": slug.current, publishedAt, _updatedAt\n  }\n': SITEMAP_POSTS_QUERY_RESULT;
+    '\n  *[_type == "organizationUnit" && term == $term && defined(slug.current)]{\n    "slug": slug.current, _updatedAt\n  }\n': SITEMAP_UNITS_QUERY_RESULT;
     '\n  *[_type == "organizationUnit" && term == $term && slug.current == $slug][0]{\n    _id, officialName, abbreviation, "slug": slug.current, unitKind, description,\n    coverImage {\n  asset->{_id, url, metadata {lqip, dimensions {width, height}}},\n  alt,\n  attribution,\n  crop,\n  hotspot\n}, gallery[]{_key, alt, caption, asset->{_id, url, metadata {lqip, dimensions {width, height}}}},\n    "programs": *[_type == "program" && term == $term && references(^._id)]\n      | order(displayOrder asc, name asc){_id, name, "slug": slug.current, shortDescription, coverImage {\n  asset->{_id, url, metadata {lqip, dimensions {width, height}}},\n  alt,\n  attribution,\n  crop,\n  hotspot\n}, externalLink},\n    "members": *[_type == "member" && term == $term && references(^._id)]\n      | order(isLeader desc, displayOrder asc, name asc){_id, name, role, photo {\n  asset->{_id, url, metadata {lqip, dimensions {width, height}}},\n  alt,\n  attribution,\n  crop,\n  hotspot\n}, socialLink, isLeader}\n  }\n': ORGANIZATION_UNIT_BY_SLUG_QUERY_RESULT;
     '\n  *[_type == "post" && term == $term && slug.current == $slug][0]{\n    _id, judul, "slug": slug.current, postCategory, publishedAt, excerpt, image {\n  asset->{_id, url, metadata {lqip, dimensions {width, height}}},\n  alt,\n  attribution,\n  crop,\n  hotspot\n},\n    body, instagramUrl, seoTitle, seoDescription, seoImage {\n  asset->{_id, url, metadata {lqip, dimensions {width, height}}},\n  alt,\n  attribution,\n  crop,\n  hotspot\n}\n  }\n': POST_BY_SLUG_QUERY_RESULT;
     '\n  *[_type == "mapres" && term == $term]\n  | order(displayOrder asc, achievementYear desc, nama_mapres asc)[0...12]{\n    _id, nama_mapres, achievementTitle, achievementYear, image {\n  asset->{_id, url, metadata {lqip, dimensions {width, height}}},\n  alt,\n  attribution,\n  crop,\n  hotspot\n}, instagramUrl\n  }\n': MAPRES_QUERY_RESULT;

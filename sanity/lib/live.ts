@@ -4,6 +4,7 @@
 import { defineLive } from "next-sanity/live";
 import { client } from './client'
 import { isSanityConfigured } from '../env'
+import { CONTENT_CACHE_TAG } from './cache'
 
 const live = defineLive({
   client,
@@ -23,5 +24,8 @@ export const sanityFetch: typeof live.sanityFetch = async (options) => {
     return { data: null } as Awaited<ReturnType<typeof live.sanityFetch>>
   }
 
-  return live.sanityFetch(options)
+  return live.sanityFetch({
+    ...options,
+    tags: [...(options.tags ?? []), CONTENT_CACHE_TAG],
+  })
 }

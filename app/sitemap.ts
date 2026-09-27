@@ -1,74 +1,69 @@
 import type { MetadataRoute } from "next";
-import { sanityFetch } from "@/sanity/lib/live";
-import { CONTENT_TERM } from "@/sanity/lib/queries";
+import { client } from "@/sanity/lib/client";
+import {
+  CONTENT_TERM,
+  SITEMAP_POSTS_QUERY,
+  SITEMAP_UNITS_QUERY,
+} from "@/sanity/lib/queries";
+
+// The sitemap has no connected Sanity Live browser; fetch it at request time.
+export const dynamic = "force-dynamic";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl =
-    process.env.NEXT_PUBLIC_SITE_URL || "https://bemfisipunpad.com";
+  const baseUrl = (
+    process.env.NEXT_PUBLIC_SITE_URL || "https://bemfisipunpad.com"
+  ).replace(/\/$/, "");
 
-  // Fetch all published posts for dynamic routes
-  const { data: posts } = await sanityFetch({
-    query: `*[_type == "post" && term == $term && defined(slug.current)]{
-      "slug": slug.current,
-      publishedAt,
-      _updatedAt
-    }`,
-    params: { term: CONTENT_TERM },
-    perspective: "published",
-    stega: false,
-  });
-
-  // Fetch all organization units (birdep) for dynamic routes
-  const { data: units } = await sanityFetch({
-    query: `*[_type == "organizationUnit" && term == $term && defined(slug.current)]{
-      "slug": slug.current,
-      _updatedAt
-    }`,
-    params: { term: CONTENT_TERM },
-    perspective: "published",
-    stega: false,
-  });
+  const params = { term: CONTENT_TERM };
+  const [posts, units] = await Promise.all([
+    client.fetch(SITEMAP_POSTS_QUERY, params, {
+      perspective: "published",
+      useCdn: false,
+      cache: "no-store",
+    }),
+    client.fetch(SITEMAP_UNITS_QUERY, params, {
+      perspective: "published",
+      useCdn: false,
+      cache: "no-store",
+    }),
+  ]);
 
   // Static routes
   const routes = [
     {
       url: baseUrl,
-      lastModified: new Date(),
       changeFrequency: "daily" as const,
       priority: 1,
     },
     {
       url: `${baseUrl}/about`,
-      lastModified: new Date(),
       changeFrequency: "monthly" as const,
       priority: 0.8,
     },
     {
       url: `${baseUrl}/article`,
-      lastModified: new Date(),
       changeFrequency: "daily" as const,
       priority: 0.8,
     },
     {
       url: `${baseUrl}/hima`,
-      lastModified: new Date(),
       changeFrequency: "weekly" as const,
       priority: 0.7,
     },
   ];
 
   // Dynamic post routes
-  const postRoutes = (Array.isArray(posts) ? posts : []).map((post: { slug: string; _updatedAt?: string; publishedAt?: string }) => ({
+  const postRoutes = (posts ?? []).map((post) => ({
     url: `${baseUrl}/post/${post.slug}`,
-    lastModified: new Date(post._updatedAt || post.publishedAt || Date.now()),
+    lastModified: post._updatedAt || post.publishedAt || undefined,
     changeFrequency: "weekly" as const,
     priority: 0.6,
   }));
 
   // Dynamic birdep routes
-  const unitRoutes = (Array.isArray(units) ? units : []).map((unit: { slug: string; _updatedAt?: string }) => ({
+  const unitRoutes = (units ?? []).map((unit) => ({
     url: `${baseUrl}/penjelasan/${unit.slug}`,
-    lastModified: new Date(unit._updatedAt || Date.now()),
+    lastModified: unit._updatedAt || undefined,
     changeFrequency: "monthly" as const,
     priority: 0.5,
   }));

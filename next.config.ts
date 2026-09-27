@@ -2,8 +2,6 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   images: {
-    //dont forget to remove this when its ready for production
-    dangerouslyAllowLocalIP: true,
     remotePatterns: [
       {
         protocol: "https",
