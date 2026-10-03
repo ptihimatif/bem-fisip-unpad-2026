@@ -49,3 +49,8 @@ next-env.d.ts
 .lighthouse
 
 docs/Booklet Rekrutmen Staf.pdf
+
+# Client member source and local preflight output
+/docs/data fungsionaris.xlsx
+/docs/~$*.xlsx
+/outputs/member-import-preflight/

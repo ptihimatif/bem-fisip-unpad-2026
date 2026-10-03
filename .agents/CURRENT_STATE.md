@@ -1,8 +1,14 @@
 # Current state
 
-Last updated: 2026-09-26
+Last updated: 2026-10-03
 
-## Latest milestone: backend and data remediation
+## Latest milestone: member import preflight
+
+The workspace is back on `feat/members`; the temporary client-color preview remains isolated on `preview/about-colors-2026-09-30` at `d306099` and was not merged. The client workbook is kept local and ignored. A read-only preflight mapped 268 filled member rows to all 23 published 2026 organization units with no missing fields, duplicate names, or unmatched roles. Three blank separator rows were skipped. The ignored `outputs/member-import-preflight/dry-run.json` contains the proposed documents and source hash. See `.agents/tasks/2026-10-03-member-import-preparation.md`.
+
+The configured Sanity dataset is named `production`; it contains term-2026 documents and one legacy document without a term. No member record was written. Explicit destination authority, client publication consent, a recoverable backup, and write access are needed before import.
+
+## Previous milestone: backend and data remediation
 
 On the local `feat/members` branch, the approved backend handoff fixes have been implemented: the unsafe local-IP image option was removed; Sanity Studio was upgraded to 6.16.0 with `@sanity/client` 8.7.0; four narrow pnpm overrides resolve the flagged CLI transitives; the article archive fetches all published 2026 posts; sitemap queries are typed and fetched fresh; the department settings query supplies the 2026 term; and a signed, server-only revalidation route supports content changes without an active Sanity Live visitor. Production webhook and secret configuration remain owned by the deployment/Sanity administrators and were not changed here. See `.agents/tasks/2026-09-26-backend-data-remediation.md` and `docs/SANITY_REVALIDATION.md`.
 
@@ -79,4 +85,4 @@ These block affected production or architectural actions, but not approved local
 
 ## Next planned milestone
 
-Review and merge the local backend remediation. The authorized production owners must separately set the server-only revalidation secret and signed webhook, then verify publish-to-site behavior and rollback readiness before release.
+Review the member dry run and confirm the Sanity destination, publication consent, backup, and write access. After separate production-content authority, import the validated members with an ID-based rollback record. Review and merge the local backend remediation separately; production owners still need to configure and verify the revalidation webhook before release.
