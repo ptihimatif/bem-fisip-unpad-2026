@@ -6,11 +6,9 @@ import Footer from "@/components/Footer";
 import { sanityFetch } from "@/sanity/lib/live";
 import {
   CONTENT_TERM,
-  PUBLICATION_COUNT_QUERY,
   PUBLICATION_PAGE_QUERY,
   SITE_SETTINGS_QUERY,
 } from "@/sanity/lib/queries";
-import type { PUBLICATION_CARDS_QUERY_RESULT } from "@/sanity.types";
 
 // Mendukung tipe searchParams untuk Next.js 14 maupun 15
 export const metadata: Metadata = {
@@ -38,15 +36,9 @@ export default async function ArticlePage(props: {
       perspective: "published",
       stega: false,
     }),
-    sanityFetch({
-      query: PUBLICATION_COUNT_QUERY,
-      params,
-      perspective: "published",
-      stega: false,
-    }),
   ]);
 
-  const rawPosts = (postsResult.data ?? []) as PUBLICATION_CARDS_QUERY_RESULT;
+  const rawPosts = postsResult.data ?? [];
 
   // 1. Mengambil parameter URL (Aman untuk Next.js 14 & 15)
   const searchParams = (await props.searchParams) || {};
@@ -56,10 +48,13 @@ export default async function ArticlePage(props: {
   const currentSort = (
     typeof searchParams.sort === "string" ? searchParams.sort : "terbaru"
   ).toLowerCase();
-  const currentPage =
+  const requestedPage =
     typeof searchParams.page === "string"
-      ? Math.max(1, parseInt(searchParams.page, 10))
+      ? Number.parseInt(searchParams.page, 10)
       : 1;
+  const currentPage = Number.isFinite(requestedPage)
+    ? Math.max(1, requestedPage)
+    : 1;
 
   // 2. Logika Filter Berdasarkan Kategori
   const filteredPosts = rawPosts.filter((post) => {

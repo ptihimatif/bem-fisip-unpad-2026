@@ -32,6 +32,7 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+!.env.example
 
 # vercel
 .vercel
@@ -48,3 +49,12 @@ next-env.d.ts
 .lighthouse
 
 docs/Booklet Rekrutmen Staf.pdf
+
+# Client member source and local preflight output
+/docs/data fungsionaris.xlsx
+/docs/~$*.xlsx
+/outputs/member-import-preflight/
+/docs/Part 1/
+/docs/Part 2/
+/docs/Part 3/
+/docs/Part 4/

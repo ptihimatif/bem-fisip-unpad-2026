@@ -103,7 +103,7 @@ export default async function Home() {
         />
         <div className="relative z-10 flex flex-col items-center gap-0">
           <h1
-            className="text-depth text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-[0.10em] text-white leading-tight"
+            className="text-depth text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-widest text-white leading-tight"
             style={{ textShadow: "0 4px 24px rgba(0,0,0,0.35)" }}
           >
             BEM FISIP UNPAD 2026

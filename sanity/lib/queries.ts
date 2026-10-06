@@ -50,35 +50,22 @@ export const PUBLICATION_CARDS_QUERY = defineQuery(`
 
 export const PUBLICATION_PAGE_QUERY = defineQuery(`
   *[_type == "post" && term == $term && defined(slug.current)]
-  | order(publishedAt desc)[0...12]{
+  | order(publishedAt desc){
     _id, judul, "slug": slug.current, postCategory, publishedAt, excerpt,
     image {${IMAGE_FIELDS}}, instagramUrl
   }
 `);
 
-export function publicationPageQuery(start: number, end: number) {
-  if (
-    !Number.isInteger(start) ||
-    !Number.isInteger(end) ||
-    start < 0 ||
-    end <= start
-  ) {
-    throw new Error(
-      "Publication pagination bounds must be safe, increasing integers.",
-    );
+export const SITEMAP_POSTS_QUERY = defineQuery(`
+  *[_type == "post" && term == $term && defined(slug.current)]{
+    "slug": slug.current, publishedAt, _updatedAt
   }
+`);
 
-  return defineQuery(`
-    *[_type == "post" && term == $term && defined(slug.current)]
-    | order(publishedAt desc)[${start}...${end}]{
-      _id, judul, "slug": slug.current, postCategory, publishedAt, excerpt,
-      image {${IMAGE_FIELDS}}, instagramUrl
-    }
-  `);
-}
-
-export const PUBLICATION_COUNT_QUERY = defineQuery(`
-  count(*[_type == "post" && term == $term && defined(slug.current)])
+export const SITEMAP_UNITS_QUERY = defineQuery(`
+  *[_type == "organizationUnit" && term == $term && defined(slug.current)]{
+    "slug": slug.current, _updatedAt
+  }
 `);
 
 export const ORGANIZATION_UNIT_BY_SLUG_QUERY = defineQuery(`

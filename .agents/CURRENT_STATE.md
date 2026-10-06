@@ -1,15 +1,39 @@
 # Current state
 
-Last updated: 2026-09-16
+Last updated: 2026-10-06
 
-## Current milestone
+## Latest milestone: About colors for frontend handoff
+
+The maintainer requested a minimal local About-page color fix before personally merging to `dev` and handing final UI work to the frontend partner. On `feat/members`, `app/about/page.tsx` now has the same class-only blue/yellow treatment as the previously reviewed client-preview commit `d306099`. Content, layout, data fetching, and other pages remain unchanged. Lint, typecheck, all three tests, production build, and the Impeccable detector passed; the fresh About build includes all 268 imported member names. No merge, push, or deployment occurred. See `.agents/tasks/2026-10-06-about-colors-handoff.md`.
+
+## Previous milestone: published member import
+
+The project maintainer approved publishing names and images to Sanity project `jcpcptq3`, dataset `production`. A full pre-import export with 57 content documents and 52 assets was created and verified locally. All 268 workbook members were imported and published with exact Excel names, roles, 2026 terms, display order, and references to the 23 existing units. Of 268 supplied card PNGs, 265 were mapped, uploaded, and attached by OCR-assisted name/role verification; three member records intentionally have no photo. Authenticated read-back verified all 268 documents and 265 exact image assets. Source images, workbook, backup, photo map, and ID-based rollback state are ignored by Git. See `.agents/tasks/2026-10-05-member-import.md`.
+
+Client card-copy corrections and missing photos remain follow-up content work. The existing production revalidation webhook configuration remains outside this task; site visibility may lag the published Content Lake until cache invalidation is configured or the live client refreshes.
+
+A clean local production build after import included all 268 workbook names on the About page. The earlier empty local build output was stale; no frontend change was needed. The deployed site's cache state has not been checked.
+
+## Previous milestone: member import preflight
+
+The workspace is back on `feat/members`; the temporary client-color preview remains isolated on `preview/about-colors-2026-09-30` at `d306099` and was not merged. The client workbook is kept local and ignored. A read-only preflight mapped 268 filled member rows to all 23 published 2026 organization units with no missing fields, duplicate names, or unmatched roles. Three blank separator rows were skipped. The ignored `outputs/member-import-preflight/dry-run.json` contains the proposed documents and source hash. See `.agents/tasks/2026-10-03-member-import-preparation.md`.
+
+At that time, no member record had been written, and destination authority, publication consent, backup, and write access were still pending. Those import prerequisites were satisfied for the 2026-10-05 member import described above.
+
+## Previous milestone: backend and data remediation
+
+On the local `feat/members` branch, the approved backend handoff fixes have been implemented: the unsafe local-IP image option was removed; Sanity Studio was upgraded to 6.16.0 with `@sanity/client` 8.7.0; four narrow pnpm overrides resolve the flagged CLI transitives; the article archive fetches all published 2026 posts; sitemap queries are typed and fetched fresh; the department settings query supplies the 2026 term; and a signed, server-only revalidation route supports content changes without an active Sanity Live visitor. Production webhook and secret configuration remain owned by the deployment/Sanity administrators and were not changed here. See `.agents/tasks/2026-09-26-backend-data-remediation.md` and `docs/SANITY_REVALIDATION.md`.
+
+The working tree already contained a user change in `app/page.tsx` and untracked `to-do-backend.md`. They were preserved.
+
+## Previous milestone (2026-09-16)
 
 The headless CMS schema foundation and the official frontend implementation of the Homepage (Navbar, Footer, Hero, Mengapa Pendar Mentari, Mapres, and Publikasi) have been completed and merged into the `dev` branch.
 
 ## Repository baseline
 
-- Local branch: dev (recently merged PRs #1, #2, and #3).
-- Stack currently installed: Next.js 16.3.4, React 19.2.8, TypeScript 5.9.3, Tailwind CSS 4.3.3, next-sanity.
+- Local branch: `feat/members` (the prior `dev` milestone is historical).
+- Stack currently installed: Next.js 16.3.4, React 19.2.8, TypeScript 5.9.3, Tailwind CSS 4.3.3, next-sanity 13.3.4, Sanity Studio 6.16.0.
 - Runtime observed during discovery: Node.js 22.14.0 and pnpm 11.1.2.
 - Brand tokens (Inter font, brand-blue, brand-yellow) have been implemented in `app/globals.css`.
 - Sanity Studio configuration, 8 core schemas, GROQ query layer, and strict types are fully implemented.
@@ -24,7 +48,7 @@ The headless CMS schema foundation and the official frontend implementation of t
 - Project-local Impeccable skill, Codex hook, product/design context, implicit UI routing, and quality-gate integration: complete.
 - Path, frontmatter, whitespace, policy, lint, type, and production-build verification: passed.
 
-## Pre-existing working-tree state
+## Historical workflow-foundation working-tree state
 
 Before this task:
 
@@ -36,7 +60,7 @@ Before this task:
 
 The approved workflow task intentionally recreates AGENTS.md and CLAUDE.md. It must not rewrite or relocate the two user-provided briefs.
 
-## Known verification baseline
+## Earlier verification history (as of 2026-09-16)
 
 - The Hima/Huria gallery now uses the supplied Instagram SVG, evenly distributed card spacing, and a compact mobile layout. Lint, direct TypeScript checking, and the Impeccable detector passed. The production build remains blocked by the existing inability to fetch the Google-hosted Inter font in this network environment.
 - pnpm lint passed after the workflow changes.
@@ -54,7 +78,7 @@ The approved workflow task intentionally recreates AGENTS.md and CLAUDE.md. It m
 ## Open decisions and blockers
 
 - Local Sanity integration hardening is complete. Deploying its term-scoped schemas still requires confirmation that the target dataset is isolated for 2026 and that a recoverable 2025 export exists; no Sanity service state was changed.
-- The configured dataset currently has legacy content but no term-2026 documents or required term-2026 singleton documents. The local home route fetches successfully and shows empty states until approved 2026 content is present.
+- The configured public dataset now includes published term-2026 documents. Published-only and term-scoped fetches remain required; no content was changed by this task.
 - The homepage member data contract is now rendered as cards; the local Press Release model was removed. An Instagram integration remains an approved future direction, not an implemented service connection.
 - Integration hardening remediation is complete locally: published-only Sanity Live, same-term references, generated image types, 2025-compatible route slices, CMS metadata/footer wiring, isolated dummy fixtures, and CI quality workflow are in place.
 - Final institutional repository owner and branch protection.
@@ -73,4 +97,4 @@ These block affected production or architectural actions, but not approved local
 
 ## Next planned milestone
 
-Present a separate plan for the application and Sanity repository scaffold. Do not scaffold either without explicit approval.
+Obtain corrected client card copy and the three missing member photos, then patch only those affected member records after review. Review and merge the local backend remediation separately; production owners still need to configure and verify the revalidation webhook before release.

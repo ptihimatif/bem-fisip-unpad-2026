@@ -41,7 +41,7 @@ export default async function DepartmentPage({
     getUnit(birdep),
     sanityFetch({
       query: SITE_SETTINGS_QUERY,
-      params,
+      params: { term: CONTENT_TERM },
       perspective: "published",
       stega: false,
     }),
