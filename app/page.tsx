@@ -98,6 +98,7 @@ export default async function Home() {
           width={800}
           height={800}
           className="pointer-events-none absolute right-[-50vw] top-1/2 z-0 h-[58vh] w-auto -translate-y-1/2 object-contain opacity-20 sm:right-[-25vw] sm:h-[68vh] md:right-[-30vw] lg:right-[-18vw] lg:h-[82vh]"
+          style={{ height: "auto" }}
           aria-hidden="true"
           priority
         />
@@ -283,10 +284,10 @@ export default async function Home() {
                         height={512}
                         sizes="(min-width: 1024px) 288px, 240px"
                         fallbackAlt={`Foto ${item.nama_mapres}`}
-                        className="h-full w-full bg-black/10 object-contain brightness-70 transition-brightness duration-300 group-hover:brightness-100"
+                        className="h-full w-full bg-black/10 object-contain brightness-70 transition-brightness duration-300 group-hover:brightness-100 rounded-lg"
                         preserveAspectRatio
                       />
-                      <div className="absolute inset-x-0 bottom-0 bg-linear-to-t from-black/85 via-black/45 to-transparent px-4 pb-4 pt-16">
+                      <div className="absolute inset-x-0 bottom-0 bg-linear-to-t from-black/85 via-black/45 to-transparent px-4 pb-4 pt-16 rounded-lg">
                         <h3 className="text-depth font-bold text-white text-sm">
                           {item.nama_mapres}
                         </h3>

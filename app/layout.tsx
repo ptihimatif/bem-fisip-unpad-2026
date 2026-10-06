@@ -1,15 +1,25 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import { SanityLive, sanityFetch } from "@/sanity/lib/live";
 import { isSanityConfigured } from "@/sanity/env";
 import { CONTENT_TERM, SITE_SETTINGS_QUERY } from "@/sanity/lib/queries";
 import Navbar from "@/components/Navbar";
 
-const inter = Inter({
-  subsets: ["latin"],
+const inter = localFont({
+  src: [
+    {
+      path: "../public/fonts/Inter/Inter-VariableFont_opsz,wght.ttf",
+      style: "normal",
+    },
+    {
+      path: "../public/fonts/Inter/Inter-Italic-VariableFont_opsz,wght.ttf",
+      style: "italic",
+    },
+  ],
   display: "swap",
   variable: "--font-inter",
+  fallback: ["Inter", "sans-serif"],
 });
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -32,6 +42,7 @@ export async function generateMetadata(): Promise<Metadata> {
     metadataBase: new URL(baseUrl),
     title,
     description,
+    icons: { icon: "/assets/favicon.ico" },
     alternates: {
       canonical: "/",
     },

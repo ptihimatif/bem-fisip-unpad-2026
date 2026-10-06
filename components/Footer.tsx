@@ -24,22 +24,27 @@ const socialItems = [
   {
     label: "Instagram",
     src: "/assets/logo/ig.svg",
+    href: "https://www.instagram.com/bemfisipunpad/",
   },
   {
     label: "TikTok",
     src: "/assets/logo/tiktok.svg",
+    href: "https://www.tiktok.com/@bemfisipunpad",
   },
   {
     label: "LinkedIn",
     src: "/assets/logo/linkedin.svg",
+    href: "https://id.linkedin.com/company/bemfisipunpad",
   },
   {
     label: "YouTube",
     src: "/assets/logo/yt.svg",
+    href: "https://www.youtube.com/@bemfisipunpad4007",
   },
   {
-    label: "LINE",
-    src: "/assets/logo/line.svg",
+    label: "X",
+    src: "/assets/logo/x.svg",
+    href: "https://x.com/bemfisipunpad",
   },
 ];
 
@@ -56,6 +61,7 @@ export default function Footer({}: FooterProps = {}) {
                 width={480}
                 height={160}
                 className="h-40 w-auto max-w-full object-contain object-center lg:object-left"
+                style={{ height: "auto" }}
               />
             </div>
           </div>
@@ -88,22 +94,22 @@ export default function Footer({}: FooterProps = {}) {
             aria-label="Media sosial BEM FISIP UNPAD"
           >
             {socialItems.map((item) => (
-              <span
+              <Link
                 key={item.label}
+                href={item.href ?? "#"}
+                target="_blank"
+                rel="noopener noreferrer"
                 title={item.label}
-                role="img"
-                aria-label={item.label}
                 className="text-white/80 transition-colors hover:text-white"
               >
                 <Image
                   src={item.src}
-                  alt=""
+                  alt={item.label}
                   width={28}
                   height={28}
-                  aria-hidden="true"
                   className="h-7 w-7"
                 />
-              </span>
+              </Link>
             ))}
           </div>
         </div>

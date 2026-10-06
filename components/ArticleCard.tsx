@@ -23,7 +23,7 @@ export default function ArticleCard({ post }: ArticleCardProps) {
   return (
     <Link
       href={`/post/${post.slug ?? post._id}`}
-      className="group relative flex flex-col md:flex-row md:min-h-60 w-full overflow-hidden bg-white text-black shadow-sm transition-shadow hover:shadow-md"
+      className="rounded-xl group relative flex flex-col md:flex-row md:min-h-60 w-full overflow-hidden bg-white text-black shadow-sm transition-shadow hover:shadow-md"
     >
       {/* 1. Bagian Gambar */}
       <div className="relative flex-none w-full h-48 sm:h-56 md:h-auto overflow-hidden border-b border-gray-100 order-1 md:order-2 md:w-[min(40%,399px)] lg:w-[min(33.33%,399px)] md:border-b-0 md:border-l">

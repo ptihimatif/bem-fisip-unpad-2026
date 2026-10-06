@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect, useMemo } from "react";
+import { useState, useRef, useEffect } from "react";
 import gsap from "gsap";
 import { SanityImage } from "@/components/SanityImage";
 import { SanityPortableText } from "@/components/SanityPortableText";
@@ -15,59 +15,64 @@ interface ProgramCarouselProps {
 export default function ProgramCarousel({ programs }: ProgramCarouselProps) {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const selectedProgram = programs.find((p) => p._id === selectedId);
+  const triggerRef = useRef<HTMLButtonElement | null>(null);
 
   const scrollRef = useRef<HTMLDivElement>(null);
   const itemRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
-  // Duplicate the programs array 4 times to create a massive track.
-  // Combined with the scroll-reset logic below, it creates a true infinite loop.
-  const MULTIPLIER = 4;
-  const infinitePrograms = useMemo(() => Array(MULTIPLIER).fill(programs).flat(), [programs]);
+  // Duplicate the programs array to create a track long enough to fake an
+  // infinite loop. Lowered from 15 -> 7: still plenty of buffer for arrow
+  // clicks and normal swipe momentum, but ~55% fewer DOM nodes/images.
+  const MULTIPLIER = 7;
+  const infinitePrograms = Array(MULTIPLIER).fill(programs).flat();
+  const middleCopyIndex = Math.floor(MULTIPLIER / 2);
 
-  useEffect(() => {
-    // Memindahkan posisi carousel ke tengah tanpa membuat seluruh layar web ikut turun
-    if (scrollRef.current && itemRefs.current.length > 0) {
-      const middleIndex = Math.floor((programs.length * MULTIPLIER) / 2);
-      const targetItem = itemRefs.current[middleIndex];
-      const container = scrollRef.current;
+  const jumpToMiddle = () => {
+    const middleIndex = Math.floor((programs.length * MULTIPLIER) / 2);
+    const target = itemRefs.current[middleIndex];
+    const container = scrollRef.current;
+    if (!target || !container) return;
+    container.scrollLeft =
+      target.offsetLeft - container.clientWidth / 2 + target.clientWidth / 2;
+  };
 
-      if (targetItem && container) {
-        // Hitung posisi horizontal elemen agar berada di tengah container
-        const centerPosition =
-          targetItem.offsetLeft -
-          container.clientWidth / 2 +
-          targetItem.clientWidth / 2;
-        container.scrollLeft = centerPosition;
-      }
-    }
-  }, [programs.length]);
-
-  const handleScroll = () => {
+  const wrapIfNeeded = () => {
     if (!scrollRef.current) return;
     const { scrollLeft, scrollWidth } = scrollRef.current;
-
     const threshold = scrollWidth / MULTIPLIER;
     if (scrollLeft < threshold || scrollLeft > scrollWidth - threshold * 2) {
-      scrollRef.current.style.scrollBehavior = "auto";
-
-      const middleIndex = Math.floor((programs.length * MULTIPLIER) / 2);
-      const targetItem = itemRefs.current[middleIndex];
-      const container = scrollRef.current;
-
-      if (targetItem && container) {
-        const centerPosition =
-          targetItem.offsetLeft -
-          container.clientWidth / 2 +
-          targetItem.clientWidth / 2;
-        container.scrollLeft = centerPosition;
-      }
-
-      setTimeout(() => {
-        if (scrollRef.current)
-          scrollRef.current.style.scrollBehavior = "smooth";
-      }, 50);
+      jumpToMiddle();
     }
   };
+
+  useEffect(() => {
+    jumpToMiddle();
+    const container = scrollRef.current;
+    if (!container) return;
+
+    // `scrollend` isn't supported on every browser in the wild yet (older
+    // Safari in particular). Without it wrapIfNeeded() never runs there,
+    // so the loop silently breaks once a user scrolls past the buffer.
+    const supportsScrollEnd = "onscrollend" in window;
+
+    if (supportsScrollEnd) {
+      container.addEventListener("scrollend", wrapIfNeeded);
+      return () => container.removeEventListener("scrollend", wrapIfNeeded);
+    }
+
+    // Debounced-scroll fallback for browsers without native `scrollend`.
+    let debounceTimer: ReturnType<typeof setTimeout>;
+    const handleScroll = () => {
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(wrapIfNeeded, 120);
+    };
+    container.addEventListener("scroll", handleScroll, { passive: true });
+    return () => {
+      clearTimeout(debounceTimer);
+      container.removeEventListener("scroll", handleScroll);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [programs.length]);
 
   const handleNext = () => {
     if (scrollRef.current) {
@@ -95,12 +100,23 @@ export default function ProgramCarousel({ programs }: ProgramCarouselProps) {
     }
   };
 
+  const openProgram = (id: string, el: HTMLButtonElement | null) => {
+    triggerRef.current = el;
+    setSelectedId(id);
+  };
+
+  const closeProgram = () => {
+    setSelectedId(null);
+    // Return focus to whatever card opened the modal.
+    triggerRef.current?.focus();
+  };
+
   return (
     <div className="relative mx-auto w-full max-w-7xl">
       {/* Desktop Navigation Buttons - Hidden on sm and md */}
       <button
         onClick={handlePrev}
-        className="absolute -left-12 top-1/2 z-10 -translate-y-1/2 hidden lg:flex cursor-pointer items-center justify-center text-white transition-transform hover:text-brand-yellow focus:outline-none"
+        className="absolute -left-12 top-1/2 z-10 -translate-y-1/2 hidden lg:flex cursor-pointer items-center justify-center text-white transition-transform hover:scale-110 hover:text-brand-yellow focus:outline-none"
         aria-label="Previous programs"
       >
         <svg
@@ -121,7 +137,7 @@ export default function ProgramCarousel({ programs }: ProgramCarouselProps) {
 
       <button
         onClick={handleNext}
-        className="absolute -right-12 top-1/2 z-10 -translate-y-1/2 hidden lg:flex cursor-pointer items-center justify-center text-white transition-transform hover:text-brand-yellow focus:outline-none"
+        className="absolute -right-12 top-1/2 z-10 -translate-y-1/2 hidden lg:flex cursor-pointer items-center justify-center text-white transition-transform hover:scale-110 hover:text-brand-yellow focus:outline-none"
         aria-label="Next programs"
       >
         <svg
@@ -140,61 +156,67 @@ export default function ProgramCarousel({ programs }: ProgramCarouselProps) {
         </svg>
       </button>
 
-      {/* 
+      {/*
         Snap Carousel Track:
         - Native swipe support (overflow-x-auto, snap-x)
         - Hides scrollbar
       */}
       <div
         ref={scrollRef}
-        onScroll={handleScroll}
-        className="flex gap-6 overflow-x-auto snap-x snap-mandatory scroll-smooth [&::-webkit-scrollbar]:hidden"
+        className="flex gap-6 overflow-x-auto snap-x snap-mandatory [&::-webkit-scrollbar]:hidden"
         style={{ scrollbarWidth: "none" }}
       >
-        {infinitePrograms.map((program, index) => (
-          <button
-            key={`${program._id}-${index}`}
-            ref={(el) => {
-              itemRefs.current[index] = el;
-            }}
-            data-card="true"
-            type="button"
-            onClick={() => setSelectedId(program._id)}
-            /* 
-              Responsive Layout: 
-              Default (Mobile): ~75vw (1 card centered + edges peeking)
-              sm: 45vw (2 cards centered + edges peeking)
-              lg: 22% (4 cards perfectly aligned with gap-6) 
-            */
-            className="group relative block w-[75vw] sm:w-[45vw] lg:w-[22%] shrink-0 snap-center cursor-pointer text-left focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-yellow"
-          >
-            {/* 1x1 Ratio with dimming effect (opacity-55 to opacity-100 on hover) */}
-            <div className="relative aspect-square bg-black/10">
-              <SanityImage
-                value={program.coverImage}
-                width={600}
-                height={600}
-                sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 80vw"
-                priority={false}
-                fallbackAlt={`Gambar ${program.name}`}
-                className="h-full w-full object-cover brightness-70 transition-brightness duration-300 group-hover:brightness-100"
-              />
-              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent px-5 pb-5 pt-20">
-                <h3 className="font-bold text-white text-base leading-snug drop-shadow-md">
-                  {program.name}
-                </h3>
+        {infinitePrograms.map((program, index) => {
+          // Only the middle copy is reachable by keyboard/screen reader;
+          // the other copies exist purely for the visual infinite-loop
+          // illusion and would otherwise flood tab order with duplicates.
+          const copyIndex = Math.floor(index / programs.length);
+          const isCanonical = copyIndex === middleCopyIndex;
+
+          return (
+            <button
+              key={`${program._id}-${index}`}
+              ref={(el) => {
+                itemRefs.current[index] = el;
+              }}
+              data-card="true"
+              type="button"
+              tabIndex={isCanonical ? 0 : -1}
+              aria-hidden={!isCanonical}
+              onClick={(e) => openProgram(program._id, e.currentTarget)}
+              /*
+                Responsive Layout:
+                Default (Mobile): ~75vw (1 card centered + edges peeking)
+                sm: 45vw (2 cards centered + edges peeking)
+                lg: 22% (4 cards perfectly aligned with gap-6)
+              */
+              className="rounded-lg group relative block w-[75vw] sm:w-[45vw] lg:w-[22%] shrink-0 snap-center cursor-pointer text-left focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-yellow"
+            >
+              {/* 1x1 Ratio with dimming effect (dims to 75%, full brightness on hover) */}
+              <div className="relative aspect-square bg-black/10">
+                <SanityImage
+                  value={program.coverImage}
+                  width={600}
+                  height={600}
+                  sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 80vw"
+                  priority={false}
+                  fallbackAlt={`Gambar ${program.name}`}
+                  className="h-full w-full object-cover brightness-75 transition duration-300 group-hover:brightness-100 rounded-lg"
+                />
+                <div className="absolute inset-x-0 bottom-0 bg-linear-to-t from-black/90 via-black/40 to-transparent px-5 pb-5 pt-20 rounded-lg">
+                  <h3 className="font-bold text-white text-base leading-snug drop-shadow-md">
+                    {program.name}
+                  </h3>
+                </div>
               </div>
-            </div>
-          </button>
-        ))}
+            </button>
+          );
+        })}
       </div>
 
       {/* GSAP 3D Modal */}
       {selectedProgram && (
-        <ProgramModal
-          program={selectedProgram}
-          onClose={() => setSelectedId(null)}
-        />
+        <ProgramModal program={selectedProgram} onClose={closeProgram} />
       )}
     </div>
   );
@@ -209,30 +231,36 @@ function ProgramModal({
 }) {
   const overlayRef = useRef<HTMLDivElement>(null);
   const cardContainerRef = useRef<HTMLDivElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const previouslyFocusedRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
+    previouslyFocusedRef.current = document.activeElement as HTMLElement;
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
+    closeButtonRef.current?.focus();
 
-    gsap.fromTo(
-      overlayRef.current,
-      { opacity: 0 },
-      { opacity: 1, duration: 0.3 },
-    );
-
-    gsap.fromTo(
-      cardContainerRef.current,
-      { rotationY: -180, scale: 0.5, opacity: 0 },
-      {
-        rotationY: 0,
-        scale: 1,
-        opacity: 1,
-        duration: 0.8,
-        ease: "back.out(1.2)",
-      },
-    );
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        overlayRef.current,
+        { opacity: 0 },
+        { opacity: 1, duration: 0.3 },
+      );
+      gsap.fromTo(
+        cardContainerRef.current,
+        { rotationY: -180, scale: 0.5, opacity: 0 },
+        {
+          rotationY: 0,
+          scale: 1,
+          opacity: 1,
+          duration: 0.8,
+          ease: "back.out(1.2)",
+        },
+      );
+    });
 
     return () => {
+      ctx.revert();
       document.body.style.overflow = previousOverflow;
     };
   }, []);
@@ -251,19 +279,53 @@ function ProgramModal({
     });
   };
 
+  // Escape-to-close + a minimal focus trap so keyboard users can't tab out
+  // of the modal into the carousel behind it.
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        handleClose();
+        return;
+      }
+      if (e.key !== "Tab" || !cardContainerRef.current) return;
+
+      const focusable = cardContainerRef.current.querySelectorAll<HTMLElement>(
+        'button, a[href], [tabindex]:not([tabindex="-1"])',
+      );
+      if (focusable.length === 0) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <div
       ref={overlayRef}
-      className="fixed inset-0 z-999 flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm"
       onClick={handleClose}
     >
       <div
         style={{ perspective: "1000px" }}
-        className="w-full max-w-2xl h-auto"
+        className="w-full max-w-2xl h-[85vh] md:h-150"
       >
         <div
           ref={cardContainerRef}
-          className="pb-10 relative h-full w-full bg-white shadow-2xl flex flex-col"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="program-modal-title"
+          className="relative h-full w-full bg-white shadow-2xl flex flex-col"
           onClick={(e) => e.stopPropagation()}
         >
           <div className="relative h-48 sm:h-64 shrink-0 bg-slate-100">
@@ -278,8 +340,9 @@ function ProgramModal({
             />
             {/* Unshaped 'X' Close Button with custom cursor on hover */}
             <button
+              ref={closeButtonRef}
               onClick={handleClose}
-              className="absolute right-5 top-5 cursor-pointer text-white drop-shadow-[0_1px_9px_rgba(0,0,0,0.5)] transition-all hover:drop-shadow-[0_4px_8px_rgba(0,0,0,0.2)] hover:scale-110 hover:text-white focus:outline-none"
+              className="absolute right-5 top-5 cursor-pointer text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] transition-colors hover:text-brand-yellow focus:outline-none"
               aria-label="Tutup"
             >
               <svg
@@ -292,7 +355,7 @@ function ProgramModal({
                 <path
                   strokeLinecap="square"
                   strokeLinejoin="bevel"
-                  strokeWidth={4}
+                  strokeWidth={2.5}
                   d="M6 18L18 6M6 6l12 12"
                 />
               </svg>
@@ -300,7 +363,10 @@ function ProgramModal({
           </div>
 
           <div className="flex-1 overflow-y-auto p-6 sm:p-8 text-[#000c23]">
-            <h3 className="mb-4 text-3xl font-extrabold pr-4 text-brand-blue">
+            <h3
+              id="program-modal-title"
+              className="mb-4 text-2xl font-extrabold sm:text-3xl text-brand-blue"
+            >
               {program.name}
             </h3>
 
@@ -315,7 +381,7 @@ function ProgramModal({
                 />
               </div>
             ) : (
-              <p className="text-black tracking-normal ">
+              <p className="text-black leading-relaxed">
                 {program.shortDescription ??
                   "Deskripsi program belum tersedia."}
               </p>
