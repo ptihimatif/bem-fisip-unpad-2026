@@ -53,12 +53,12 @@ export default async function AboutPage() {
   const members = membersResult.data ?? [];
 
   return (
-    <div className="min-h-screen bg-gray-50 text-slate-900 pt-24">
+    <div className="min-h-screen bg-brand-gradient text-white pt-24">
       <main className="mx-auto max-w-6xl space-y-14 px-6 py-12">
         <section aria-labelledby="about-title">
           <h1
             id="about-title"
-            className="text-4xl font-extrabold text-[var(--color-brand-blue)]"
+            className="text-4xl font-extrabold text-white"
           >
             Tentang BEM FISIP Unpad
           </h1>
@@ -74,7 +74,7 @@ export default async function AboutPage() {
           <section aria-labelledby="vision">
             <h2
               id="vision"
-              className="text-2xl font-bold text-[var(--color-brand-blue)]"
+              className="text-2xl font-bold text-brand-yellow"
             >
               Visi
             </h2>
@@ -85,13 +85,13 @@ export default async function AboutPage() {
           <section aria-labelledby="mission">
             <h2
               id="mission"
-              className="text-2xl font-bold text-[var(--color-brand-blue)]"
+              className="text-2xl font-bold text-brand-yellow"
             >
               Misi
             </h2>
             <ul className="mt-4 grid gap-3 md:grid-cols-2">
               {cabinet.missions.map((mission, index) => (
-                <li key={`${mission}-${index}`} className="border bg-white p-5">
+                <li key={`${mission}-${index}`} className="border border-white/10 bg-[#001949] p-5">
                   {mission}
                 </li>
               ))}
@@ -101,12 +101,12 @@ export default async function AboutPage() {
         <section aria-labelledby="units">
           <h2
             id="units"
-            className="text-2xl font-bold text-[var(--color-brand-blue)]"
+            className="text-2xl font-bold text-brand-yellow"
           >
             Bidang dan Departemen
           </h2>
           {units.length === 0 ? (
-            <p className="mt-4 bg-slate-100 p-4 text-slate-600">
+            <p className="mt-4 bg-[#001949] p-4 text-white/80">
               Belum ada struktur organisasi yang dipublikasikan.
             </p>
           ) : (
@@ -114,7 +114,7 @@ export default async function AboutPage() {
               {units.map((unit) => (
                 <article
                   key={unit._id}
-                  className="overflow-hidden border bg-white shadow-sm"
+                  className="overflow-hidden border border-white/10 bg-[#001949]"
                 >
                   <SanityImage
                     value={unit.coverImage}
@@ -126,7 +126,7 @@ export default async function AboutPage() {
                   />
                   <div className="p-5">
                     <h3 className="font-bold">{unit.officialName}</h3>
-                    <p className="mt-2 text-sm text-slate-600">
+                    <p className="mt-2 text-sm text-white/80">
                       {unit.description}
                     </p>
                   </div>
@@ -138,12 +138,12 @@ export default async function AboutPage() {
         <section aria-labelledby="team">
           <h2
             id="team"
-            className="text-2xl font-bold text-[var(--color-brand-blue)]"
+            className="text-2xl font-bold text-brand-yellow"
           >
             Fungsionaris
           </h2>
           {members.length === 0 ? (
-            <p className="mt-4 bg-slate-100 p-4 text-slate-600">
+            <p className="mt-4 bg-[#001949] p-4 text-white/80">
               Belum ada fungsionaris yang dipublikasikan.
             </p>
           ) : (
@@ -151,7 +151,7 @@ export default async function AboutPage() {
               {members.map((member) => (
                 <article
                   key={member._id}
-                  className="overflow-hidden border bg-white shadow-sm"
+                  className="overflow-hidden border border-white/10 bg-[#001949]"
                 >
                   <SanityImage
                     value={member.photo}
@@ -163,7 +163,7 @@ export default async function AboutPage() {
                   />
                   <div className="p-5">
                     <h3 className="font-bold">{member.name}</h3>
-                    <p className="mt-1 text-sm text-[var(--color-brand-blue)]">
+                    <p className="mt-1 text-sm text-brand-yellow">
                       {member.role}
                     </p>
                   </div>
