@@ -119,8 +119,8 @@ function LogoDisplay({ parts, cycle }: Pick<Explanation, "parts" | "cycle">) {
     ).matches;
     if (!cycle || reduceMotion) return;
 
-    setTick(0);
-    const id = setInterval(() => setTick((t) => (t ?? 0) + 1), CYCLE_MS);
+    let i = 0;
+    const id = setInterval(() => setTick(i++), CYCLE_MS);
     return () => {
       clearInterval(id);
       setTick(null);
