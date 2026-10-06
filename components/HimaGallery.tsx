@@ -61,7 +61,7 @@ export default function HimaGallery({ associations }: HimaGalleryProps) {
               <button
                 key={item._id}
                 onClick={() => handleSelect(index)}
-                className={`cursor-pointer relative flex w-full aspect-square items-center justify-center bg-white p-3 transition-all duration-250 hover:brightness-100 brightness-75 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-brand-yellow)] sm:p-4 lg:p-5 ${
+                className={`rounded-lg cursor-pointer relative flex w-full aspect-square items-center justify-center bg-white p-3 transition-all duration-250 hover:brightness-100 brightness-75 focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-brand-yellow sm:p-4 lg:p-5 ${
                   isSelected
                     ? "scale-102 md:scale-105 z-10 brightness-100"
                     : "shadow-sm hover:shadow-md"
@@ -77,7 +77,7 @@ export default function HimaGallery({ associations }: HimaGalleryProps) {
                     className="mx-auto h-auto max-w-[80%] object-contain"
                   />
                 ) : (
-                  <span className="font-bold text-[#003089] text-center text-sm md:text-base">
+                  <span className="font-bold text-brand-blue text-center text-sm md:text-base">
                     {item.abbreviation || item.officialName}
                   </span>
                 )}
@@ -92,7 +92,7 @@ export default function HimaGallery({ associations }: HimaGalleryProps) {
         <div
           ref={detailCardRef}
           key={selectedIndex}
-          className="animate-smooth-appear group relative flex w-full flex-col overflow-hidden bg-gradient-to-r from-[#001949] to-[#fffff] text-white shadow-md md:h-auto md:flex-row scroll-mt-28"
+          className="rounded-lg animate-smooth-appear group relative flex w-full flex-col overflow-hidden bg-linear-to-r from-[#001949] to-[#fffff] text-white shadow-md md:h-auto md:flex-row scroll-mt-28"
         >
           {/* Left Side: White Logo Box */}
           <div className="relative flex h-48 w-full flex-none items-center justify-center border-b border-gray-100/20 bg-white sm:h-56 md:h-auto md:w-[280px] lg:w-[320px] md:border-r md:border-b-0 p-4 sm:p-6">
@@ -107,7 +107,7 @@ export default function HimaGallery({ associations }: HimaGalleryProps) {
                 priority={true}
               />
             ) : (
-              <span className="font-bold text-[#003089] text-3xl text-center">
+              <span className="font-bold text-brand-blue text-3xl text-center">
                 {selectedAssociation.abbreviation ||
                   selectedAssociation.officialName}
               </span>

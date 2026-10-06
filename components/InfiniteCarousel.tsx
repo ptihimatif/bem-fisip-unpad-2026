@@ -1,4 +1,6 @@
-import type { ReactNode } from "react";
+"use client";
+
+import { Children, cloneElement, isValidElement, type ReactNode } from "react";
 
 interface InfiniteCarouselProps {
   children: ReactNode;
@@ -11,19 +13,20 @@ export default function InfiniteCarousel({
   ariaLabel,
   pauseOnHover = true,
 }: InfiniteCarouselProps) {
+  const clonedChildren = Children.map(children, (child, i) =>
+    isValidElement(child) ? cloneElement(child, { key: `clone-${i}` }) : child,
+  );
+
   return (
     <div
-      className={`infinite-carousel flex items-center overflow-hidden bg-linear-to-l from-brand-yellow to-brand-blue/50 ${
-        pauseOnHover ? "" : "infinite-carousel--always-moving"
-      }`}
+      className={`infinite-carousel overflow-hidden px-6${pauseOnHover ? "" : " infinite-carousel--always-moving"}`}
       role="region"
       aria-label={ariaLabel}
     >
-      <div className="infinite-carousel-track flex w-max items-center gap-2 px-6 pb-2 pt-2">
-        <div className="flex shrink-0 gap-2">{children}</div>
-
-        <div className="flex shrink-0 gap-2" aria-hidden="true">
-          {children}
+      <div className="infinite-carousel-track flex w-max pb-4">
+        <div className="flex shrink-0 gap-2 pr-2">{children}</div>
+        <div className="flex shrink-0 gap-2 pr-2" aria-hidden="true">
+          {clonedChildren}
         </div>
       </div>
     </div>

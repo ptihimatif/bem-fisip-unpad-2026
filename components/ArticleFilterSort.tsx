@@ -24,7 +24,7 @@ export default function ArticleFilterSort({
 }: ArticleFilterSortProps) {
   return (
     <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
-      <div className="flex border border-white">
+      <div className="flex border border-white rounded-lg overflow-hidden">
         <Link
           href={buildUrl({ category: "semua" })}
           className={getButtonClass(currentCategory === "semua")}
@@ -49,7 +49,7 @@ export default function ArticleFilterSort({
         </Link>
       </div>
 
-      <div className="flex border border-white">
+      <div className="flex border border-white rounded-lg overflow-hidden">
         <Link
           href={buildUrl({ sort: "terbaru" })}
           className={getButtonClass(currentSort === "terbaru")}
