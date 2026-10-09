@@ -226,7 +226,12 @@ export type CabinetProfile = {
   profileVideoUrl?: string;
   vision?: string;
   missions?: Array<string>;
-  values?: Array<string>;
+  values?: Array<{
+    title: string;
+    description: string;
+    _type: "cabinetValue";
+    _key: string;
+  }>;
   workCulture?: Array<string>;
   logoPhilosophy?: Array<{
     title: string;
@@ -559,7 +564,7 @@ export type SITE_SETTINGS_QUERY_RESULT =
 
 // Source: sanity/lib/queries.ts
 // Variable: CABINET_PROFILE_QUERY
-// Query: *[_id == "cabinetProfile-2026" && term == $term][0]{    _id, cabinetName, tagline, overview, profileVideoUrl, vision, missions, values,    workCulture, logoPhilosophy[]{_key, title, description}  }
+// Query: *[_id == "cabinetProfile-2026" && term == $term][0]{    _id, cabinetName, tagline, overview, profileVideoUrl, vision, missions,    values[]{_key, title, description},    workCulture, logoPhilosophy[]{_key, title, description}  }
 export type CABINET_PROFILE_QUERY_RESULT =
   | {
       _id: string;
@@ -599,7 +604,11 @@ export type CABINET_PROFILE_QUERY_RESULT =
       profileVideoUrl: string | null;
       vision: string | null;
       missions: Array<string> | null;
-      values: Array<string> | null;
+      values: Array<{
+        _key: string;
+        title: string;
+        description: string;
+      }> | null;
       workCulture: Array<string> | null;
       logoPhilosophy: Array<{
         _key: string;
@@ -1100,7 +1109,7 @@ export type STUDENT_ASSOCIATIONS_QUERY_RESULT = Array<{
 declare global {
   interface SanityQueries {
     '\n  *[_id == "siteSettings-2026" && term == $term][0]{\n    _id, organizationName, term, seoTitle, seoDescription, ogImage {\n  asset->{_id, url, metadata {lqip, dimensions {width, height}}},\n  alt,\n  attribution,\n  crop,\n  hotspot\n},\n    officialEmail, officialAddress, socialLinks[]{platform, url}, fisipCareCenterUrl\n  }\n': SITE_SETTINGS_QUERY_RESULT;
-    '\n  *[_id == "cabinetProfile-2026" && term == $term][0]{\n    _id, cabinetName, tagline, overview, profileVideoUrl, vision, missions, values,\n    workCulture, logoPhilosophy[]{_key, title, description}\n  }\n': CABINET_PROFILE_QUERY_RESULT;
+    '\n  *[_id == "cabinetProfile-2026" && term == $term][0]{\n    _id, cabinetName, tagline, overview, profileVideoUrl, vision, missions,\n    values[]{_key, title, description},\n    workCulture, logoPhilosophy[]{_key, title, description}\n  }\n': CABINET_PROFILE_QUERY_RESULT;
     '\n  *[_type == "program" && term == $term && isFeatured == true && organizationUnit->term == $term]\n  | order(displayOrder asc, name asc)[0...6]{\n    _id, name, "slug": slug.current, shortDescription, description, coverImage {\n  asset->{_id, url, metadata {lqip, dimensions {width, height}}},\n  alt,\n  attribution,\n  crop,\n  hotspot\n},\n    externalLink, "organizationUnit": organizationUnit->{_id, officialName, abbreviation, "slug": slug.current}\n  }\n': FEATURED_PROGRAMS_QUERY_RESULT;
     '\n  *[_type == "program" && term == $term && slug.current == $slug && organizationUnit->term == $term][0]{\n    _id, name, "slug": slug.current, shortDescription, description, coverImage {\n  asset->{_id, url, metadata {lqip, dimensions {width, height}}},\n  alt,\n  attribution,\n  crop,\n  hotspot\n},\n    startDate, endDate, externalLink,\n    "organizationUnit": organizationUnit->{_id, officialName, abbreviation, "slug": slug.current}\n  }\n': PROGRAM_BY_SLUG_QUERY_RESULT;
     '\n  *[_type == "post" && term == $term && defined(slug.current)]\n  | order(publishedAt desc)[0...6]{\n    _id, judul, "slug": slug.current, postCategory, publishedAt, excerpt,\n    image {\n  asset->{_id, url, metadata {lqip, dimensions {width, height}}},\n  alt,\n  attribution,\n  crop,\n  hotspot\n}, instagramUrl\n  }\n': PUBLICATION_CARDS_QUERY_RESULT;

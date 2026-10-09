@@ -14,7 +14,23 @@ export const cabinetProfile = defineType({
     httpsUrlField("profileVideoUrl", "Profile Video URL"),
     defineField({ name: "vision", title: "Vision", type: "text" }),
     defineField({ name: "missions", title: "Missions", type: "array", of: [defineArrayMember({ type: "string" })] }),
-    defineField({ name: "values", title: "Values", type: "array", of: [defineArrayMember({ type: "string" })] }),
+    defineField({
+      name: "values",
+      title: "Nilai",
+      type: "array",
+      of: [
+        defineArrayMember({
+          name: "cabinetValue",
+          title: "Nilai",
+          type: "object",
+          fields: [
+            defineField({ name: "title", title: "Nama Nilai", type: "string", validation: (rule) => rule.required() }),
+            defineField({ name: "description", title: "Penjelasan", type: "text", validation: (rule) => rule.required() }),
+          ],
+          preview: { select: { title: "title", subtitle: "description" } },
+        }),
+      ],
+    }),
     defineField({ name: "workCulture", title: "Work Culture Points", type: "array", of: [defineArrayMember({ type: "string" })] }),
     defineField({ name: "logoPhilosophy", title: "Logo Philosophy", type: "array", of: [defineArrayMember({ type: "object", fields: [defineField({ name: "title", title: "Element Name", type: "string", validation: (rule) => rule.required() }), defineField({ name: "description", title: "Description", type: "text", validation: (rule) => rule.required() })] })] }),
   ],

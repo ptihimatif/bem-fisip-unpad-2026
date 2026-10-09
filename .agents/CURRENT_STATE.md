@@ -1,8 +1,12 @@
 # Current state
 
-Last updated: 2026-10-06
+Last updated: 2026-10-08
 
-## Latest milestone: About colors for frontend handoff
+## Latest milestone: cabinet values with explanations
+
+The maintainer supplied four client-approved Nilai descriptions and requested publication. The `cabinetProfile` schema now models each value as a title/description object; its GROQ projection and generated types were updated. The existing `cabinetProfile-2026` document in `jcpcptq3/production` was backed up, revision-checked, and patched only in `values`. Authenticated readback and a published GROQ query verified all four exact entries. Lint, typecheck, tests, build, and TypeGen passed. The About page does not render this field yet; the frontend partner can use the new query shape, and the embedded Studio needs the normal code deployment to expose the new fields. See `.agents/tasks/2026-10-08-cabinet-values.md`.
+
+## Previous milestone: About colors for frontend handoff
 
 The maintainer requested a minimal local About-page color fix before personally merging to `dev` and handing final UI work to the frontend partner. On `feat/members`, `app/about/page.tsx` now has the same class-only blue/yellow treatment as the previously reviewed client-preview commit `d306099`. Content, layout, data fetching, and other pages remain unchanged. Lint, typecheck, all three tests, production build, and the Impeccable detector passed; the fresh About build includes all 268 imported member names. No merge, push, or deployment occurred. See `.agents/tasks/2026-10-06-about-colors-handoff.md`.
 
