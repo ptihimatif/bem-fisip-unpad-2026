@@ -19,7 +19,8 @@ export const SITE_SETTINGS_QUERY = defineQuery(`
 
 export const CABINET_PROFILE_QUERY = defineQuery(`
   *[_id == "cabinetProfile-2026" && term == $term][0]{
-    _id, cabinetName, tagline, overview, profileVideoUrl, vision, missions, values,
+    _id, cabinetName, tagline, overview, profileVideoUrl, vision, missions,
+    values[]{_key, title, description},
     workCulture, logoPhilosophy[]{_key, title, description}
   }
 `);
