@@ -8,7 +8,9 @@ const instagramUrl = "https://www.instagram.com/bemfisipunpad/";
 declare global {
   interface Window {
     instgrm?: {
-      process: () => void;
+      Embeds?: {
+        process: () => void;
+      };
     };
   }
 }
@@ -17,8 +19,8 @@ export default function InstagramEmbed() {
   const processedRef = useRef(false);
 
   const processEmbed = useCallback(() => {
-    if (typeof window !== "undefined" && window.instgrm?.process) {
-      window.instgrm.process();
+    if (typeof window !== "undefined" && window.instgrm?.Embeds?.process) {
+      window.instgrm.Embeds.process();
       processedRef.current = true;
     }
   }, []);
@@ -31,9 +33,17 @@ export default function InstagramEmbed() {
     }
 
     // Fallback: poll for instgrm availability in case onLoad didn't fire
+    // (e.g. SPA navigation re-mounts this component after embed.js is
+    // already cached, so next/script's onLoad never fires again).
+    let attempts = 0;
+    const maxAttempts = 20; // ~10s at 500ms, then give up instead of polling forever
+
     const interval = setInterval(() => {
-      if (window.instgrm?.process) {
+      attempts += 1;
+      if (window.instgrm?.Embeds?.process) {
         processEmbed();
+        clearInterval(interval);
+      } else if (attempts >= maxAttempts) {
         clearInterval(interval);
       }
     }, 500);

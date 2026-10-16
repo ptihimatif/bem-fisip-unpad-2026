@@ -1,9 +1,7 @@
-import LoadingSpinner from "@/components/LoadingSpinner";
-
 export default function PageLoading() {
   return (
     <div className="flex min-h-screen items-center justify-center">
-      <LoadingSpinner />
+      <p className="text-neutral-500">Memuat</p>
     </div>
   );
 }

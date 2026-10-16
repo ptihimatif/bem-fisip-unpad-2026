@@ -1,13 +1,15 @@
 import Link from "next/link";
-import Image from "next/image";
+import ParallaxImage from "@/components/ParallaxImage";
 import ArticleCard from "@/components/ArticleCard";
 import { SanityImage } from "@/components/SanityImage";
+import { SanityPortableText } from "@/components/SanityPortableText";
 import Footer from "@/components/Footer";
 import InfiniteCarousel from "@/components/InfiniteCarousel";
 import dynamic from "next/dynamic";
 const ProgramCarousel = dynamic(() => import("@/components/ProgramCarousel"));
 const InstagramEmbed = dynamic(() => import("@/components/InstagramEmbed"));
 import ScrollToSectionButton from "@/components/ScrollToSectionButton";
+import type { PortableTextBlock } from "next-sanity";
 import { sanityFetch } from "@/sanity/lib/live";
 import { safeExternalUrl } from "@/sanity/lib/urls";
 import type {
@@ -92,13 +94,14 @@ export default async function Home() {
     >
       {/* HERO SECTION - FULL SCREEN */}
       <section className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-4 pt-28 pb-16 text-center">
-        <Image
+        <ParallaxImage
           src="/assets/LOGO KABINET/logo-full.png"
           alt=""
           width={800}
           height={800}
+          speed={0.12}
           className="pointer-events-none absolute right-[-50vw] top-1/2 z-0 h-[58vh] w-auto -translate-y-1/2 object-contain opacity-20 sm:right-[-25vw] sm:h-[68vh] md:right-[-30vw] lg:right-[-18vw] lg:h-[82vh]"
-          style={{ height: "auto" }}
+          style={{ width: "auto" }}
           aria-hidden="true"
           priority
         />
@@ -145,11 +148,12 @@ export default async function Home() {
         id="mengapa-pendar-mentari"
         className="relative isolate scroll-mt-8 max-w-7xl mx-auto px-6 py-24 flex flex-col lg:grid lg:grid-cols-2 gap-8 lg:gap-16 items-center"
       >
-        <Image
+        <ParallaxImage
           src="/assets/home/asset1.png"
           alt=""
           width={864}
           height={960}
+          speed={0.18}
           className="hidden lg:block pointer-events-none absolute right-[-18%] top-[56%] z-0 h-[105%] w-[52%] max-w-none -translate-y-1/2 object-contain opacity-75 lg:right-[-8%] lg:top-[56%] lg:h-[120%] lg:w-[42%]"
           aria-hidden="true"
         />
@@ -183,20 +187,10 @@ export default async function Home() {
           >
             Mengapa Pendar Mentari?
           </h2>
-          <p className="text-base text-white sm:text-lg text-justify">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer
-            vitae justo nec arcu tincidunt consequat. Sed at libero vel nisl
-            posuere facilisis, sementara semangat kolaborasi terus tumbuh di
-            tengah mahasiswa FISIP. Lorem ipsum dolor sit amet, consectetur
-            adipiscing elit. Integer vitae justo nec arcu tincidunt consequat.
-            Sed at libero vel nisl posuere facilisis, sementara semangat
-            kolaborasi terus tumbuh di tengah mahasiswa FISIP.
-          </p>
-          <p className="text-base text-white sm:text-lg text-justify">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer
-            vitae justo nec arcu tincidunt consequat. Sed at libero vel nisl
-            posuere facilisis.
-          </p>
+          <SanityPortableText
+            blocks={(cabinet?.overview ?? []) as unknown as PortableTextBlock[]}
+            className="text-base text-white sm:text-lg text-justify"
+          />
           <Link
             href="/about"
             className="inline-flex items-center gap-2 font-bold text-white transition-colors hover:text-white text-sm"
@@ -223,11 +217,12 @@ export default async function Home() {
       {/* PROGRAM KAMI */}
       <section className="relative py-20 mt-20">
         <div className="pointer-events-none absolute inset-0 overflow-hidden">
-          <Image
+          <ParallaxImage
             src="/assets/home/asset2.png"
             alt=""
             width={864}
             height={960}
+            speed={0.15}
             className="absolute left-1/2 top-1/2 z-0 h-full w-auto max-w-none -translate-x-1/2 -translate-y-1/2 object-contain opacity-80"
             aria-hidden="true"
           />
@@ -338,12 +333,15 @@ export default async function Home() {
 
       {/* ARTIKEL DAN KAJIAN */}
       <section className="relative isolate z-1 overflow py-20">
-        <Image
+        <ParallaxImage
           src="/assets/home/asset5.png"
           alt=""
           width={1200}
           height={1200}
+          speed={0.15}
           className="pointer-events-none absolute -left-1/4 top-1/2 translate-y-[-60%] h-[125%] w-auto max-w-none z-0 opacity-80"
+          style={{ width: "auto" }}
+          aria-hidden="true"
         />
         <div className="relative z-10 max-w-6xl mx-auto px-6 ">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-12">

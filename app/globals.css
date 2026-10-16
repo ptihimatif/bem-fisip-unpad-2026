@@ -28,7 +28,7 @@ body {
 }
 
 .infinite-carousel-track {
-  animation: infinite-carousel-scroll 48s linear infinite;
+  animation: infinite-carousel-scroll var(--infinite-carousel-duration, 48s) linear infinite;
   backface-visibility: hidden;
   will-change: transform;
 }

@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import Image from "next/image";
+import ParallaxImage from "@/components/ParallaxImage";
 
 import {
   type Explanation,
@@ -11,7 +12,6 @@ import {
   STEP_VH,
   CYCLE_MS,
   PARTS_DIR,
-  GRADIENT,
   SIZES,
 } from "./logo-section";
 
@@ -26,9 +26,11 @@ const GLOW =
 
 function Wordmark({
   className,
+  style,
   priority = false,
 }: {
   className: string;
+  style?: CSSProperties;
   priority?: boolean;
 }) {
   return (
@@ -37,7 +39,9 @@ function Wordmark({
       alt="Pendar Mentari"
       width={1090}
       height={480}
+      sizes="(min-width: 1024px) 480px, 80vw"
       className={className}
+      style={style}
       priority={priority}
     />
   );
@@ -56,39 +60,13 @@ function CardText({
         {title}
       </h2>
 
-      <p className="text-center text-sm leading-relaxed text-white sm:text-left sm:text-base lg:leading-normal lg:text-justify">
+      <p className="text-center text-sm leading-relaxed text-white sm:text-left sm:text-base lg:leading-normal xl:text-justify">
         {description}
       </p>
     </div>
   );
 }
 
-// Mobile only: tells people they can swipe. Shown on the intro card.
-function ScrollHint({ visible }: { visible: boolean }) {
-  return (
-    <div
-      aria-hidden
-      className={`pointer-events-none absolute inset-x-0 bottom-[max(1.5rem,env(safe-area-inset-bottom))] flex flex-col items-center gap-1 text-xs text-white/70 transition-opacity duration-300 lg:hidden ${
-        visible ? "opacity-100" : "opacity-0"
-      }`}
-    >
-      Geser ke atas
-      <svg
-        width="20"
-        height="20"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        className="motion-safe:animate-bounce"
-      >
-        <path d="m18 15-6-6-6 6" />
-      </svg>
-    </div>
-  );
-}
 
 // Mobile only: one dot per card, so people can see where they are.
 function ProgressDots({ active }: { active: number }) {
@@ -176,17 +154,6 @@ export default function LogoSection() {
 
     const desktop = window.matchMedia("(min-width: 1024px)");
 
-    // Mobile: native scroll snapping. The anchors rendered below have
-    // scroll-snap-stop: always, so one swipe can never skip past a card,
-    // however hard it's flicked. 'proximity' (not 'mandatory') so people can
-    // still scroll freely into and out of the section.
-    const applySnap = () => {
-      document.documentElement.style.scrollSnapType = desktop.matches
-        ? ""
-        : "y proximity";
-    };
-    applySnap();
-    desktop.addEventListener("change", applySnap);
     let locked = false; // true while a snap (desktop) or step (mobile) animates
     let index = 0; // mobile: the card currently shown
     let timer: ReturnType<typeof setTimeout>;
@@ -310,8 +277,6 @@ export default function LogoSection() {
       window.removeEventListener("resize", update);
       sticky.removeEventListener("touchstart", onTouchStart);
       sticky.removeEventListener("touchmove", onTouchMove);
-      desktop.removeEventListener("change", applySnap);
-      document.documentElement.style.scrollSnapType = "";
       clearTimeout(timer);
     };
   }, []);
@@ -330,10 +295,34 @@ export default function LogoSection() {
       <div
         ref={stickyRef}
         className="sticky top-0 h-[100svh] w-full overflow-hidden"
-        style={{ background: GRADIENT }}
       >
+        {/* Big decorative glow in the top-right corner */}
+        <ParallaxImage
+          src="/assets/about/asset2.png"
+          alt=""
+          width={1209}
+          height={1209}
+          speed={0.2}
+          loading="eager"
+          className="pointer-events-none absolute -right-[10%] -top-[15%] z-0 hidden lg:block h-[120%] w-auto max-w-none object-contain opacity-60"
+          style={{ width: "auto" }}
+          aria-hidden="true"
+        />
+
+        {/* Matching glow on the left edge */}
+        <ParallaxImage
+          src="/assets/about/asset1.png"
+          alt=""
+          width={840}
+          height={840}
+          speed={-0.15}
+          className="pointer-events-none absolute -left-[5%] top-[45%] z-0 hidden h-[45%] w-auto max-w-none object-contain opacity-60 xl:block"
+          style={{ width: "auto" }}
+          aria-hidden="true"
+        />
+
         {/* Mobile: pt pushes the whole block down so it sits closer to centre */}
-        <div className="flex h-full w-full flex-col pt-[8svh] lg:grid lg:grid-cols-2 lg:pt-0">
+        <div className="relative z-10 flex h-full w-full flex-col pt-[8svh] lg:grid lg:grid-cols-2 lg:pt-0">
           {/* Text: below the logo on mobile, left column on desktop */}
           <div className="relative min-h-0 flex-1 overflow-hidden lg:h-full">
             {/* Mobile: cards stacked in place, one visible at a time */}
@@ -353,7 +342,10 @@ export default function LogoSection() {
                   }`}
                 >
                   {i === 0 ? (
-                    <Wordmark className="h-auto w-4/5 max-w-sm" />
+                    <Wordmark
+                      className="h-auto w-4/5 max-w-sm"
+                      style={{ width: "100%", height: "auto" }}
+                    />
                   ) : (
                     <CardText title={title} description={description} />
                   )}
@@ -377,6 +369,7 @@ export default function LogoSection() {
                     <div className="-mr-10 flex w-full justify-end">
                       <Wordmark
                         className="h-[480px] w-auto object-contain"
+                        style={{ width: "auto", height: "480px" }}
                         priority
                       />
                     </div>
@@ -395,20 +388,7 @@ export default function LogoSection() {
         </div>
 
         <ProgressDots active={active} />
-        <ScrollHint visible={active === 0} />
       </div>
-
-      {/* Mobile: one invisible snap stop per card, at that card's scroll offset.
-          snap-always = the browser must stop at each one, so a hard flick
-          moves exactly one card. */}
-      {explanations.map((_, i) => (
-        <div
-          key={i}
-          aria-hidden
-          className="pointer-events-none absolute left-0 h-px w-px snap-start snap-always lg:hidden"
-          style={{ top: `${i * STEP_VH}vh` }}
-        />
-      ))}
     </section>
   );
 }

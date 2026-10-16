@@ -61,7 +61,7 @@ export default function Footer({}: FooterProps = {}) {
                 width={480}
                 height={160}
                 className="h-40 w-auto max-w-full object-contain object-center lg:object-left"
-                style={{ height: "auto" }}
+                style={{ width: "auto" }}
               />
             </div>
           </div>

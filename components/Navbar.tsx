@@ -41,7 +41,7 @@ export default function Navbar() {
               href={item.href}
               target={item.external ? "_blank" : undefined}
               rel={item.external ? "noopener noreferrer" : undefined}
-              className="text-md font-bold text-white/80 hover:text-white transition-colors duration-200"
+              className="text-md font-bold text-white/80 hover:text-white hover:underline transition-all duration-300"
             >
               {item.label}
             </Link>
