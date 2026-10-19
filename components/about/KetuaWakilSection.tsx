@@ -39,10 +39,13 @@ export default function KetuaWakilSection({ members }: KetuaWakilSectionProps) {
       <SectionHeading id="ketua-wakil-heading">{HEADING}</SectionHeading>
 
       {/* flex + justify-center keeps one or two cards centered under the heading */}
-      <div className="flex flex-wrap justify-center gap-6">
-        {topMembers.map((member) => (
-          <LeadershipCard key={member._id} member={member} />
-        ))}
+      <div className="relative flex flex-wrap justify-center gap-15">
+        {/* Decorative background asset (from home) between the two cards */}
+        <div className="relative z-10 flex flex-wrap justify-center gap-15">
+          {topMembers.map((member) => (
+            <LeadershipCard key={member._id} member={member} />
+          ))}
+        </div>
       </div>
     </section>
   );

@@ -23,6 +23,11 @@ const BIDANG_HEAD_ROLE = /^Kepala Bidang\b/i;
 // "Kepala Biro ..." and "Wakil Kepala Biro ..."
 const UNIT_LEAD_ROLE = /^(?:Wakil )?Kepala (?:Departemen|Biro)\b/i;
 
+// Both carousels share one card width, so matching their visual speed (px/s)
+// means scaling the loop duration with the number of cards. Calibrated so the
+// larger "Kepala & Wakil Kepala Departemen & Biro" carousel keeps its ~80s loop.
+const CAROUSEL_SECONDS_PER_CARD = 80 / 39;
+
 /* ------------------------------------------------------------------ */
 /* Sekretariat Umum + Kepala Bidang                                    */
 /* ------------------------------------------------------------------ */
@@ -99,7 +104,11 @@ function CarouselSection({
       {/* Full-bleed: break out of the section padding so the carousel spans
           the whole viewport width, matching the hero/mapres carousels. */}
       <div className="relative left-1/2 w-screen -translate-x-1/2">
-        <InfiniteCarousel ariaLabel={ariaLabel} duration={80} gap="gap-6">
+        <InfiniteCarousel
+          ariaLabel={ariaLabel}
+          duration={Math.max(8, Math.round(members.length * CAROUSEL_SECONDS_PER_CARD))}
+          gap="gap-6"
+        >
           {members.map((member) => (
             <LeadershipCard key={member._id} member={member} />
           ))}
