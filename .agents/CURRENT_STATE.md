@@ -1,8 +1,12 @@
 # Current state
 
-Last updated: 2026-10-16
+Last updated: 2026-10-17
 
-## Latest milestone: About "Departemen dan Biro" button section
+## Latest milestone: `/penjelasan/[birdep]` restyled to the house style
+
+The department/bureau detail page — the last page still on the old light theme — now matches the shared dark house style: `bg-brand-gradient` root, a "Kembali ke Departemen dan Biro" link to `/about#departemen-biro-heading`, `text-depth` h1 with the full-bleed white divider, a black-on-yellow unit-kind tag (labels mapped for all four `unitKind` values) plus abbreviation, a bordered cover image (`max-w-3xl`, still `priority`), the description, and yellow sub-headings with `border-white/15 bg-white/5` cards for Program Kerja and Meet the Team; empty states are dark now too. No query, schema, content, metadata, or external state changed. Typecheck, lint, 3/3 tests, Impeccable detector, production build, and built-server fetches (`biro-keuangan`, `departemen-akademik-dan-keprofesian`, `ekonomi-kreatif`: 200 + all key classes; old light-theme markers absent) passed. The About grid heading also got `scroll-mt-24` so the back-link anchor lands below the fixed navbar. Known pre-existing behavior: an unknown slug's streaming shell reports HTTP 200 while rendering the not-found content (documented in `2026-09-05-integration-hardening-remediation.md`). See `.agents/tasks/2026-10-17-penjelasan-detail-restyle.md`.
+
+## Previous milestone: About "Departemen dan Biro" button section
 
 The About page's last section was replaced. The 23-unit "Bidang dan Departemen" cover-image grid is gone; `components/about/DepartemenBiroSection.tsx` now renders one container with a centered yellow heading (same style as the leadership sections) and 17 buttons — one per published Departemen (13) and Biro (4) — each a `next/link` card to `/penjelasan/[slug]` with a unique mesh background from `public/assets/about/depbir` (19 supplied frames, fixed shuffle, no repeats), the unit name only, a `bg-brand-blue/75` contrast wash, hover/focus states, and reduced-motion safety. `app/about/page.tsx` renders the component inside the existing `<main>`; its superseded `SectionHeading`/`EmptyState` helpers and unused imports were removed. No Sanity schema, content, query, deployment, or production state changed. Typecheck, lint, tests, Impeccable detector, production build, and a built `/about` HTML smoke check (17 distinct links, 17 unique backgrounds, old copy absent) passed. See `.agents/tasks/2026-10-16-about-departemen-biro.md`.
 

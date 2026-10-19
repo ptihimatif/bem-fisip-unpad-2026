@@ -1,7 +1,9 @@
 import { SanityImage } from "@/components/SanityImage";
 import type { MEMBERS_QUERY_RESULT } from "@/sanity.types";
 
-type Member = MEMBERS_QUERY_RESULT[number];
+type Member =
+  | MEMBERS_QUERY_RESULT[number]
+  | Omit<MEMBERS_QUERY_RESULT[number], "organizationUnit">;
 
 /* ------------------------------------------------------------------ */
 /* Shared look: both leadership groups use these, so they cannot drift */
