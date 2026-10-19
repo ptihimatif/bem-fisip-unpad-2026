@@ -1,5 +1,4 @@
 import type { ReactNode } from "react";
-import Image from "next/image";
 
 import { LeadershipCard } from "@/components/about/LeadershipCard";
 import type { MEMBERS_QUERY_RESULT } from "@/sanity.types";
