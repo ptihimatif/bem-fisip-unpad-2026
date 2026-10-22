@@ -1800,12 +1800,33 @@
         },
         "optional": false
       },
-      "achievementTitle": {
+      "studyProgram": {
         "type": "objectAttribute",
         "value": {
           "type": "string"
         },
         "optional": false
+      },
+      "cohortYear": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "number"
+        },
+        "optional": false
+      },
+      "rank": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "number"
+        },
+        "optional": true
+      },
+      "achievementTitle": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
       },
       "achievementYear": {
         "type": "objectAttribute",
@@ -1873,7 +1894,7 @@
             }
           }
         },
-        "optional": false
+        "optional": true
       },
       "instagramUrl": {
         "type": "objectAttribute",

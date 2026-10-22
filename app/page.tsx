@@ -260,7 +260,7 @@ export default async function Home() {
           {mapres.length > 0 ? (
             <InfiniteCarousel ariaLabel="Mahasiswa berprestasi">
               {mapres.map((item: MAPRES_QUERY_RESULT[number]) => {
-                const dimensions = item.image.asset?.metadata?.dimensions;
+                const dimensions = item.image?.asset?.metadata?.dimensions;
                 const aspectRatio = dimensions
                   ? `${dimensions.width} / ${dimensions.height}`
                   : "3 / 4";

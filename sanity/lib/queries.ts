@@ -89,8 +89,9 @@ export const POST_BY_SLUG_QUERY = defineQuery(`
 
 export const MAPRES_QUERY = defineQuery(`
   *[_type == "mapres" && term == $term]
-  | order(displayOrder asc, achievementYear desc, nama_mapres asc)[0...12]{
-    _id, nama_mapres, achievementTitle, achievementYear, image {${IMAGE_FIELDS}}, instagramUrl
+  | order(displayOrder asc, rank asc, nama_mapres asc)[0...12]{
+    _id, nama_mapres, studyProgram, cohortYear, rank, achievementTitle, achievementYear,
+    image {${IMAGE_FIELDS}}, instagramUrl
   }
 `);
 

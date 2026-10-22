@@ -277,9 +277,12 @@ export type Mapres = {
   _rev: string;
   term: "2026";
   nama_mapres: string;
-  achievementTitle: string;
+  studyProgram: string;
+  cohortYear: number;
+  rank?: number;
+  achievementTitle?: string;
   achievementYear?: number;
-  image: {
+  image?: {
     asset?: SanityImageAssetReference;
     media?: unknown;
     hotspot?: SanityImageHotspot;
@@ -975,11 +978,14 @@ export type POST_BY_SLUG_QUERY_RESULT = {
 
 // Source: sanity/lib/queries.ts
 // Variable: MAPRES_QUERY
-// Query: *[_type == "mapres" && term == $term]  | order(displayOrder asc, achievementYear desc, nama_mapres asc)[0...12]{    _id, nama_mapres, achievementTitle, achievementYear, image {  asset->{_id, url, metadata {lqip, dimensions {width, height}}},  alt,  attribution,  crop,  hotspot}, instagramUrl  }
+// Query: *[_type == "mapres" && term == $term]  | order(displayOrder asc, rank asc, nama_mapres asc)[0...12]{    _id, nama_mapres, studyProgram, cohortYear, rank, achievementTitle, achievementYear,    image {  asset->{_id, url, metadata {lqip, dimensions {width, height}}},  alt,  attribution,  crop,  hotspot}, instagramUrl  }
 export type MAPRES_QUERY_RESULT = Array<{
   _id: string;
   nama_mapres: string;
-  achievementTitle: string;
+  studyProgram: string;
+  cohortYear: number;
+  rank: number | null;
+  achievementTitle: string | null;
   achievementYear: number | null;
   image: {
     asset: {
@@ -997,7 +1003,7 @@ export type MAPRES_QUERY_RESULT = Array<{
     attribution: string | null;
     crop: SanityImageCrop | null;
     hotspot: SanityImageHotspot | null;
-  };
+  } | null;
   instagramUrl: string | null;
 }>;
 
@@ -1118,7 +1124,7 @@ declare global {
     '\n  *[_type == "organizationUnit" && term == $term && defined(slug.current)]{\n    "slug": slug.current, _updatedAt\n  }\n': SITEMAP_UNITS_QUERY_RESULT;
     '\n  *[_type == "organizationUnit" && term == $term && slug.current == $slug][0]{\n    _id, officialName, abbreviation, "slug": slug.current, unitKind, description,\n    coverImage {\n  asset->{_id, url, metadata {lqip, dimensions {width, height}}},\n  alt,\n  attribution,\n  crop,\n  hotspot\n}, gallery[]{_key, alt, caption, asset->{_id, url, metadata {lqip, dimensions {width, height}}}},\n    "programs": *[_type == "program" && term == $term && references(^._id)]\n      | order(displayOrder asc, name asc){_id, name, "slug": slug.current, shortDescription, coverImage {\n  asset->{_id, url, metadata {lqip, dimensions {width, height}}},\n  alt,\n  attribution,\n  crop,\n  hotspot\n}, externalLink},\n    "members": *[_type == "member" && term == $term && references(^._id)]\n      | order(isLeader desc, displayOrder asc, name asc){_id, name, role, photo {\n  asset->{_id, url, metadata {lqip, dimensions {width, height}}},\n  alt,\n  attribution,\n  crop,\n  hotspot\n}, socialLink, isLeader}\n  }\n': ORGANIZATION_UNIT_BY_SLUG_QUERY_RESULT;
     '\n  *[_type == "post" && term == $term && slug.current == $slug][0]{\n    _id, judul, "slug": slug.current, postCategory, publishedAt, excerpt, image {\n  asset->{_id, url, metadata {lqip, dimensions {width, height}}},\n  alt,\n  attribution,\n  crop,\n  hotspot\n},\n    body, instagramUrl, seoTitle, seoDescription, seoImage {\n  asset->{_id, url, metadata {lqip, dimensions {width, height}}},\n  alt,\n  attribution,\n  crop,\n  hotspot\n}\n  }\n': POST_BY_SLUG_QUERY_RESULT;
-    '\n  *[_type == "mapres" && term == $term]\n  | order(displayOrder asc, achievementYear desc, nama_mapres asc)[0...12]{\n    _id, nama_mapres, achievementTitle, achievementYear, image {\n  asset->{_id, url, metadata {lqip, dimensions {width, height}}},\n  alt,\n  attribution,\n  crop,\n  hotspot\n}, instagramUrl\n  }\n': MAPRES_QUERY_RESULT;
+    '\n  *[_type == "mapres" && term == $term]\n  | order(displayOrder asc, rank asc, nama_mapres asc)[0...12]{\n    _id, nama_mapres, studyProgram, cohortYear, rank, achievementTitle, achievementYear,\n    image {\n  asset->{_id, url, metadata {lqip, dimensions {width, height}}},\n  alt,\n  attribution,\n  crop,\n  hotspot\n}, instagramUrl\n  }\n': MAPRES_QUERY_RESULT;
     '\n  *[_type == "organizationUnit" && term == $term && defined(slug.current)]\n  | order(displayOrder asc, officialName asc){\n    _id, officialName, abbreviation, "slug": slug.current, unitKind, description,\n    coverImage {\n  asset->{_id, url, metadata {lqip, dimensions {width, height}}},\n  alt,\n  attribution,\n  crop,\n  hotspot\n}\n  }\n': ORGANIZATION_UNITS_QUERY_RESULT;
     '\n  *[_type == "member" && term == $term && organizationUnit->term == $term]\n  | order(isLeader desc, displayOrder asc, name asc){\n    _id, name, role, photo {\n  asset->{_id, url, metadata {lqip, dimensions {width, height}}},\n  alt,\n  attribution,\n  crop,\n  hotspot\n}, socialLink, isLeader,\n    "organizationUnit": organizationUnit->{_id, officialName, abbreviation, "slug": slug.current}\n  }\n': MEMBERS_QUERY_RESULT;
     '\n  *[_type == "studentAssociation" && term == $term]\n  | order(displayOrder asc, officialName asc){\n    _id, officialName, abbreviation, studyProgram, cabinetName, description, logo {\n  asset->{_id, url, metadata {lqip, dimensions {width, height}}},\n  alt,\n  attribution,\n  crop,\n  hotspot\n}, officialLink, socialLinks[]{platform, url}\n  }\n': STUDENT_ASSOCIATIONS_QUERY_RESULT;

@@ -1,6 +1,10 @@
 # Current state
 
-Last updated: 2026-10-17
+Last updated: 2026-10-22
+
+## Latest milestone: Mapres and proker imported from client document
+
+The maintainer approved publishing client-provided Mapres and program data to `jcpcptq3/production`, excluding "Delegasi FISIP" and leaving images for manual upload. The Mapres schema now models study program, cohort year, and optional rank; portrait and achievement/event details are optional. The query and generated types were updated, and the homepage has a one-line guard for missing portraits. Ten Mapres and 81 new program documents were created. Five existing program documents were patched only in name, owning unit, and order, giving 86 published proker entries across 17 units. Existing descriptions and other fields, other document types, and the one unrelated unnamed Mapres draft were preserved. A targeted pre-write backup and created-ID manifest are kept locally under the ignored `outputs/mapres-proker-2026-10-22/` directory. Independent readback, TypeGen, typecheck, lint, tests, build, and diff checks passed. No photos, deployment, webhook, or other service settings were changed. See `.agents/tasks/2026-10-22-mapres-proker-import.md`.
 
 ## Latest milestone: `/penjelasan/[birdep]` restyled to the house style
 

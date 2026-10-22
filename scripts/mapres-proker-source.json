@@ -1,0 +1,233 @@
+{
+  "sourceUrl": "https://docs.google.com/document/d/1UabOc5VLxLPROsY2I9a_sYAEXYD_ER9yXrSLWPHFmHE",
+  "revisionId": "AHj4eMSMKXaF8j0Yp6Pp4KxgPC-YuaxDrnjuALZF0acKI7zDgp5Tw8SOwbK8X8W0gh1uJfchzuCWBwdHMyGNHo_tTZZhY40FvpGqCo0qvBI",
+  "term": "2026",
+  "mapres": [
+    {
+      "name": "Evelyn Kurniawan",
+      "studyProgram": "Administrasi Bisnis",
+      "cohortYear": 2023,
+      "rank": 1
+    },
+    {
+      "name": "Shine Natasha Nauli Simanjuntak",
+      "studyProgram": "Ilmu Pemerintahan",
+      "cohortYear": 2023,
+      "rank": 2
+    },
+    {
+      "name": "Virginia de Rils Ezvelov",
+      "studyProgram": "Hubungan Internasional",
+      "cohortYear": 2023,
+      "rank": 3
+    },
+    {
+      "name": "Andrea Hillary Gusandi",
+      "studyProgram": "Hubungan Internasional",
+      "cohortYear": 2023
+    },
+    {
+      "name": "Ayu Eka Putri",
+      "studyProgram": "Administrasi Publik",
+      "cohortYear": 2023
+    },
+    {
+      "name": "Alya Zahra",
+      "studyProgram": "Antropologi",
+      "cohortYear": 2024
+    },
+    {
+      "name": "Muhammad Adryan Rusdiana",
+      "studyProgram": "Ilmu Politik",
+      "cohortYear": 2023
+    },
+    {
+      "name": "Muhammad Syamil Basayev",
+      "studyProgram": "Ilmu Politik",
+      "cohortYear": 2024
+    },
+    {
+      "name": "Naila Farhani Ramadanty",
+      "studyProgram": "Antropologi",
+      "cohortYear": 2024
+    },
+    {
+      "name": "Yohana Setyarini Pape Mala",
+      "studyProgram": "Antropologi",
+      "cohortYear": 2024
+    }
+  ],
+  "groups": [
+    {
+      "sourceHeading": "Biro kesekretariatan",
+      "programs": [
+        "meeting support",
+        "Database",
+        "Pendampingan",
+        "Inventaris",
+        "Timetable",
+        "Sosialisasi"
+      ]
+    },
+    {
+      "sourceHeading": "Biro keuangan",
+      "programs": [
+        "Dana kepengurusan",
+        "Financial statement",
+        "Financial records",
+        "Pelatihan kebendaharaan",
+        "Pendampingan cluster",
+        "Investasi keuangan"
+      ]
+    },
+    {
+      "sourceHeading": "Biro rda",
+      "programs": [
+        "mega survei",
+        "Riset kepntingan",
+        "Dashboard",
+        "Redaksi",
+        "Pelatihan RDA"
+      ]
+    },
+    {
+      "sourceHeading": "Sosial masyarakat",
+      "programs": [
+        "aliansi kemasyarakatan FISIP",
+        "FISIP Impaction",
+        "Daily story of Jatinangor",
+        "FISIP Sadar Bencana",
+        "FISIP Learning Lab",
+        "Social Camping"
+      ]
+    },
+    {
+      "sourceHeading": "Lingkungan Hidup",
+      "programs": [
+        "Aliansi Kemasyarakatan FISIP",
+        "FORESTA",
+        "FISIP Coastal Guard",
+        "FISIP ACT"
+      ]
+    },
+    {
+      "sourceHeading": "Olahraga",
+      "programs": [
+        "FISIP JAWARA",
+        "FISIP Fun Sport",
+        "FISTAORA-ART",
+        "GORI"
+      ]
+    },
+    {
+      "sourceHeading": "Seni Budaya",
+      "programs": [
+        "Putra Outri FISIP",
+        "Menyoal Seni",
+        "Sampai Sunyi",
+        "FISIP Nyeni",
+        "Potensi FISIP",
+        "FISTAORA-ART"
+      ]
+    },
+    {
+      "sourceHeading": "Akademik dan Profesi",
+      "programs": [
+        "SOLITAIRE",
+        "CS FISIP",
+        "Kalender Kontespedia dan Pendanaan lomba",
+        "Socio-Political from Roots",
+        "Kelas Pendampingan Mahasiswa Berprestasi"
+      ]
+    },
+    {
+      "sourceHeading": "Ekonomi Kreatif",
+      "programs": [
+        "FISIP Commerce Hub",
+        "Pasar FISIP",
+        "Konekraf",
+        "FISIPVisit",
+        "EkraFun Talks",
+        "Invasi Bisnis"
+      ]
+    },
+    {
+      "sourceHeading": "KPSDM",
+      "programs": [
+        "Forkin KPSDM FISIP Unpad",
+        "Safari Himpunan/Huru FISIP Unpad",
+        "Amandemen Blueprint Kaderisasi",
+        "ORASI",
+        "MABAFEST",
+        "FILS"
+      ]
+    },
+    {
+      "sourceHeading": "MSDO",
+      "programs": [
+        "Learning, Growth, & Development",
+        "People Engagement & Wellness",
+        "Hiring & Onboarding",
+        "Internal Experience",
+        "Clarities of Connection"
+      ]
+    },
+    {
+      "sourceHeading": "Media kreatif",
+      "programs": [
+        "FISIP Media License",
+        "Company Profile",
+        "Situs BEM FISIP Unoad"
+      ]
+    },
+    {
+      "sourceHeading": "Hubungan Internal",
+      "programs": [
+        "FKL",
+        "FISIPAW",
+        "MINION",
+        "Infisiple"
+      ]
+    },
+    {
+      "sourceHeading": "Hubungan Eksternal",
+      "programs": [
+        "SOLITAIRE",
+        "Company Visit",
+        "Delegation & Comparative Study",
+        "Strategic Partnership",
+        "Media Relations"
+      ]
+    },
+    {
+      "sourceHeading": "Proaksi",
+      "programs": [
+        "Catatan Dalam Ingatan",
+        "FISIP BERDIALEKTIKA",
+        "Kampanye Propaganda",
+        "Proaksi Bersafari",
+        "Buku Saku Aksi",
+        "Suara Mereka"
+      ]
+    },
+    {
+      "sourceHeading": "Kastrat",
+      "programs": [
+        "Kajian Komperhensif",
+        "Majalah Dimensi",
+        "Kelas Kastrart"
+      ]
+    },
+    {
+      "sourceHeading": "Adkesma",
+      "programs": [
+        "Pengawalan Isu",
+        "Lensa Advokasi",
+        "Beasiswa Fair",
+        "FISIP Care Center",
+        "Forkesma",
+        "SANDAR"
+      ]
+    }
+  ]
+}
