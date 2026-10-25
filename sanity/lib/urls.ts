@@ -7,8 +7,3 @@ export function safeExternalUrl(value: string | null | undefined): string | unde
     return undefined;
   }
 }
-
-export function safeMailto(value: string | null | undefined): string | undefined {
-  if (!value || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return undefined;
-  return `mailto:${value}`;
-}

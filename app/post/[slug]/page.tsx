@@ -85,6 +85,7 @@ export default async function PostPage({
         day: "numeric",
         month: "long",
         year: "numeric",
+        timeZone: "Asia/Jakarta",
       }).format(new Date(post.publishedAt))
     : "";
 
@@ -103,7 +104,7 @@ export default async function PostPage({
   `,
       }}
     >
-      <main className="relative z-10 mx-auto max-w-6xl px-6 py-12">
+      <div className="relative z-10 mx-auto max-w-6xl px-6 py-12">
         {/* BREADCRUMB / BACK LINK */}
         <div className="mb-8">
           <Link
@@ -144,7 +145,7 @@ export default async function PostPage({
               <span
                 className="px-2 py-1 font-semibold text-black"
                 style={{
-                  backgroundColor: isKajian ? "#8CFF00" : "#FFBA3A",
+                  backgroundColor: isKajian ? "var(--color-brand-yellow)" : "#FFBA3A",
                 }}
               >
                 {categoryLabel}
@@ -189,7 +190,7 @@ export default async function PostPage({
             </div>
           )}
         </article>
-      </main>
+      </div>
 
       {/* FOOTER */}
       <Footer settings={settingsResult.data} />

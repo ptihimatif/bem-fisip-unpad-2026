@@ -60,3 +60,6 @@ docs/Booklet Rekrutmen Staf.pdf
 /docs/Part 2/
 /docs/Part 3/
 /docs/Part 4/
+
+# local build output
+build.log

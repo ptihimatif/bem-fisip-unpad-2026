@@ -17,7 +17,7 @@ export default function HimaGallery({ associations }: HimaGalleryProps) {
 
   if (!associations || associations.length === 0) {
     return (
-      <p className="mt-10 bg-white p-4 text-white">
+      <p className="mt-10 bg-white/5 border border-white/10 p-4 text-white/80">
         Belum ada organisasi mahasiswa yang dipublikasikan.
       </p>
     );
@@ -92,7 +92,7 @@ export default function HimaGallery({ associations }: HimaGalleryProps) {
         <div
           ref={detailCardRef}
           key={selectedIndex}
-          className="rounded-lg animate-smooth-appear group relative flex w-full flex-col overflow-hidden bg-linear-to-r from-[#001949] to-[#fffff] text-white shadow-md md:h-auto md:flex-row scroll-mt-28"
+          className="rounded-lg animate-smooth-appear group relative flex w-full flex-col overflow-hidden bg-linear-to-r from-[#001949] to-[#003089] text-white shadow-md md:h-auto md:flex-row scroll-mt-28"
         >
           {/* Left Side: White Logo Box */}
           <div className="relative flex h-48 w-full flex-none items-center justify-center border-b border-gray-100/20 bg-white sm:h-56 md:h-auto md:w-[280px] lg:w-[320px] md:border-r md:border-b-0 p-4 sm:p-6">
@@ -117,14 +117,14 @@ export default function HimaGallery({ associations }: HimaGalleryProps) {
           {/* Right Side: Details */}
           <div className="flex min-w-0 flex-1 flex-col justify-between p-5 sm:p-6 md:px-8 md:py-6">
             <div>
-              <h3
+              <h2
                 style={{ letterSpacing: "-0.05em" }}
                 className="-mt-4 mb-1 break-words text-[40px] sm:text-[50px] md:text-[60px] font-bold tracking-tight leading-tight"
               >
                 {selectedAssociation.abbreviation ||
                   selectedAssociation.officialName}
-              </h3>
-              <h4
+              </h2>
+              <h3
                 style={{ letterSpacing: "-0.05em" }}
                 className="-mt-3 text-sm font-bold leading-snug sm:text-base md:text-[18px] text-white"
               >
@@ -134,7 +134,7 @@ export default function HimaGallery({ associations }: HimaGalleryProps) {
                   {selectedAssociation.cabinetName ||
                     selectedAssociation.studyProgram}
                 </span>
-              </h4>
+              </h3>
 
               {selectedAssociation.description && (
                 <p className="mt-3 mb-3 max-w-[800px] text-xs leading-relaxed text-white/90 sm:text-sm">

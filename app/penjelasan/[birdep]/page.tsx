@@ -13,41 +13,6 @@ import {
 } from "@/sanity/lib/queries";
 import { safeExternalUrl } from "@/sanity/lib/urls";
 
-const PLACEHOLDER_PROGRAMS = [
-  {
-    _id: "placeholder-1",
-    name: "Program Kerja Contoh Satu",
-    shortDescription:
-      "Deskripsi singkat program kerja pertama untuk melihat bentuk layout masonry.",
-    externalLink: null,
-  },
-  {
-    _id: "placeholder-2",
-    name: "Program Kerja Contoh Dua",
-    shortDescription: "Deskripsi singkat program kerja kedua.",
-    externalLink: null,
-  },
-  {
-    _id: "placeholder-3",
-    name: "Program Kerja Contoh Tiga",
-    shortDescription:
-      "Deskripsi singkat program kerja ketiga yang sedikit lebih panjang agar bentuk masonry terlihat.",
-    externalLink: null,
-  },
-  {
-    _id: "placeholder-4",
-    name: "Program Kerja Contoh Empat",
-    shortDescription: "Deskripsi singkat.",
-    externalLink: null,
-  },
-  {
-    _id: "placeholder-5",
-    name: "Program Kerja Contoh Lima",
-    shortDescription: "Deskripsi singkat program kerja kelima.",
-    externalLink: null,
-  },
-];
-
 async function getUnit(slug: string) {
   const result = await sanityFetch({
     query: ORGANIZATION_UNIT_BY_SLUG_QUERY,
@@ -88,13 +53,12 @@ export default async function DepartmentPage({
   ]);
   if (!unit) notFound();
 
-  const programs =
-    unit.programs.length > 0 ? unit.programs : PLACEHOLDER_PROGRAMS;
+  const programs = unit.programs;
 
   return (
     <div className="relative isolate min-h-screen overflow-x-clip pt-24 text-white">
       <MeshBackgroundBright />
-      <main className="relative z-10 mx-auto max-w-6xl px-6 py-12">
+      <div className="relative z-10 mx-auto max-w-6xl px-6 py-12">
         {/* HEADER: nama unit -> garis -> jenis unit */}
         <header className="mb-10 pb-2 text-center">
           <h1
@@ -141,7 +105,7 @@ export default async function DepartmentPage({
             />
           )}
         </section>
-      </main>
+      </div>
 
         {unit.members.length === 0 ? (
           <section aria-labelledby="members" className="mt-16">

@@ -11,7 +11,7 @@ interface ArticleFilterSortProps {
 }
 
 const getButtonClass = (isActive: boolean) =>
-  `px-5 py-2.5 text-sm font-bold transition-colors ${
+  `px-5 py-2.5 text-sm font-bold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-yellow ${
     isActive
       ? "bg-brand-yellow text-black pointer-events-none"
       : "bg-white/10 text-white hover:bg-white/20"

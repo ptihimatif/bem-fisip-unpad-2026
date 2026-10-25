@@ -76,7 +76,7 @@ export default function Footer({}: FooterProps = {}) {
                 href={item.href}
                 target={item.external ? "_blank" : undefined}
                 rel={item.external ? "noopener noreferrer" : undefined}
-                className="text-right text-md font-bold text-white transition-colors hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-yellow"
+                className="text-right text-base font-bold text-white transition-colors hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-yellow"
               >
                 {item.label}
               </Link>
@@ -100,7 +100,7 @@ export default function Footer({}: FooterProps = {}) {
                 target="_blank"
                 rel="noopener noreferrer"
                 title={item.label}
-                className="text-white/80 transition-colors hover:text-white"
+                className="text-white/80 transition-colors hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-yellow"
               >
                 <Image
                   src={item.src}

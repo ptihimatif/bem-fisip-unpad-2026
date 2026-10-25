@@ -11,6 +11,7 @@ const dateFormatter = new Intl.DateTimeFormat("id-ID", {
   day: "numeric",
   month: "long",
   year: "numeric",
+  timeZone: "Asia/Jakarta",
 });
 
 export default function ArticleCard({ post }: ArticleCardProps) {
@@ -45,7 +46,7 @@ export default function ArticleCard({ post }: ArticleCardProps) {
             {post.judul}
           </h2>
           {post.excerpt && (
-            <p className="mt-2 sm:mt-3 mb-4 lg:line-clamp-4 line-clamp-2 text-sm sm:text-sm md:text-md font-normal leading-relaxed warp-break-word text-gray-700">
+            <p className="mt-2 sm:mt-3 mb-4 lg:line-clamp-4 line-clamp-2 text-sm sm:text-sm md:text-base font-normal leading-relaxed break-words text-gray-700">
               {post.excerpt}
             </p>
           )}
@@ -54,7 +55,7 @@ export default function ArticleCard({ post }: ArticleCardProps) {
           <span
             className="px-2 py-0.5 sm:py-1 font-semibold text-black text-xs"
             style={{
-              backgroundColor: isKajian ? "#8CFF00" : "#FFBA3A",
+              backgroundColor: isKajian ? "var(--color-brand-yellow)" : "#FFBA3A",
             }}
           >
             {categoryLabel}

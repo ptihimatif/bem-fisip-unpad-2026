@@ -51,6 +51,8 @@ export function SanityImage({
       sizes={sizes}
       className={className}
       priority={priority}
+      // src is already resized/format-negotiated by the Sanity CDN; skip the second /_next/image pass
+      unoptimized
       placeholder={value.asset.metadata?.lqip ? "blur" : "empty"}
       blurDataURL={value.asset.metadata?.lqip ?? undefined}
       style={{ aspectRatio }}
