@@ -63,8 +63,8 @@ next.config.ts            Header keamanan (CSP), remotePatterns gambar Sanity
 
 | Komponen | Client? | Fungsi |
 | --- | --- | --- |
-| `Navbar.tsx` | Ya | Navigasi atas tetap (fixed), menu HP dengan tombol buka/tutup. Daftar menu hardcoded. |
-| `Footer.tsx` | Tidak | Logo, menu, ikon media sosial. Semua link hardcoded (prop `settings` diterima tapi tidak dipakai). |
+| `Navbar.tsx` | Ya | Navigasi atas tetap (fixed), menu HP dengan tombol buka/tutup. Daftar menu statis; link Care Center memakai Site Settings. |
+| `Footer.tsx` | Tidak | Logo, menu, dan sosial. Site Settings mengatur Care Center serta sosial; default lama dipakai sampai daftar CMS ditandai lengkap. |
 | `SanityImage.tsx` | Tidak | Gambar Sanity: membuat URL berukuran tertentu, alt text, placeholder blur (LQIP), `unoptimized`. |
 | `SanityPortableText.tsx` | Tidak | Merender rich text Sanity (paragraf, h1/h2, quote, list, bold/italic, link https). |
 | `ArticleCard.tsx` | Tidak | Kartu artikel/kajian untuk beranda dan arsip. Tanggal diformat dalam zona waktu `Asia/Jakarta`. |

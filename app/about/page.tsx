@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { getPageMetadata } from "@/lib/page-metadata";
 import Footer from "@/components/Footer";
 import BudayaKerjaSection from "@/components/about/BudayaKerjaSection";
 import DepartemenBiroSection from "@/components/about/DepartemenBiroSection";
@@ -16,19 +17,21 @@ import { sanityFetch } from "@/sanity/lib/live";
 import {
   CONTENT_TERM,
   MEMBERS_QUERY,
+  CABINET_PROFILE_QUERY,
   ORGANIZATION_UNITS_QUERY,
   SITE_SETTINGS_QUERY,
 } from "@/sanity/lib/queries";
 
-export const metadata: Metadata = {
+export async function generateMetadata(): Promise<Metadata> { return getPageMetadata({
+  path: "/about",
   title: "Tentang — BEM FISIP Unpad 2026",
   description:
     "Pelajari lebih lanjut tentang Badan Eksekutif Mahasiswa FISIP Unpad 2026, kabinet Pendar Mentari, visi, misi, dan struktur organisasi.",
-};
+}); }
 
 export default async function AboutPage() {
   const params = { term: CONTENT_TERM };
-  const [settingsResult, unitsResult, membersResult] = await Promise.all([
+  const [settingsResult, unitsResult, membersResult, cabinetResult] = await Promise.all([
     sanityFetch({
       query: SITE_SETTINGS_QUERY,
       params,
@@ -47,6 +50,7 @@ export default async function AboutPage() {
       perspective: "published",
       stega: false,
     }),
+    sanityFetch({ query: CABINET_PROFILE_QUERY, params, perspective: "published", stega: false }),
   ]);
   const settings = settingsResult.data;
   const units = unitsResult.data ?? [];
@@ -61,19 +65,19 @@ export default async function AboutPage() {
 
       {/* SECTION 1 - Logo Philosophy */}
       <h1 className="sr-only">BEM FISIP Unpad 2026</h1>
-      <LogoSection />
+      <LogoSection copy={cabinetResult.data?.logoExplanationItems} />
 
       {/* SECTION 2 - Visi */}
-      <VisiSection />
+      <VisiSection vision={cabinetResult.data?.vision} highlights={cabinetResult.data?.visionHighlights} />
 
       {/* SECTION 3 - Misi */}
-      <MisiSection />
+      <MisiSection items={cabinetResult.data?.missionItems} />
 
       {/* SECTION 4 - Budaya Kerja */}
-      <BudayaKerjaSection />
+      <BudayaKerjaSection items={cabinetResult.data?.workCultureItems} />
 
       {/* SECTION 5 - Nilai */}
-      <NilaiSection />
+      <NilaiSection values={cabinetResult.data?.values} />
 
       {/* SECTION 6-8 - Petinggi (with hierarchy connector) */}
       <div className="relative">

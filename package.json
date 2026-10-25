@@ -9,31 +9,35 @@
     "lint": "eslint",
     "typecheck": "tsc --noEmit --incremental false",
     "typegen": "sanity schemas extract --force --enforce-required-fields --path schema.json && sanity typegen generate",
-    "test": "tsx --test tests/**/*.test.ts"
+    "test": "tsx --test tests/*.test.ts",
+    "build:check": "node scripts/check_browser.mjs --build-only",
+    "test:browser": "node scripts/check_browser.mjs",
+    "test:browser:built": "node scripts/check_browser.mjs --skip-build"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",
-    "@sanity/client": "^8.7.0",
+    "@sanity/client": "^8.11.0",
     "@sanity/image-url": "^2.1.1",
-    "@sanity/vision": "^6.16.0",
+    "@sanity/vision": "^6.20.0",
     "gsap": "^3.15.0",
-    "next": "16.3.4",
-    "next-sanity": "^13.3.4",
-    "react": "19.2.8",
-    "react-dom": "19.2.8",
-    "sanity": "^6.16.0"
+    "next": "16.4.3",
+    "next-sanity": "^13.4.0",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "sanity": "^6.20.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.64.1",
     "@sanity/webhook": "4.0.4",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
-    "eslint-config-next": "16.3.4",
+    "eslint-config-next": "16.4.3",
     "tailwindcss": "^4",
     "tsx": "^4.23.13",
-    "typescript": "^5"
+    "typescript": "^6.0.3"
   },
   "packageManager": "pnpm@11.1.2"
 }

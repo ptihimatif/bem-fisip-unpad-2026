@@ -6,7 +6,7 @@ import ParallaxImage from "@/components/ParallaxImage";
 
 import {
   type Explanation,
-  explanations,
+  explanations as fallbackExplanations,
   PARTS,
   CARD_VH,
   STEP_VH,
@@ -15,7 +15,8 @@ import {
   SIZES,
 } from "./logo-section";
 
-const TOTAL = explanations.length;
+const TOTAL = fallbackExplanations.length;
+const ELEMENT_KEYS = ["intro", "wave", "pendar", "mentari", "rays", "sun", "yellow", "blue", "synergy"];
 const SNAP_DELAY_MS = 80; // desktop only: idle time before snapping to a card
 const SNAP_SETTLE_MS = 600; // desktop only: roughly how long the smooth snap takes
 const SWIPE_PX = 24; // mobile: how far a finger must move to count as a swipe
@@ -75,7 +76,7 @@ function ProgressDots({ active }: { active: number }) {
       aria-hidden
       className="absolute right-2 top-1/2 flex -translate-y-1/2 flex-col gap-2 lg:hidden"
     >
-      {explanations.map((_, i) => (
+      {fallbackExplanations.map((_, i) => (
         <span
           key={i}
           className={`w-1.5 rounded-full bg-white transition-all duration-300 ${
@@ -138,7 +139,11 @@ function LogoDisplay({ parts, cycle }: Pick<Explanation, "parts" | "cycle">) {
   );
 }
 
-export default function LogoSection() {
+export default function LogoSection({ copy }: { copy?: { elementKey: string; title: string; description: string }[] | null }) {
+  const explanations = fallbackExplanations.map((entry, index) => {
+    const replacement = copy?.find((item) => item.elementKey === ELEMENT_KEYS[index]);
+    return replacement ? { ...entry, title: replacement.title, description: replacement.description } : entry;
+  });
   // Card whose highlight is on. Desktop: the card it snapped to (null while
   // scrolling). Mobile: the card nearest the scroll position.
   const [settled, setSettled] = useState<number | null>(null);

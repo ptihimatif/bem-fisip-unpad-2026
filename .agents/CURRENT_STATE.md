@@ -1,10 +1,18 @@
 # Current state
 
-Last updated: 2026-10-25
+Last updated: 2026-10-26
 
-## Latest milestone: audit fixes and website documentation
+## Latest milestone: approved local pre-release improvements
 
-Locally (uncommitted): Sanity images now load directly from the Sanity CDN (`unoptimized`), Mapres cards render study program/cohort/optional achievement with a silhouette placeholder, and a whole-repo audit was fixed. The production CSP previously blocked Next.js inline scripts (no hydration); it now follows the Next.js "without nonces" policy and allows the Studio's Sanity CDN script/font and realtime socket. Fake placeholder programs were removed from unit pages, post dates use `Asia/Jakarta`, `ProgramList` re-measures on resize, the revalidate webhook has tests, and dead code/`build.log` were removed. Complete Indonesian documentation now lives in `docs/panduan/` and the root README points to it. Typecheck, lint, tests (4/4), build, and a headless-Chrome production smoke test passed. No Sanity, deployment, or GitHub state changed. See `.agents/tasks/2026-10-25-audit-fixes-and-website-docs.md`.
+The approved plan in `docs/PRE_RELEASE_IMPROVEMENT_PLAN_2026-10-26.md` is implemented locally for the available scope. The BEM favicon is a valid multi-size ICO; framework/CMS dependencies are patched and the final production audit reports zero advisories. Environment/origin validation, non-indexable staging, CMS/SEO integration, additive About fields with current-copy fallbacks, modal accessibility, deterministic browser fixtures, CI checks, and Indonesian handover documentation are in place. Frozen install, TypeGen, peers, lint, typecheck, 13 behavior tests, 8 browser tests, and fixture/actual-content builds passed. One existing stylistic blockquote detector warning is documented. No production content or service settings changed, and no commit/push/merge/deployment occurred. A read-only four-field About manifest is ready under ignored `outputs/pre-release-cms/`. Targets/owners, client acceptance, webhook/CORS setup, real-domain tests, backup recovery, and publishing the manifest remain pending. See `.agents/tasks/2026-10-26-pre-release-improvements.md` and `docs/panduan/08-checklist-rilis.md`.
+
+### Follow-up: local Next.js runtime recovered
+
+The reported missing `.next/dev/server/preview-props.json` occurred while port 3000 was still running Next.js 16.3.4 after installation of 16.4.3. Restarting only this workspace's stale dev server regenerated the manifest without deleting files. Fixture browser builds now use `.next-check`, with matching runner/type/ignore configuration, while regular dev/build/start retain `.next`. The real-content dev server remained healthy through the concurrent fixture build; all 8 browser checks, lint, TypeScript, and diff checks passed. Restart dev after dependency upgrades. Recovery instructions are in `docs/panduan/07-pemeliharaan-dan-troubleshooting.md`.
+
+## Previous milestone: audit fixes and website documentation
+
+Merged into `dev` at `155854f` (historical milestone): Sanity images now load directly from the Sanity CDN (`unoptimized`), Mapres cards render study program/cohort/optional achievement with a silhouette placeholder, and a whole-repo audit was fixed. The production CSP previously blocked Next.js inline scripts (no hydration); it now follows the Next.js "without nonces" policy and allows the Studio's Sanity CDN script/font and realtime socket. Fake placeholder programs were removed from unit pages, post dates use `Asia/Jakarta`, `ProgramList` re-measures on resize, the revalidate webhook has tests, and dead code/`build.log` were removed. Complete Indonesian documentation now lives in `docs/panduan/` and the root README points to it. Typecheck, lint, tests (4/4), build, and a headless-Chrome production smoke test passed. No Sanity, deployment, or GitHub state changed. See `.agents/tasks/2026-10-25-audit-fixes-and-website-docs.md`.
 
 ## Previous milestone: Mapres and proker imported from client document
 

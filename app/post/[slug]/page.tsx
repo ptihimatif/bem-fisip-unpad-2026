@@ -12,6 +12,8 @@ import {
   SITE_SETTINGS_QUERY,
 } from "@/sanity/lib/queries";
 import { safeExternalUrl } from "@/sanity/lib/urls";
+import { resolveSiteConfig } from "@/lib/site-config";
+import { getSiteSettings } from "@/sanity/lib/settings";
 
 async function getPost(slug: string) {
   const result = await sanityFetch({
@@ -36,7 +38,10 @@ export async function generateMetadata({
 
   const title = post.seoTitle ?? post.judul;
   const description = post.seoDescription ?? post.excerpt ?? undefined;
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://bemfisipunpad.com";
+  const { origin: baseUrl } = resolveSiteConfig();
+  const settings = await getSiteSettings();
+  const image = post.seoImage?.asset?.url ?? post.image?.asset?.url ?? settings?.ogImage?.asset?.url;
+  const images = image ? [image] : undefined;
 
   return {
     title,
@@ -50,11 +55,13 @@ export async function generateMetadata({
       type: "article",
       url: `${baseUrl}/post/${slug}`,
       publishedTime: post.publishedAt ?? undefined,
+      images,
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
+      images,
     },
   };
 }
@@ -183,7 +190,7 @@ export default async function PostPage({
                 href={socialLink}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-8 py-3 font-bold text-sm text-white tracking-tight bg-brand-yellow brightness-75 hover:brightness-100 transition-all duration-300 shadow-md"
+                className="inline-flex items-center gap-2 px-8 py-3 font-bold text-sm text-brand-blue tracking-tight bg-brand-yellow hover:bg-brand-yellow/90 transition-colors duration-300 shadow-md focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-yellow"
               >
                 Lihat Unggahan Resmi di Instagram
               </a>

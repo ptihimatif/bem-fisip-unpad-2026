@@ -12,7 +12,7 @@ This directory stores durable project context and workflow records. Keep it conc
 
 For frontend/UI work, also read `../PRODUCT.md`, `../DESIGN.md`, and `skills/impeccable/SKILL.md`; then run the Impeccable context script once as directed by that skill.
 
-Read ../docs/2026_PREPARATION_AND_HANDOVER.md when a task relies on the inherited 2025 site, routes, features, content model, or audit findings.
+The historical `../docs/2026_PREPARATION_AND_HANDOVER.md` is absent from this checkout. Current 2026 operations are documented in `../docs/panduan/`; obtain the original handover if an inherited-system task requires it.
 
 ## Files
 

@@ -11,14 +11,16 @@ Currently available:
 | Gate | Command or state |
 | --- | --- |
 | Lint | pnpm lint |
-| TypeScript | pnpm exec tsc --noEmit --incremental false; no dedicated script yet |
-| Production build | pnpm build |
+| TypeScript | pnpm typecheck |
+| Production build | pnpm build with explicit release environment; pnpm build:check for isolated CI fixtures |
 | Impeccable UI detector | `node .agents/skills/impeccable/scripts/detect.mjs <changed-ui-paths>`; the trusted hook also runs after UI edits and at Stop |
-| Unit/component tests | Not configured |
-| End-to-end tests | Not configured |
+| Unit/behavior tests | pnpm test |
+| Browser tests | pnpm test:browser; isolated production-mode fixtures, Chromium desktop/mobile |
 | Workflow integrity | Manual until automation is approved |
 
 Missing gates must be reported honestly; absence is not a passing result.
+
+The browser suite does not prove external Studio login, CORS, deployed webhook freshness, real-domain SEO, client acceptance, or a backup restore. Use `docs/panduan/08-checklist-rilis.md` for those release gates. Do not deploy fixture builds or treat `CI=true` as permission to omit CMS configuration.
 
 ## Target pull-request gates
 

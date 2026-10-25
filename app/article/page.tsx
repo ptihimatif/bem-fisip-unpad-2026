@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { getPageMetadata } from "@/lib/page-metadata";
 import Link from "next/link";
 import ArticleCard from "@/components/ArticleCard";
 import ArticleFilterSort from "@/components/ArticleFilterSort";
@@ -11,11 +12,12 @@ import {
 } from "@/sanity/lib/queries";
 
 // Mendukung tipe searchParams untuk Next.js 14 maupun 15
-export const metadata: Metadata = {
+export async function generateMetadata(): Promise<Metadata> { return getPageMetadata({
+  path: "/article",
   title: "Artikel dan Kajian — BEM FISIP Unpad 2026",
   description:
     "Baca artikel dan kajian terbaru dari BEM FISIP Unpad 2026. Publikasi resmi, kebijakan, dan pemikiran kritis dari kabinet Pendar Mentari.",
-};
+}); }
 
 export default async function ArticlePage(props: {
   searchParams?:

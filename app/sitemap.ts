@@ -1,5 +1,9 @@
 import type { MetadataRoute } from "next";
 import { client } from "@/sanity/lib/client";
+import { resolveSiteConfig } from "@/lib/site-config";
+import { isSanityTestMode } from "@/sanity/env";
+import { fixtureData } from "@/sanity/lib/test-fixtures";
+import type { SITEMAP_POSTS_QUERY_RESULT, SITEMAP_UNITS_QUERY_RESULT } from "@/sanity.types";
 import {
   CONTENT_TERM,
   SITEMAP_POSTS_QUERY,
@@ -10,18 +14,16 @@ import {
 export const dynamic = "force-dynamic";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = (
-    process.env.NEXT_PUBLIC_SITE_URL || "https://bemfisipunpad.com"
-  ).replace(/\/$/, "");
+  const { origin: baseUrl } = resolveSiteConfig();
 
   const params = { term: CONTENT_TERM };
   const [posts, units] = await Promise.all([
-    client.fetch(SITEMAP_POSTS_QUERY, params, {
+    isSanityTestMode ? Promise.resolve(fixtureData(SITEMAP_POSTS_QUERY) as SITEMAP_POSTS_QUERY_RESULT) : client.fetch(SITEMAP_POSTS_QUERY, params, {
       perspective: "published",
       useCdn: false,
       cache: "no-store",
     }),
-    client.fetch(SITEMAP_UNITS_QUERY, params, {
+    isSanityTestMode ? Promise.resolve(fixtureData(SITEMAP_UNITS_QUERY) as SITEMAP_UNITS_QUERY_RESULT) : client.fetch(SITEMAP_UNITS_QUERY, params, {
       perspective: "published",
       useCdn: false,
       cache: "no-store",

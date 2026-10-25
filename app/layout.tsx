@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import { SanityLive, sanityFetch } from "@/sanity/lib/live";
+import { SanityLive } from "@/sanity/lib/live";
 import { isSanityConfigured } from "@/sanity/env";
-import { CONTENT_TERM, SITE_SETTINGS_QUERY } from "@/sanity/lib/queries";
 import Navbar from "@/components/Navbar";
+import { getSiteSettings } from "@/sanity/lib/settings";
+import { resolveSiteConfig } from "@/lib/site-config";
+import { getSocialLinks } from "@/lib/site-content";
 
 const inter = localFont({
   src: [
@@ -23,12 +25,7 @@ const inter = localFont({
 });
 
 export async function generateMetadata(): Promise<Metadata> {
-  const { data: settings } = await sanityFetch({
-    query: SITE_SETTINGS_QUERY,
-    params: { term: CONTENT_TERM },
-    perspective: "published",
-    stega: false,
-  });
+  const settings = await getSiteSettings();
 
   const title =
     settings?.seoTitle ??
@@ -36,16 +33,14 @@ export async function generateMetadata(): Promise<Metadata> {
     "BEM FISIP Unpad 2026";
   const description =
     settings?.seoDescription ?? "Official Website of BEM FISIP Unpad 2026";
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://bemfisipunpad.com";
+  const { origin: baseUrl, indexable } = resolveSiteConfig();
+  const images = settings?.ogImage?.asset?.url ? [settings.ogImage.asset.url] : undefined;
 
   return {
     metadataBase: new URL(baseUrl),
     title,
     description,
-    icons: { icon: "/assets/favicon.ico" },
-    alternates: {
-      canonical: "/",
-    },
+    robots: indexable ? { index: true, follow: true } : { index: false, follow: false, nocache: true },
     openGraph: {
       title,
       description,
@@ -53,33 +48,31 @@ export async function generateMetadata(): Promise<Metadata> {
       siteName: "BEM FISIP Unpad 2026",
       locale: "id_ID",
       type: "website",
+      images,
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
+      images,
     },
   };
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://bemfisipunpad.com";
+  const { origin: baseUrl } = resolveSiteConfig();
+  const settings = await getSiteSettings();
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Organization",
-    name: "BEM FISIP Unpad 2026",
+    name: settings?.organizationName ?? "BEM FISIP Unpad 2026",
     url: baseUrl,
     logo: `${baseUrl}/assets/LOGO%20KABINET/logo-full.png`,
-    sameAs: [
-      "https://www.instagram.com/bemfisipunpad",
-      "https://www.tiktok.com/@bemfisipunpad",
-      "https://www.linkedin.com/company/bem-fisip-unpad",
-      "https://www.youtube.com/@BEMFISIPUNPAD",
-    ],
+    sameAs: getSocialLinks(settings).map((item) => item.href),
   };
 
   return (
@@ -87,7 +80,7 @@ export default function RootLayout({
       <head>
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }}
         />
       </head>
       <body className="min-h-full flex flex-col font-sans bg-[#000c23] text-white">
@@ -97,7 +90,7 @@ export default function RootLayout({
         >
           Lewati ke konten
         </a>
-        <Navbar />
+        <Navbar careCenterUrl={settings?.fisipCareCenterUrl} />
         <main id="main-content" className="flex-1">{children}</main>
         {isSanityConfigured && <SanityLive includeDrafts={false} />}
       </body>

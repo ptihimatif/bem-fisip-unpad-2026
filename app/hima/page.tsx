@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { getPageMetadata } from "@/lib/page-metadata";
 import Footer from "@/components/Footer";
 import { sanityFetch } from "@/sanity/lib/live";
 import {
@@ -8,11 +9,12 @@ import {
 } from "@/sanity/lib/queries";
 import HimaGallery from "@/components/HimaGallery";
 
-export const metadata: Metadata = {
+export async function generateMetadata(): Promise<Metadata> { return getPageMetadata({
+  path: "/hima",
   title: "Hima/Huria — BEM FISIP Unpad 2026",
   description:
     "Kenali Himpunan Mahasiswa (Hima) dan Huria mahasiswa FISIP Unpad. Galeri profil dan informasi resmi setiap organisasi mahasiswa.",
-};
+}); }
 
 export default async function HimaPage() {
   const params = { term: CONTENT_TERM };

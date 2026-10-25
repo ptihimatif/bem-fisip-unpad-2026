@@ -15,14 +15,14 @@ Project `jcpcptq3`, dataset `production`. Schema ada di `sanity/schemaTypes/`, q
 
 ## Ringkasan tipe dokumen
 
-| Tipe (`_type`) | Judul di Studio | Jumlah published (2026-10-25) | Dipakai di |
+| Tipe (`_type`) | Judul di Studio | Jumlah published (snapshot 2026-10-26) | Dipakai di |
 | --- | --- | --- | --- |
 | `siteSettings` | Site Settings (singleton) | 1 | Metadata SEO global |
 | `cabinetProfile` | Cabinet Profile (singleton) | 1 | Beranda (nama kabinet, overview) |
 | `organizationUnit` | Organization Unit | 24 (13 departemen, 4 biro, 5 bidang, 2 pengurus inti) | About, `/penjelasan/[slug]`, sitemap |
 | `member` | Member | 268 (3 tanpa foto) | About, `/penjelasan/[slug]` |
 | `program` | Program | 86 (3 unggulan) | Beranda, `/penjelasan/[slug]` |
-| `mapres` | Mahasiswa Berprestasi | 10 (1 tanpa foto) | Beranda |
+| `mapres` | Mahasiswa Berprestasi | 10 (semua punya referensi foto) | Beranda |
 | `post` | Publication | 6 (3 artikel, 3 kajian) | Beranda, `/article`, `/post/[slug]`, sitemap |
 | `studentAssociation` | Student Association (Himpunan / Huria) | 9 | `/hima` |
 
@@ -37,10 +37,10 @@ Kolom "Tampil?" menunjukkan apakah field itu benar-benar dirender website saat i
 | `organizationName` | string | Ya | Ya, fallback judul SEO |
 | `seoTitle` | string (≤60) | | Ya, `<title>` default |
 | `seoDescription` | text (≤160) | | Ya, meta description default |
-| `ogImage` | gambar | | Belum |
+| `ogImage` | gambar | | Ya, default social preview. |
 | `officialEmail`, `officialAddress` | string/text | | Belum |
-| `socialLinks[]` | {platform, url} | | Belum (footer hardcoded) |
-| `fisipCareCenterUrl` | url | | Belum (navbar/footer hardcoded) |
+| `socialLinks[]` | {platform, url} | | Ya, footer dan JSON-LD; daftar lama menjadi fallback sampai `replaceDefaultSocialLinks` diaktifkan. |
+| `fisipCareCenterUrl` | url | | Ya, navbar/footer. |
 
 ### `cabinetProfile` (ID tetap `cabinetProfile-2026`)
 
@@ -48,8 +48,13 @@ Kolom "Tampil?" menunjukkan apakah field itu benar-benar dirender website saat i
 | --- | --- | --- |
 | `cabinetName` (wajib) | string | Ya, di hero beranda |
 | `overview` | rich text | Ya, "Mengapa Pendar Mentari?" di beranda |
-| `profileVideoUrl` | url | Belum (video YouTube hardcoded di `app/page.tsx`) |
-| `tagline`, `vision`, `missions[]`, `values[]` {title, description}, `workCulture[]`, `logoPhilosophy[]` {title, description} | | Belum. Halaman About memakai teks hardcoded. Lihat [konten yang masih hardcoded](#konten-yang-masih-hardcoded). |
+| `profileVideoUrl` | url | Ya, host/ID YouTube divalidasi sebelum menjadi iframe. |
+| `vision` | text | Ya, kalimat visi. |
+| `values[]` | {title, description} | Ya, kartu Nilai; ada fallback salinan lama. |
+| `visionHighlights[]` | {phrase, description} | Penjelasan phrase visi, dengan fallback sampai migrasi disetujui. |
+| `missionItems[]`, `workCultureItems[]` | {title, description} | Kartu terstruktur baru, dengan fallback salinan lama. |
+| `logoExplanationItems[]` | {elementKey, title, description} | Teks elemen logo dengan kunci presentasi tetap. |
+| `missions[]`, `workCulture[]`, `logoPhilosophy[]`, `tagline` | legacy | Dipertahankan sebagai referensi; tidak diparse otomatis untuk kartu baru. |
 
 `siteSettings` dan `cabinetProfile` adalah singleton: Studio membukanya langsung lewat menu "Site Settings" dan "Cabinet Profile", dan tombol buat dokumen baru untuk kedua tipe ini disembunyikan (`sanity.config.ts`, `sanity/structure.ts`).
 
@@ -133,7 +138,7 @@ Urutan di beranda: `displayOrder`, lalu `rank`, lalu nama. Maksimal 12.
 | `body` | rich text | Ya | Ya. Mendukung paragraf, heading, quote, list, bold, italic, link https. Gambar di dalam isi belum didukung. |
 | `instagramUrl` | url | | Ya, tombol "Lihat Unggahan Resmi di Instagram" |
 | `seoTitle`, `seoDescription` | string/text | | Ya, metadata halaman post |
-| `seoImage` | gambar | | Belum |
+| `seoImage` | gambar | | Ya, social preview post; fallback cover/default global. |
 | `isFeatured`, `displayOrder` | | | Belum |
 
 ### `studentAssociation` (Hima/Huria)
@@ -181,14 +186,14 @@ Perubahan schema yang menyentuh data production termasuk perubahan berisiko. Iku
 
 ## Konten yang masih hardcoded
 
-Bagian berikut **tidak** berubah walaupun field Sanity yang mirip diedit. Perubahannya harus lewat kode.
+Per 2026-10-26, komponen sudah membaca field aktif di bawah. Salinan statis menjadi fallback untuk field terstruktur yang belum diisi; manifest migrasi empat field disiapkan tetapi belum dipublikasikan. Lihat [bab 09](09-konten-about-dan-favicon.md). Menu navigasi dan asset/animasi logo tetap menjadi konfigurasi kode.
 
 | Konten | Lokasi kode | Field Sanity yang sebenarnya sudah ada |
 | --- | --- | --- |
-| Filosofi logo | `components/about/logo-section.ts` | `cabinetProfile.logoPhilosophy` |
-| Visi dan penjabarannya | `components/about/VisiSection.tsx` | `cabinetProfile.vision` |
-| Misi | `components/about/MisiSection.tsx` | `cabinetProfile.missions` |
-| Budaya kerja | `components/about/BudayaKerjaSection.tsx` | `cabinetProfile.workCulture` |
+| Filosofi logo | `components/about/logo-section.ts` | `cabinetProfile.logoExplanationItems` |
+| Visi dan penjabarannya | `components/about/VisiSection.tsx` | `cabinetProfile.vision` + `visionHighlights` |
+| Misi | `components/about/MisiSection.tsx` | `cabinetProfile.missionItems` |
+| Budaya kerja | `components/about/BudayaKerjaSection.tsx` | `cabinetProfile.workCultureItems` |
 | Nilai | `components/about/NilaiSection.tsx` | `cabinetProfile.values` |
 | Video profil YouTube | `app/page.tsx` (`znT9GP-2LYo`) | `cabinetProfile.profileVideoUrl` |
 | Menu navigasi dan link FISIP Care Center | `components/Navbar.tsx`, `components/Footer.tsx` | `siteSettings.fisipCareCenterUrl` |
@@ -196,4 +201,4 @@ Bagian berikut **tidak** berubah walaupun field Sanity yang mirip diedit. Peruba
 | Akun sosial di JSON-LD | `app/layout.tsx` | `siteSettings.socialLinks` |
 | Profil Instagram di "Siaran Pers" | `components/InstagramEmbed.tsx` | — |
 
-Catatan: link LinkedIn dan YouTube di `Footer.tsx` berbeda dengan yang ada di JSON-LD `app/layout.tsx`. Samakan saat memindahkan ke Sanity.
+Footer dan JSON-LD sekarang memakai helper sosial yang sama di `lib/site-content.ts`.

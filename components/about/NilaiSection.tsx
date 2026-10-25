@@ -19,7 +19,8 @@ const NILAI = [
   },
 ];
 
-export default function NilaiSection() {
+export default function NilaiSection({ values }: { values?: { title: string; description: string }[] | null }) {
+  const items = values?.length ? values.map((item) => ({ title: item.title, body: item.description })) : NILAI;
   return (
     <section
       aria-labelledby="nilai-heading"
@@ -52,7 +53,7 @@ export default function NilaiSection() {
 
       {/* Four values -> 2 × 2 on md+, so each card keeps a readable width. */}
       <div className="mt-12 grid grid-cols-1 gap-6 md:grid-cols-2">
-        {NILAI.map((n) => (
+        {items.map((n) => (
           <article
             key={n.title}
             className="rounded border border-white/10 bg-white/5 p-5 backdrop-blur-md shadow-[0_8px_32px_-8px_rgba(255,255,255,0.12)] ring-1 ring-inset ring-white/10 transition-all duration-300 hover:border-white/25 hover:bg-white/15 hover:shadow-[0_12px_40px_-8px_rgba(255,255,255,0.2)] motion-reduce:transition-none sm:p-6"

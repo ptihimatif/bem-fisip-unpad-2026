@@ -2,6 +2,7 @@
 
 # dependencies
 /node_modules
+/.pnpm-store/
 /.pnp
 .pnp.*
 .yarn/*
@@ -12,9 +13,12 @@
 
 # testing
 /coverage
+/test-results/
+/playwright-report/
 
 # next.js
 /.next/
+/.next-check/
 /out/
 
 # production
@@ -56,6 +60,7 @@ docs/Booklet Rekrutmen Staf.pdf
 /outputs/member-import-preflight/
 /outputs/cabinet-values-2026-10-08/
 /outputs/mapres-proker-2026-10-22/
+/outputs/pre-release-cms/
 /docs/Part 1/
 /docs/Part 2/
 /docs/Part 3/

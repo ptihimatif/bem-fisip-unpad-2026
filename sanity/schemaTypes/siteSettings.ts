@@ -17,6 +17,7 @@ export const siteSettings = defineType({
     defineField({ name: "officialAddress", title: "Official Address", type: "text" }),
     defineField({ name: "socialLinks", title: "Social Links", type: "array", of: [defineArrayMember({ type: "object", fields: [defineField({ name: "platform", title: "Platform", type: "string", validation: (rule) => rule.required() }), httpsUrlField("url", "Official URL", true)] })] }),
     httpsUrlField("fisipCareCenterUrl", "FISIP Care Center URL"),
+    defineField({ name: "replaceDefaultSocialLinks", title: "Use only the social links above", type: "boolean", initialValue: false, description: "Enable after entering the complete approved list. Otherwise unspecified existing links remain as fallbacks." }),
   ],
   preview: { select: { title: "organizationName", subtitle: "term" } },
 });

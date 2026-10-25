@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { getCareCenterUrl } from "@/lib/site-content";
 
 const navItems = [
   { href: "/", label: "Beranda" },
@@ -16,8 +17,9 @@ const navItems = [
   },
 ];
 
-export default function Navbar() {
+export default function Navbar({ careCenterUrl }: { careCenterUrl?: string | null }) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const links = navItems.map((item) => item.external ? { ...item, href: getCareCenterUrl({ fisipCareCenterUrl: careCenterUrl }) } : item);
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-998 w-full bg-[#000c23]/25 backdrop-blur-lg">
@@ -35,7 +37,7 @@ export default function Navbar() {
         </Link>
 
         <div className="hidden md:flex items-center gap-8">
-          {navItems.map((item) => (
+          {links.map((item) => (
             <Link
               key={item.label}
               href={item.href}
@@ -97,7 +99,7 @@ export default function Navbar() {
       {menuOpen && (
         <div className="md:hidden overflow-hidden border-t border-b border-white/10">
           <div className="flex flex-col px-6 py-3">
-            {navItems.map((item) => (
+            {links.map((item) => (
               <Link
                 key={item.label}
                 href={item.href}

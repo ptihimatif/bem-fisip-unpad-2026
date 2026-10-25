@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import ParallaxImage from "@/components/ParallaxImage";
+import type { ContentCard } from "@/lib/cabinet-content";
 
 const MISI = [
   {
@@ -33,7 +34,9 @@ const MISI = [
 
 const STAGGER_MS = 400;
 
-export default function MisiSection() {
+export default function MisiSection({ items }: { items?: ContentCard[] | null }) {
+  const cards = items?.length ? items.map((item, index) => ({ no: String(index + 1).padStart(2, "0"), title: item.title, body: item.description })) : MISI;
+  const count = cards.length;
   const isDesktop = () =>
     typeof window !== "undefined" &&
     window.matchMedia("(min-width: 768px)").matches;
@@ -62,14 +65,15 @@ export default function MisiSection() {
       "(prefers-reduced-motion: reduce)",
     ).matches;
 
+    const timers: ReturnType<typeof setTimeout>[] = [];
     const open = (desktop: boolean) => {
       if (!desktop) return;
-      MISI.forEach((_, i) => {
-        setTimeout(
+      for (let i = 0; i < count; i++) {
+        timers.push(setTimeout(
           () => setOpen((prev) => new Set(prev).add(i)),
           reduceMotion ? 0 : i * STAGGER_MS,
-        );
-      });
+        ));
+      }
     };
 
     const mq = window.matchMedia("(min-width: 768px)");
@@ -82,8 +86,8 @@ export default function MisiSection() {
     );
     observer.observe(section);
 
-    return () => observer.disconnect();
-  }, []);
+    return () => { observer.disconnect(); timers.forEach(clearTimeout); };
+  }, [count]);
 
   return (
     <section
@@ -114,7 +118,7 @@ export default function MisiSection() {
         </div>
 
         <div className="space-y-3">
-          {MISI.map((m, i) => {
+          {cards.map((m, i) => {
             const isOpen = open.has(i);
             return (
               <div

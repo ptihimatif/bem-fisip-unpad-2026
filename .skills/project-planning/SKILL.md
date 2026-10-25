@@ -17,7 +17,7 @@ Read:
 4. .agents/CURRENT_STATE.md.
 5. Any existing task or decision directly relevant to the request.
 
-Use docs/2026_PREPARATION_AND_HANDOVER.md when the request touches the inherited 2025 behavior, data, routes, assets, or migration.
+The historical preparation/handover document is absent from this checkout. Use docs/panduan/ for current 2026 operations; obtain the original handover only if inherited-system work actually requires it.
 
 ## Procedure
 

@@ -6,13 +6,15 @@
 
 ## Checklist deploy pertama
 
-1. Hubungkan repositori GitHub ke project hosting. Branch production: `main`.
+1. Pilih hosting dan branch rilis yang disetujui. Pada audit 2026-10-26, `main` masih scaffold awal; jangan deploy otomatis sebelum review. Isi [checklist rilis](08-checklist-rilis.md).
 2. Build command `pnpm build`, install command `pnpm install --frozen-lockfile`, Node.js 22.
 3. Isi environment variable production (lihat [bab 02](02-setup-dan-menjalankan.md#environment-variable)):
    - `NEXT_PUBLIC_SANITY_PROJECT_ID=jcpcptq3`
    - `NEXT_PUBLIC_SANITY_DATASET=production`
    - `NEXT_PUBLIC_SANITY_API_VERSION=2026-09-04`
-   - `NEXT_PUBLIC_SITE_URL=https://<domain-resmi>`
+   - `NEXT_PUBLIC_SITE_ENV=production` (gunakan `staging` untuk preview)
+   - `NEXT_PUBLIC_SITE_URL=https://<domain-resmi-yang-disetujui>`
+   - `SANITY_TEST_MODE=false`
    - `SANITY_REVALIDATE_SECRET=<string acak, minimal 32 karakter>`
 4. Daftarkan domain production di **CORS origins** Sanity (lihat [CORS](#cors-sanity)).
 5. Buat webhook revalidasi (lihat [Webhook revalidasi](#webhook-revalidasi)).
@@ -87,11 +89,11 @@ Port lain (misalnya `localhost:3123` saat tes `pnpm start`) akan kena error CORS
 
 ## SEO
 
-- **Metadata default** (`app/layout.tsx`): judul dan deskripsi dari Site Settings, Open Graph dan Twitter card, `lang="id"`, favicon.
+- **Metadata default** (`app/layout.tsx`): judul/deskripsi dan `ogImage` dari Site Settings, Open Graph/Twitter card, `lang="id"`, favicon BEM dari `app/favicon.ico`.
 - **Per halaman**: `/article` dan `/hima` punya metadata tetap. `/post/[slug]` memakai `seoTitle`/`seoDescription` atau judul/excerpt, plus canonical. `/penjelasan/[slug]` memakai nama dan deskripsi unit.
-- **JSON-LD Organization** di layout: nama, URL, logo, akun sosial (hardcoded).
+- **JSON-LD Organization** di layout: origin yang divalidasi, logo, dan akun sosial dari helper yang sama dengan footer/Site Settings.
 - **`/sitemap.xml`**: beranda, about, article, hima, semua post, semua unit (termasuk Bidang dan Pengurus Inti). Selalu data terbaru.
-- **`/robots.txt`**: izinkan semua kecuali `/studio/` dan `/api/`, menunjuk ke sitemap.
+- **`/robots.txt`**: production mengizinkan halaman publik kecuali `/studio` dan `/api/`, serta menunjuk sitemap. Staging/development melarang semua crawling dan mendapat meta/header `noindex`.
 
 Setelah domain aktif: daftarkan di Google Search Console dan submit `https://<domain>/sitemap.xml`.
 
@@ -129,7 +131,7 @@ Butuh login Sanity CLI (`pnpm exec sanity login`) dengan akses ke project. Simpa
 
 - Jangan commit file `.env*`. Hanya `.env.example` yang boleh ada di git.
 - Website tidak memakai token baca Sanity. Draft tidak bisa bocor ke publik.
-- Semua link dari konten dicek `safeExternalUrl()`: hanya `https:`. Link `javascript:` dan `http:` dibuang.
+- Link dari konten memakai `safeExternalUrl()` (hanya HTTPS); URL video juga harus cocok dengan host YouTube dan ID yang valid.
 - Embed pihak ketiga hanya YouTube (iframe dengan `sandbox`) dan Instagram.
 - `/studio` terbuka untuk siapa saja, tapi hanya akun yang diundang ke project Sanity yang bisa login dan mengedit. Kelola anggota di sanity.io/manage dan cabut akses pengurus yang sudah selesai masa jabatannya.
 - Foto dan nama anggota adalah data pribadi. Pastikan ada persetujuan sebelum dipublikasikan.

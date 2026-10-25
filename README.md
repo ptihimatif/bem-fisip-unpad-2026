@@ -15,7 +15,10 @@ pnpm dev                     # http://localhost:3000, Studio di /studio
 Sebelum push:
 
 ```bash
-pnpm lint && pnpm typecheck && pnpm test && pnpm build
+pnpm lint
+pnpm typecheck
+pnpm test
+pnpm test:browser
 ```
 
 ## Dokumentasi
@@ -29,5 +32,9 @@ Dokumentasi lengkap (bahasa Indonesia) ada di [`docs/panduan/`](docs/panduan/REA
 5. [Panduan editor konten](docs/panduan/05-panduan-editor-konten.md)
 6. [Deploy dan operasional](docs/panduan/06-deploy-dan-operasional.md)
 7. [Pemeliharaan dan troubleshooting](docs/panduan/07-pemeliharaan-dan-troubleshooting.md)
+8. [Checklist staging dan production](docs/panduan/08-checklist-rilis.md)
+9. [CMS About dan favicon](docs/panduan/09-konten-about-dan-favicon.md)
+
+`pnpm test:browser` memakai fixture terisolasi dan memerlukan `pnpm exec playwright install chromium` sekali. `pnpm build` untuk deployment memerlukan origin dan environment yang dipilih; lihat bab 02. Jangan gunakan hasil build fixture untuk deployment.
 
 Aturan kerja proyek (rencana dan persetujuan sebelum mengubah apa pun) ada di [`AGENTS.md`](AGENTS.md) dan folder `.agents/`. Brief produk dan teknis: [`docs/AGENTIC_DEVELOPMENT_BRIEF_2026.md`](docs/AGENTIC_DEVELOPMENT_BRIEF_2026.md).

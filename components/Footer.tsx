@@ -1,11 +1,9 @@
 import Link from "next/link";
 import Image from "next/image";
+import { getCareCenterUrl, getSocialLinks, type EditableSiteSettings } from "@/lib/site-content";
 
 interface FooterProps {
-  settings?: {
-    fisipCareCenterUrl?: string | null;
-  } | null;
-  careCenterUrl?: string | null;
+  settings?: EditableSiteSettings | null;
 }
 
 const navItems = [
@@ -20,35 +18,9 @@ const navItems = [
   },
 ];
 
-const socialItems = [
-  {
-    label: "Instagram",
-    src: "/assets/logo/ig.svg",
-    href: "https://www.instagram.com/bemfisipunpad/",
-  },
-  {
-    label: "TikTok",
-    src: "/assets/logo/tiktok.svg",
-    href: "https://www.tiktok.com/@bemfisipunpad",
-  },
-  {
-    label: "LinkedIn",
-    src: "/assets/logo/linkedin.svg",
-    href: "https://id.linkedin.com/company/bemfisipunpad",
-  },
-  {
-    label: "YouTube",
-    src: "/assets/logo/yt.svg",
-    href: "https://www.youtube.com/@bemfisipunpad4007",
-  },
-  {
-    label: "X",
-    src: "/assets/logo/x.svg",
-    href: "https://x.com/bemfisipunpad",
-  },
-];
-
-export default function Footer({}: FooterProps = {}) {
+export default function Footer({ settings }: FooterProps = {}) {
+  const links = navItems.map((item) => item.external ? { ...item, href: getCareCenterUrl(settings) } : item);
+  const socials = getSocialLinks(settings);
   return (
     <footer className="border-t py-12 text-white">
       <div className="w-full px-6 sm:px-8 lg:px-16 xl:px-24 2xl:px-32">
@@ -70,7 +42,7 @@ export default function Footer({}: FooterProps = {}) {
             aria-label="Navigasi footer"
             className="flex flex-1 flex-col items-start gap-5 md:items-end md:gap-3"
           >
-            {navItems.map((item) => (
+            {links.map((item) => (
               <Link
                 key={item.label}
                 href={item.href}
@@ -90,10 +62,10 @@ export default function Footer({}: FooterProps = {}) {
             Reserved.
           </p>
           <div
-            className="flex items-center gap-10"
+            className="flex flex-wrap items-center gap-x-10 gap-y-4"
             aria-label="Media sosial BEM FISIP UNPAD"
           >
-            {socialItems.map((item) => (
+            {socials.map((item) => (
               <Link
                 key={item.label}
                 href={item.href ?? "#"}
@@ -102,13 +74,13 @@ export default function Footer({}: FooterProps = {}) {
                 title={item.label}
                 className="text-white/80 transition-colors hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-yellow"
               >
-                <Image
+                {item.src ? <Image
                   src={item.src}
                   alt={item.label}
                   width={28}
                   height={28}
                   className="h-7 w-7"
-                />
+                /> : <span className="text-sm font-bold">{item.label}</span>}
               </Link>
             ))}
           </div>

@@ -13,7 +13,7 @@ const IMAGE_FIELDS = `
 export const SITE_SETTINGS_QUERY = defineQuery(`
   *[_id == "siteSettings-2026" && term == $term][0]{
     _id, organizationName, term, seoTitle, seoDescription, ogImage {${IMAGE_FIELDS}},
-    officialEmail, officialAddress, socialLinks[]{platform, url}, fisipCareCenterUrl
+    officialEmail, officialAddress, socialLinks[]{platform, url}, fisipCareCenterUrl, replaceDefaultSocialLinks
   }
 `);
 
@@ -21,7 +21,9 @@ export const CABINET_PROFILE_QUERY = defineQuery(`
   *[_id == "cabinetProfile-2026" && term == $term][0]{
     _id, cabinetName, tagline, overview, profileVideoUrl, vision, missions,
     values[]{_key, title, description},
-    workCulture, logoPhilosophy[]{_key, title, description}
+    workCulture, logoPhilosophy[]{_key, title, description},
+    visionHighlights[]{_key, phrase, description}, missionItems[]{_key, title, description},
+    workCultureItems[]{_key, title, description}, logoExplanationItems[]{_key, elementKey, title, description}
   }
 `);
 

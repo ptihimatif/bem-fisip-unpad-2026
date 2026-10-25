@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { getPageMetadata } from "@/lib/page-metadata";
 import { notFound } from "next/navigation";
 import Footer from "@/components/Footer";
 import MeshBackgroundBright from "@/components/about/MeshBackgroundBright";
@@ -32,7 +33,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const unit = await getUnit((await params).birdep);
   return unit
-    ? { title: unit.officialName, description: unit.description }
+    ? getPageMetadata({ title: unit.officialName, description: unit.description, path: `/penjelasan/${(await params).birdep}` })
     : { title: "Bidang tidak ditemukan" };
 }
 

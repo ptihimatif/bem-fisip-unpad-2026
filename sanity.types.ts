@@ -225,6 +225,35 @@ export type CabinetProfile = {
   }>;
   profileVideoUrl?: string;
   vision?: string;
+  visionHighlights?: Array<{
+    phrase: string;
+    description: string;
+    _key: string;
+  }>;
+  missionItems?: Array<{
+    title: string;
+    description: string;
+    _key: string;
+  }>;
+  workCultureItems?: Array<{
+    title: string;
+    description: string;
+    _key: string;
+  }>;
+  logoExplanationItems?: Array<{
+    elementKey:
+      | "wave"
+      | "pendar"
+      | "mentari"
+      | "rays"
+      | "sun"
+      | "yellow"
+      | "blue"
+      | "synergy";
+    title: string;
+    description: string;
+    _key: string;
+  }>;
   missions?: Array<string>;
   values?: Array<{
     title: string;
@@ -267,6 +296,7 @@ export type SiteSettings = {
     _key: string;
   }>;
   fisipCareCenterUrl?: string;
+  replaceDefaultSocialLinks?: boolean;
 };
 
 export type Mapres = {
@@ -472,7 +502,7 @@ export type AllSanitySchemaTypes =
 
 // Source: sanity/lib/queries.ts
 // Variable: SITE_SETTINGS_QUERY
-// Query: *[_id == "siteSettings-2026" && term == $term][0]{    _id, organizationName, term, seoTitle, seoDescription, ogImage {  asset->{_id, url, metadata {lqip, dimensions {width, height}}},  alt,  attribution,  crop,  hotspot},    officialEmail, officialAddress, socialLinks[]{platform, url}, fisipCareCenterUrl  }
+// Query: *[_id == "siteSettings-2026" && term == $term][0]{    _id, organizationName, term, seoTitle, seoDescription, ogImage {  asset->{_id, url, metadata {lqip, dimensions {width, height}}},  alt,  attribution,  crop,  hotspot},    officialEmail, officialAddress, socialLinks[]{platform, url}, fisipCareCenterUrl, replaceDefaultSocialLinks  }
 export type SITE_SETTINGS_QUERY_RESULT =
   | {
       _id: string;
@@ -485,6 +515,7 @@ export type SITE_SETTINGS_QUERY_RESULT =
       officialAddress: null;
       socialLinks: null;
       fisipCareCenterUrl: null;
+      replaceDefaultSocialLinks: null;
     }
   | {
       _id: string;
@@ -497,6 +528,7 @@ export type SITE_SETTINGS_QUERY_RESULT =
       officialAddress: null;
       socialLinks: null;
       fisipCareCenterUrl: null;
+      replaceDefaultSocialLinks: null;
     }
   | {
       _id: string;
@@ -519,6 +551,7 @@ export type SITE_SETTINGS_QUERY_RESULT =
         url: string | null;
       }> | null;
       fisipCareCenterUrl: null;
+      replaceDefaultSocialLinks: null;
     }
   | {
       _id: string;
@@ -531,6 +564,7 @@ export type SITE_SETTINGS_QUERY_RESULT =
       officialAddress: null;
       socialLinks: null;
       fisipCareCenterUrl: null;
+      replaceDefaultSocialLinks: null;
     }
   | {
       _id: string;
@@ -562,12 +596,13 @@ export type SITE_SETTINGS_QUERY_RESULT =
         url: string;
       }> | null;
       fisipCareCenterUrl: string | null;
+      replaceDefaultSocialLinks: boolean | null;
     }
   | null;
 
 // Source: sanity/lib/queries.ts
 // Variable: CABINET_PROFILE_QUERY
-// Query: *[_id == "cabinetProfile-2026" && term == $term][0]{    _id, cabinetName, tagline, overview, profileVideoUrl, vision, missions,    values[]{_key, title, description},    workCulture, logoPhilosophy[]{_key, title, description}  }
+// Query: *[_id == "cabinetProfile-2026" && term == $term][0]{    _id, cabinetName, tagline, overview, profileVideoUrl, vision, missions,    values[]{_key, title, description},    workCulture, logoPhilosophy[]{_key, title, description},    visionHighlights[]{_key, phrase, description}, missionItems[]{_key, title, description},    workCultureItems[]{_key, title, description}, logoExplanationItems[]{_key, elementKey, title, description}  }
 export type CABINET_PROFILE_QUERY_RESULT =
   | {
       _id: string;
@@ -580,6 +615,10 @@ export type CABINET_PROFILE_QUERY_RESULT =
       values: null;
       workCulture: null;
       logoPhilosophy: null;
+      visionHighlights: null;
+      missionItems: null;
+      workCultureItems: null;
+      logoExplanationItems: null;
     }
   | {
       _id: string;
@@ -618,6 +657,35 @@ export type CABINET_PROFILE_QUERY_RESULT =
         title: string;
         description: string;
       }> | null;
+      visionHighlights: Array<{
+        _key: string;
+        phrase: string;
+        description: string;
+      }> | null;
+      missionItems: Array<{
+        _key: string;
+        title: string;
+        description: string;
+      }> | null;
+      workCultureItems: Array<{
+        _key: string;
+        title: string;
+        description: string;
+      }> | null;
+      logoExplanationItems: Array<{
+        _key: string;
+        elementKey:
+          | "blue"
+          | "mentari"
+          | "pendar"
+          | "rays"
+          | "sun"
+          | "synergy"
+          | "wave"
+          | "yellow";
+        title: string;
+        description: string;
+      }> | null;
     }
   | {
       _id: string;
@@ -630,6 +698,10 @@ export type CABINET_PROFILE_QUERY_RESULT =
       values: null;
       workCulture: null;
       logoPhilosophy: null;
+      visionHighlights: null;
+      missionItems: null;
+      workCultureItems: null;
+      logoExplanationItems: null;
     }
   | null;
 
@@ -1114,8 +1186,8 @@ export type STUDENT_ASSOCIATIONS_QUERY_RESULT = Array<{
 // Query TypeMap
 declare global {
   interface SanityQueries {
-    '\n  *[_id == "siteSettings-2026" && term == $term][0]{\n    _id, organizationName, term, seoTitle, seoDescription, ogImage {\n  asset->{_id, url, metadata {lqip, dimensions {width, height}}},\n  alt,\n  attribution,\n  crop,\n  hotspot\n},\n    officialEmail, officialAddress, socialLinks[]{platform, url}, fisipCareCenterUrl\n  }\n': SITE_SETTINGS_QUERY_RESULT;
-    '\n  *[_id == "cabinetProfile-2026" && term == $term][0]{\n    _id, cabinetName, tagline, overview, profileVideoUrl, vision, missions,\n    values[]{_key, title, description},\n    workCulture, logoPhilosophy[]{_key, title, description}\n  }\n': CABINET_PROFILE_QUERY_RESULT;
+    '\n  *[_id == "siteSettings-2026" && term == $term][0]{\n    _id, organizationName, term, seoTitle, seoDescription, ogImage {\n  asset->{_id, url, metadata {lqip, dimensions {width, height}}},\n  alt,\n  attribution,\n  crop,\n  hotspot\n},\n    officialEmail, officialAddress, socialLinks[]{platform, url}, fisipCareCenterUrl, replaceDefaultSocialLinks\n  }\n': SITE_SETTINGS_QUERY_RESULT;
+    '\n  *[_id == "cabinetProfile-2026" && term == $term][0]{\n    _id, cabinetName, tagline, overview, profileVideoUrl, vision, missions,\n    values[]{_key, title, description},\n    workCulture, logoPhilosophy[]{_key, title, description},\n    visionHighlights[]{_key, phrase, description}, missionItems[]{_key, title, description},\n    workCultureItems[]{_key, title, description}, logoExplanationItems[]{_key, elementKey, title, description}\n  }\n': CABINET_PROFILE_QUERY_RESULT;
     '\n  *[_type == "program" && term == $term && isFeatured == true && organizationUnit->term == $term]\n  | order(displayOrder asc, name asc)[0...6]{\n    _id, name, "slug": slug.current, shortDescription, description, coverImage {\n  asset->{_id, url, metadata {lqip, dimensions {width, height}}},\n  alt,\n  attribution,\n  crop,\n  hotspot\n},\n    externalLink, "organizationUnit": organizationUnit->{_id, officialName, abbreviation, "slug": slug.current}\n  }\n': FEATURED_PROGRAMS_QUERY_RESULT;
     '\n  *[_type == "program" && term == $term && slug.current == $slug && organizationUnit->term == $term][0]{\n    _id, name, "slug": slug.current, shortDescription, description, coverImage {\n  asset->{_id, url, metadata {lqip, dimensions {width, height}}},\n  alt,\n  attribution,\n  crop,\n  hotspot\n},\n    startDate, endDate, externalLink,\n    "organizationUnit": organizationUnit->{_id, officialName, abbreviation, "slug": slug.current}\n  }\n': PROGRAM_BY_SLUG_QUERY_RESULT;
     '\n  *[_type == "post" && term == $term && defined(slug.current)]\n  | order(publishedAt desc)[0...6]{\n    _id, judul, "slug": slug.current, postCategory, publishedAt, excerpt,\n    image {\n  asset->{_id, url, metadata {lqip, dimensions {width, height}}},\n  alt,\n  attribution,\n  crop,\n  hotspot\n}, instagramUrl\n  }\n': PUBLICATION_CARDS_QUERY_RESULT;

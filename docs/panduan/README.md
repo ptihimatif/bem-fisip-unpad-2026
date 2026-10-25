@@ -2,7 +2,7 @@
 
 Dokumentasi ini menjelaskan cara kerja, cara menjalankan, cara mengisi konten, dan cara merawat website resmi BEM FISIP Unpad 2026 (Kabinet Pendar Mentari).
 
-Status dokumen: ditulis 2026-10-25 berdasarkan isi repositori dan data Sanity `jcpcptq3/production` pada tanggal itu. Kalau kode atau konten berubah, perbarui bab yang terkait.
+Status dokumen: diperbarui 2026-10-26 untuk perbaikan lokal prarilis. Angka konten adalah snapshot audit; hosting dan domain belum dipilih, dan dokumen ini tidak menyatakan deployment sudah dilakukan.
 
 ## Pilih sesuai peranmu
 
@@ -24,6 +24,8 @@ Status dokumen: ditulis 2026-10-25 berdasarkan isi repositori dan data Sanity `j
 5. [Panduan editor konten](05-panduan-editor-konten.md) — langkah mengisi konten di Sanity Studio.
 6. [Deploy dan operasional](06-deploy-dan-operasional.md) — environment production, keamanan (CSP), webhook, CORS, SEO, rollback.
 7. [Pemeliharaan dan troubleshooting](07-pemeliharaan-dan-troubleshooting.md) — masalah umum, keterbatasan yang diketahui, backlog, serah terima tahunan.
+8. [Checklist rilis](08-checklist-rilis.md) — keputusan staging/production, otoritas, verifikasi, dan rollback.
+9. [Konten About dan favicon](09-konten-about-dan-favicon.md) — field CMS baru, manifest yang belum dipublikasikan, dan icon browser.
 
 ## Dokumen lain di repositori
 

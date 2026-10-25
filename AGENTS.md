@@ -1,6 +1,6 @@
 <!-- BEGIN:nextjs-agent-rules -->
 
-# This is NOT the Next.js you know
+## This is NOT the Next.js you know
 
 This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
 
@@ -24,7 +24,7 @@ Before planning or changing the repository, read:
 
 For frontend or UI work, also load the repository-local Impeccable skill at `.agents/skills/impeccable/SKILL.md`. Its broad UI-focused description enables implicit Codex discovery; explicit `$impeccable` commands remain available when a particular playbook is wanted.
 
-Use docs/2026_PREPARATION_AND_HANDOVER.md when work depends on the inherited 2025 implementation, migration risks, or CMS history.
+The historical `docs/2026_PREPARATION_AND_HANDOVER.md` is not present in this checkout. For current 2026 operations use `docs/panduan/` and approved task history. If work actually requires inherited implementation details, obtain the original handover instead of assuming its contents.
 
 ## Operating rules
 

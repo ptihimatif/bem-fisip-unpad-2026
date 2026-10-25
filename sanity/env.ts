@@ -1,9 +1,12 @@
+import { isIsolatedTestMode } from '../lib/site-config'
+
 export const apiVersion =
   process.env.NEXT_PUBLIC_SANITY_API_VERSION || '2026-09-04'
 
-const allowBuildFallback = process.env.CI === 'true' || process.env.NODE_ENV === 'test'
+export const isSanityTestMode = isIsolatedTestMode()
+const allowBuildFallback = isSanityTestMode || process.env.NODE_ENV === 'test'
 
-export const isSanityConfigured = Boolean(
+export const isSanityConfigured = !isSanityTestMode && Boolean(
   process.env.NEXT_PUBLIC_SANITY_DATASET?.trim() &&
     process.env.NEXT_PUBLIC_SANITY_PROJECT_ID?.trim()
 )

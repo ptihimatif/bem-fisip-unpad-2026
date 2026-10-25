@@ -1,15 +1,14 @@
 import type { MetadataRoute } from "next";
+import { resolveSiteConfig } from "@/lib/site-config";
 
 export default function robots(): MetadataRoute.Robots {
-  const baseUrl =
-    process.env.NEXT_PUBLIC_SITE_URL || "https://bemfisipunpad.com";
+  const { origin: baseUrl, indexable } = resolveSiteConfig();
 
   return {
     rules: {
       userAgent: "*",
-      allow: "/",
-      disallow: ["/studio/", "/api/"],
+      ...(indexable ? { allow: "/", disallow: ["/studio", "/api/"] } : { disallow: "/" }),
     },
-    sitemap: `${baseUrl}/sitemap.xml`,
+    sitemap: indexable ? `${baseUrl}/sitemap.xml` : undefined,
   };
 }

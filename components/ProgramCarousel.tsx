@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import gsap from "gsap";
+import { createPortal } from "react-dom";
 import { SanityImage } from "@/components/SanityImage";
 import { SanityPortableText } from "@/components/SanityPortableText";
 import type { FEATURED_PROGRAMS_QUERY_RESULT } from "@/sanity.types";
@@ -116,7 +117,7 @@ export default function ProgramCarousel({ programs }: ProgramCarouselProps) {
       {/* Desktop Navigation Buttons - Hidden on sm and md */}
       <button
         onClick={handlePrev}
-        className="absolute -left-12 top-1/2 z-10 -translate-y-1/2 hidden lg:flex cursor-pointer items-center justify-center text-white transition-transform hover:scale-110 hover:text-brand-yellow focus:outline-none"
+        className="absolute -left-12 top-1/2 z-10 -translate-y-1/2 hidden lg:flex cursor-pointer items-center justify-center text-white transition-transform hover:scale-110 hover:text-brand-yellow focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-yellow"
         aria-label="Previous programs"
       >
         <svg
@@ -137,7 +138,7 @@ export default function ProgramCarousel({ programs }: ProgramCarouselProps) {
 
       <button
         onClick={handleNext}
-        className="absolute -right-12 top-1/2 z-10 -translate-y-1/2 hidden lg:flex cursor-pointer items-center justify-center text-white transition-transform hover:scale-110 hover:text-brand-yellow focus:outline-none"
+        className="absolute -right-12 top-1/2 z-10 -translate-y-1/2 hidden lg:flex cursor-pointer items-center justify-center text-white transition-transform hover:scale-110 hover:text-brand-yellow focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-yellow"
         aria-label="Next programs"
       >
         <svg
@@ -215,8 +216,8 @@ export default function ProgramCarousel({ programs }: ProgramCarouselProps) {
       </div>
 
       {/* GSAP 3D Modal */}
-      {selectedProgram && (
-        <ProgramModal program={selectedProgram} onClose={closeProgram} />
+      {selectedProgram && createPortal(
+        <ProgramModal program={selectedProgram} onClose={closeProgram} />, document.body,
       )}
     </div>
   );
@@ -232,15 +233,17 @@ function ProgramModal({
   const overlayRef = useRef<HTMLDivElement>(null);
   const cardContainerRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
-  const previouslyFocusedRef = useRef<HTMLElement | null>(null);
+  const reducedMotionRef = useRef(false);
+  const closingRef = useRef(false);
 
   useEffect(() => {
-    previouslyFocusedRef.current = document.activeElement as HTMLElement;
+    reducedMotionRef.current = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     closeButtonRef.current?.focus();
 
     const ctx = gsap.context(() => {
+      if (reducedMotionRef.current) return;
       gsap.fromTo(
         overlayRef.current,
         { opacity: 0 },
@@ -266,6 +269,9 @@ function ProgramModal({
   }, []);
 
   const handleClose = () => {
+    if (closingRef.current) return;
+    closingRef.current = true;
+    if (reducedMotionRef.current) { onClose(); return; }
     gsap.to(cardContainerRef.current, {
       rotationY: 180,
       scale: 0.5,
@@ -313,7 +319,7 @@ function ProgramModal({
   return (
     <div
       ref={overlayRef}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm"
+      className="fixed inset-0 z-[999] flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm"
       onClick={handleClose}
     >
       <div
@@ -342,7 +348,7 @@ function ProgramModal({
             <button
               ref={closeButtonRef}
               onClick={handleClose}
-              className="absolute right-5 top-5 cursor-pointer text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] transition-colors hover:text-brand-yellow focus:outline-none"
+              className="absolute right-5 top-5 flex min-h-11 min-w-11 items-center justify-center cursor-pointer bg-brand-blue text-white transition-colors hover:text-brand-yellow focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-yellow"
               aria-label="Tutup"
             >
               <svg
@@ -373,6 +379,7 @@ function ProgramModal({
             {program.description?.length ? (
               <div className="prose prose-blue max-w-none">
                 <SanityPortableText
+                  tone="light"
                   blocks={
                     program.description as NonNullable<
                       Parameters<typeof SanityPortableText>[0]["blocks"]

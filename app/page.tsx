@@ -1,4 +1,6 @@
 import Link from "next/link";
+import type { Metadata } from "next";
+import { youtubeEmbedUrl } from "@/lib/site-content";
 import ParallaxImage from "@/components/ParallaxImage";
 import ArticleCard from "@/components/ArticleCard";
 import { SanityImage } from "@/components/SanityImage";
@@ -25,6 +27,8 @@ import {
   PUBLICATION_CARDS_QUERY,
   SITE_SETTINGS_QUERY,
 } from "@/sanity/lib/queries";
+
+export const metadata: Metadata = { alternates: { canonical: "/" } };
 
 export default async function Home() {
   const params = { term: CONTENT_TERM };
@@ -69,6 +73,7 @@ export default async function Home() {
 
   const settings = settingsResult.data;
   const cabinet = cabinetResult.data;
+  const videoUrl = youtubeEmbedUrl(cabinet?.profileVideoUrl);
   const programs = (programsResult.data ??
     []) as FEATURED_PROGRAMS_QUERY_RESULT;
   const posts = postsResult.data ?? [];
@@ -168,14 +173,14 @@ export default async function Home() {
 
         {/* Video YouTube (Urutan kedua di sm/md, urutan kanan di lg) */}
         <div className="relative z-10 w-full aspect-video overflow-hidden border border-white/15 lg:h-80 lg:w-[84%] lg:justify-self-start lg:aspect-auto order-2 lg:order-2">
-          <iframe
+          {videoUrl && <iframe
             className="absolute inset-0 z-10 h-full w-full"
-            src="https://www.youtube.com/embed/znT9GP-2LYo"
+            src={videoUrl}
             title="Video profil BEM FISIP UNPAD"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             allowFullScreen
             sandbox="allow-scripts allow-same-origin allow-presentation"
-          />
+          />}
         </div>
 
         {/* Deskripsi Teks (Urutan ketiga di sm/md, urutan kiri di lg) */}

@@ -2,101 +2,70 @@
 
 ## Kebutuhan
 
-- Node.js 22 (CI memakai 22.18.0).
-- pnpm 11.1.2. Repositori menyatakan `packageManager: pnpm@11.1.2` dan memakai `pnpm-lock.yaml`. Aktifkan dengan `corepack enable` atau install pnpm versi itu.
-- Git.
-- Akses baca ke repositori GitHub `ptihimatif/bem-fisip-unpad-2026`.
-- Untuk mengedit konten lewat Studio: akun Sanity yang sudah diundang ke project `jcpcptq3`.
-
-`npm run <script>` juga bisa menjalankan script yang sama. Untuk install dependency, tetap pakai pnpm supaya lockfile tidak berubah.
-
-## Langkah pertama
+- Node.js 22.18.0, mengikuti `.node-version` dan CI.
+- pnpm 11.1.2, mengikuti `packageManager` dan `pnpm-lock.yaml`.
+- Git dan akses repositori. Editor Studio perlu akun yang diundang ke project Sanity.
 
 ```bash
-git clone https://github.com/ptihimatif/bem-fisip-unpad-2026.git
-cd bem-fisip-unpad-2026
-pnpm install
-cp .env.example .env.local   # lalu isi nilainya, lihat tabel di bawah
+pnpm install --frozen-lockfile
+cp .env.example .env.local
 pnpm dev
 ```
 
-Buka `http://localhost:3000`. Studio ada di `http://localhost:3000/studio`.
+Isi identitas project/dataset yang disetujui sebelum menjalankan development. Di PowerShell, gunakan `Copy-Item .env.example .env.local`. Website berada di `http://localhost:3000`, Studio di `/studio`.
 
 ## Environment variable
 
-Semua file `.env*` kecuali `.env.example` diabaikan oleh git (`.gitignore`). Jangan pernah commit nilai rahasia.
+Semua `.env*` selain `.env.example` diabaikan Git. Jangan menyalin secret ke dokumentasi atau browser.
 
-| Nama | Wajib | Rahasia | Isi | Dipakai di |
-| --- | --- | --- | --- | --- |
-| `NEXT_PUBLIC_SANITY_PROJECT_ID` | Ya | Tidak | `jcpcptq3` | `sanity/env.ts` |
-| `NEXT_PUBLIC_SANITY_DATASET` | Ya | Tidak | `production` | `sanity/env.ts` |
-| `NEXT_PUBLIC_SANITY_API_VERSION` | Tidak | Tidak | `2026-09-04` (default kalau kosong) | `sanity/env.ts` |
-| `NEXT_PUBLIC_SITE_URL` | Untuk production | Tidak | Alamat utama website, misalnya `https://bemfisipunpad.com`. Default `https://bemfisipunpad.com`. | metadata, canonical, sitemap, robots, JSON-LD |
-| `SANITY_REVALIDATE_SECRET` | Untuk production | **Ya** | String acak panjang, sama dengan secret webhook di Sanity | `app/api/revalidate/route.ts` |
+| Nama | Kegunaan |
+| --- | --- |
+| `NEXT_PUBLIC_SANITY_PROJECT_ID` | Project yang disetujui untuk lingkungan tersebut. Project 2026 saat audit: `jcpcptq3`. |
+| `NEXT_PUBLIC_SANITY_DATASET` | Dataset lingkungan tersebut. Dataset yang sudah ada saat audit: `production`. Dataset staging belum dibuat. |
+| `NEXT_PUBLIC_SANITY_API_VERSION` | Default `2026-09-04`. |
+| `NEXT_PUBLIC_SITE_ENV` | `development`, `staging`, atau `production`. Hanya production yang boleh diindeks. |
+| `NEXT_PUBLIC_SITE_URL` | Origin lengkap, misalnya `https://<domain-yang-disetujui>`, tanpa path/query/fragment. Wajib untuk staging dan production. Tidak ada lagi fallback ke domain publik yang belum diputuskan. |
+| `SANITY_REVALIDATE_SECRET` | Secret server, harus cocok dengan webhook. Jangan gunakan awalan `NEXT_PUBLIC_`. |
+| `SANITY_TEST_MODE` | `false` untuk deployment. `true` hanya untuk fixture lokal/CI melalui perintah pemeriksaan. Mode ini ditolak pada build Vercel/Netlify. |
 
-Catatan:
+Untuk development lokal, origin default adalah `http://localhost:3000`. Untuk release gunakan HTTPS dan environment eksplisit. Copy `.env.example` memberi nilai `development`; ubah ke `staging` atau `production` pada hosting. Hosting dengan nilai development ditolak.
 
-- Jangan beri awalan `NEXT_PUBLIC_` pada secret. Variabel berawalan itu ikut terkirim ke browser.
-- Website tidak memakai token Sanity untuk membaca. `defineLive` sengaja diset `serverToken: false` dan `browserToken: false`, jadi draft tidak mungkin bocor ke publik.
-- Kalau project ID atau dataset kosong di luar CI/test, aplikasi berhenti dengan error `Missing environment variable: …`.
+`CI=true` tidak lagi mengizinkan project/dataset kosong. Pemeriksaan terisolasi harus memilih mode test secara eksplisit. Website publik tetap membaca published saja, tanpa token baca draft.
 
 ## Perintah
 
 | Perintah | Fungsi |
 | --- | --- |
-| `pnpm dev` | Server development dengan hot reload di port 3000. CSP **tidak** aktif di mode ini. |
-| `pnpm build` | Build production. Wajib lolos sebelum merge. |
-| `pnpm start` | Menjalankan hasil build (mode production, CSP aktif). Port lain: `PORT=3123 pnpm start`. |
-| `pnpm lint` | ESLint untuk seluruh repo. |
-| `pnpm typecheck` | `tsc --noEmit`, cek tipe tanpa build. |
-| `pnpm test` | Unit test di `tests/**/*.test.ts` (`node:test` lewat `tsx`). |
-| `pnpm typegen` | Ekstrak schema Sanity ke `schema.json` lalu generate tipe ke `sanity.types.ts`. Jalankan setiap kali schema atau query berubah. |
+| `pnpm dev` | Development dengan data lingkungan yang dikonfigurasi. |
+| `pnpm build` | Build aplikasi sungguhan; konfigurasi release harus lengkap. |
+| `pnpm start` | Menjalankan hasil build; `pnpm start -p 3123` untuk port lain. |
+| `pnpm build:check` | Build production-mode dengan fixture di `.next-check`, terpisah dari hasil build aplikasi sungguhan di `.next`. |
+| `pnpm test:browser` | Build fixture lalu delapan pemeriksaan Chromium desktop/mobile. Tidak membaca atau menulis dataset klien. |
+| `pnpm test:browser:built` | Ulangi suite pada hasil build fixture terakhir di `.next-check`. |
+| `pnpm lint` | ESLint. |
+| `pnpm typecheck` | Pemeriksaan TypeScript tanpa emit. |
+| `pnpm test` | Tes perilaku URL, environment, CMS mapping, dan autentikasi webhook di `tests/*.test.ts`. |
+| `pnpm typegen` | Ekstrak schema dan hasilkan ulang `sanity.types.ts` setelah perubahan schema/query. |
+| `pnpm audit --prod` | Laporan advisori saat ini; tinjau relevansi setiap laporan. |
 
-## Quality gate sebelum push
+Pasang browser sekali sebelum suite: `pnpm exec playwright install chromium`. Di Linux CI, workflow memakai `--with-deps`.
 
-Urutan yang sama dengan CI:
+## Quality gate
 
 ```bash
+pnpm install --frozen-lockfile
 pnpm lint
 pnpm typecheck
 pnpm test
-pnpm build
+pnpm test:browser
 ```
 
-Untuk perubahan tampilan, tambahkan:
+CI menjalankan urutan tersebut di Node 22.18.0/pnpm 11.1.2 dan mengunggah trace/screenshot ketika browser test gagal. Fixture mencakup program dengan/tanpa rich text, gambar kosong, konten About terstruktur, filter artikel, serta slug yang tidak ada. Build hosting sungguhan harus diuji lagi pada konfigurasi dan domain staging yang dipilih.
 
-- `pnpm start` lalu cek halaman yang terkait di browser, termasuk ukuran HP (lebar sekitar 390px). Perhatikan Console: tidak boleh ada error `Content-Security-Policy`.
-- Detector Impeccable untuk file UI yang diubah: `node .agents/skills/impeccable/scripts/detect.mjs <path>`.
+Fixture dan data published adalah dua hal berbeda. Lolosnya CI tidak membuktikan CORS, login Studio, webhook yang terpasang, atau data resmi telah disetujui klien.
 
-### Test yang ada
+## Git dan deployment
 
-| File | Yang diuji |
-| --- | --- |
-| `tests/urls.test.ts` | `safeExternalUrl` hanya menerima URL `https:` dan menolak `http:` serta `javascript:` |
-| `tests/revalidate.test.ts` | Webhook menolak tanpa secret (503), tanpa signature atau signature palsu (401), dan menerima signature yang benar |
+`dev` adalah branch integrasi saat ini. Pada audit 2026-10-26, `main` masih scaffold awal. Jangan menganggap `main` siap production hanya karena menjadi default branch. Pilih branch rilis, review perbedaan lewat PR, dan tunggu persetujuan merge/deploy.
 
-Test webhook mengimpor `@sanity/webhook`, yang terpasang sebagai dependency dari `next-sanity`. Kalau suatu saat tidak ditemukan, tambahkan sebagai devDependency.
-
-## CI (GitHub Actions)
-
-File: `.github/workflows/quality.yml`.
-
-- Berjalan pada push ke `main` dan `dev`, serta setiap pull request.
-- Langkah: checkout, pnpm 11.1.2, Node 22.18.0, `pnpm install --frozen-lockfile`, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
-- `NEXT_PUBLIC_SANITY_PROJECT_ID` dan `NEXT_PUBLIC_SANITY_DATASET` diambil dari **repository variables** GitHub (`vars.*`), bukan secrets, karena nilainya publik.
-
-## Alur kerja Git
-
-- `main` harus selalu siap rilis. `dev` adalah branch integrasi.
-- Kerjakan fitur di branch pendek (`page/about`, `feat/members`, dan seterusnya), lalu buat pull request ke `dev`.
-- Satu PR untuk satu pekerjaan yang utuh. Satu orang mengerjakan, satu orang mereview.
-- Ambil perubahan terbaru dari `dev` sebelum push:
-
-  ```bash
-  git add .
-  git commit -m "feat: ..."
-  git pull origin dev      # selesaikan konflik kalau ada
-  git push origin <nama-branch>
-  ```
-
-- Aturan proyek (`AGENTS.md`): rencanakan dulu, minta persetujuan, baru ubah file. Ini berlaku untuk manusia maupun AI agent.
+Perubahan lokal pada pekerjaan ini tidak membuat commit, push, merge, atau deployment. Checklist keputusan ada di [bab 08](08-checklist-rilis.md).

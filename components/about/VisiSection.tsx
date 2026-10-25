@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { visionParts, type VisionHighlight } from "@/lib/cabinet-content";
 
 // ─── data ────────────────────────────────────────────────────────────────────
 
@@ -17,14 +18,17 @@ const VISI_PARTS = [
 const PENJABARAN = [
   {
     term: 0,
+    phrase: "Pijar Asa",
     body: "Pijar Asa dimaknai sebagai cahaya kecil yang menyala konsisten dan tidak pernah padam. Ia mungkin tidak langsung menjadi api besar, tetapi ia hadir terus-menerus, menerangi kebutuhan paling mendasar mahasiswa. BEM FISIP Unpad memposisikan dirinya bukan sebagai sorotan yang menyilaukan, melainkan sebagai pijar yang hangat — hadir, terasa, dan memberi arah. Pijar Asa berarti keberpihakan pada kebutuhan riil mahasiswa: akademik, kesejahteraan, ruang dialektika, hingga pengembangan potensi.",
   },
   {
     term: 1,
+    phrase: "Kolaborasi Strategis",
     body: "Kolaborasi Strategis dimaknai sebagai kerja bersama yang terarah, setara, dan saling menguatkan. BEM FISIP Unpad tidak berdiri sebagai pusat kuasa, melainkan sebagai simpul penghubung antara Himpunan, Huria, UKM, komunitas, dan fakultas. Strategis berarti tidak seremonial dan tidak sporadis, melainkan dirancang dengan kesadaran arah bersama.",
   },
   {
     term: 2,
+    phrase: "Perubahan yang Bermakna",
     body: "Perubahan yang Bermakna bukan sekadar perubahan yang terlihat, tetapi perubahan yang dirasakan dan berkelanjutan. BEM FISIP Unpad hadir untuk memastikan setiap perubahan yang diperjuangkan berorientasi pada kebermanfaatan nyata bagi mahasiswa — perbaikan sistem, penguatan budaya akademik, peningkatan kesejahteraan, dan ekosistem organisasi yang sehat.",
   },
 ];
@@ -33,7 +37,10 @@ const PENJABARAN = [
 
 const CYCLE_MS = 2400; // ms each card stays lit when the device can't hover
 
-export default function VisiSection() {
+export default function VisiSection({ vision, highlights }: { vision?: string | null; highlights?: VisionHighlight[] | null }) {
+  const cards = highlights?.length ? highlights.map((item, term) => ({ term, phrase: item.phrase, body: item.description })) : PENJABARAN;
+  const parts = visionParts(vision?.trim() || VISI_PARTS.map((item) => item.text).join(""), cards.map((item) => ({ phrase: item.phrase, description: item.body })));
+  const count = cards.length;
   // Which term is highlighted. -1 = none (whole sentence reads plain).
   const [active, setActive] = useState<number | null>(null);
 
@@ -52,7 +59,7 @@ export default function VisiSection() {
 
     const start = () => {
       if (timer) return;
-      timer = setInterval(() => setActive(i++ % PENJABARAN.length), CYCLE_MS);
+      timer = setInterval(() => setActive(i++ % count), CYCLE_MS);
     };
     const stop = () => {
       clearInterval(timer);
@@ -71,7 +78,7 @@ export default function VisiSection() {
       stop();
       observer.disconnect();
     };
-  }, []);
+  }, [count]);
 
   return (
     <section
@@ -92,7 +99,7 @@ export default function VisiSection() {
           className="text-depth text-2xl font-bold leading-snug sm:text-3xl lg:text-4xl"
           style={{ letterSpacing: "-0.03em" }}
         >
-          {VISI_PARTS.map((part, i) =>
+          {parts.map((part, i) =>
             part.term === -1 ? (
               <span key={i}>{part.text}</span>
             ) : (
@@ -114,7 +121,7 @@ export default function VisiSection() {
 
       {/* ── Penjabaran: all three, side by side ── */}
       <div className="mx-auto mt-14 grid max-w-6xl grid-cols-1 gap-6 md:grid-cols-3">
-        {PENJABARAN.map((p) => {
+        {cards.map((p) => {
           const isActive = active === p.term;
           return (
             <article

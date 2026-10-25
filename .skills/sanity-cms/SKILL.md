@@ -9,7 +9,7 @@ Build an editor-friendly, typed content layer while protecting the recoverable 2
 
 ## Required context
 
-Read Sections 6, 10, 14, 16, and 19 of docs/AGENTIC_DEVELOPMENT_BRIEF_2026.md, the approved task, and applicable decision records. Consult docs/2026_PREPARATION_AND_HANDOVER.md when mapping inherited fields or behavior.
+Read Sections 6, 10, 14, 16, and 19 of docs/AGENTIC_DEVELOPMENT_BRIEF_2026.md, the approved task, and applicable decision records. The historical preparation/handover document is absent; use docs/panduan/ for current 2026 operations and obtain the original only when inherited-system mapping requires it.
 
 ## Non-negotiable safety
 
