@@ -91,8 +91,14 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-full flex flex-col font-sans bg-[#000c23] text-white">
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[998] focus:rounded-md focus:bg-brand-yellow focus:px-4 focus:py-2 focus:font-bold focus:text-brand-blue"
+        >
+          Lewati ke konten
+        </a>
         <Navbar />
-        <main className="flex-1">{children}</main>
+        <main id="main-content" className="flex-1">{children}</main>
         {isSanityConfigured && <SanityLive includeDrafts={false} />}
       </body>
     </html>

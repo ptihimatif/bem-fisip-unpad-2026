@@ -48,7 +48,7 @@ export default async function HimaPage() {
         `,
       }}
     >
-      <main className="relative z-10 mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-12">
+      <div className="relative z-10 mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-12">
         {/* HEADER SECTION */}
         <section aria-labelledby="hima-title" className="">
           <h1
@@ -71,7 +71,7 @@ export default async function HimaPage() {
         />
 
         <HimaGallery associations={associations} />
-      </main>
+      </div>
       <Footer settings={settingsResult.data} />
     </div>
   );

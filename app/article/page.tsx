@@ -116,7 +116,7 @@ export default async function ArticlePage(props: {
   return (
     <div className="relative overflow-hidden text-white pt-24 bg-brand-gradient">
       {/* Tambahkan relative z-10 di sini agar semua konten berada di atas gambar */}
-      <main className="relative z-10 mx-auto max-w-6xl px-6 py-12">
+      <div className="relative z-10 mx-auto max-w-6xl px-6 py-12">
         {/* HEADER SECTION */}
         <section aria-labelledby="publication-title" className="">
           <h1
@@ -200,7 +200,7 @@ export default async function ArticlePage(props: {
             </Link>
           </div>
         )}
-      </main>
+      </div>
 
       <Footer settings={settingsResult.data} />
     </div>

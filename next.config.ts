@@ -24,6 +24,7 @@ const nextConfig: NextConfig = {
     ];
 
     // Add CSP header for production security
+    // Next.js inlines its bootstrap scripts, so without nonces script-src needs 'unsafe-inline' (Next CSP guide).
     if (process.env.NODE_ENV === "production") {
       baseHeaders.push({
         source: "/(.*)",
@@ -31,7 +32,7 @@ const nextConfig: NextConfig = {
           {
             key: "Content-Security-Policy",
             value:
-              "default-src 'self'; script-src 'self' https://www.instagram.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://cdn.sanity.io https://www.instagram.com; connect-src 'self' https://*.sanity.io; font-src 'self';",
+              "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.instagram.com https://core.sanity-cdn.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://cdn.sanity.io https://www.instagram.com; font-src 'self' https://design-system-static.sanity.io; connect-src 'self' https://*.sanity.io wss://*.api.sanity.io; frame-src 'self' https://www.youtube.com https://www.instagram.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self';",
           },
         ],
       });

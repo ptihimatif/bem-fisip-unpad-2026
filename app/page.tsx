@@ -273,22 +273,41 @@ export default async function Home() {
                     style={{ aspectRatio }}
                   >
                     <div className="absolute inset-0 flex items-center justify-center">
-                      <SanityImage
-                        value={item.image}
-                        width={384}
-                        height={512}
-                        sizes="(min-width: 1024px) 288px, 240px"
-                        fallbackAlt={`Foto ${item.nama_mapres}`}
-                        className="h-full w-full bg-black/10 object-contain brightness-70 transition-brightness duration-300 group-hover:brightness-100 rounded-lg"
-                        preserveAspectRatio
-                      />
+                      {item.image?.asset ? (
+                        <SanityImage
+                          value={item.image}
+                          width={384}
+                          height={512}
+                          sizes="(min-width: 1024px) 288px, 240px"
+                          fallbackAlt={`Foto ${item.nama_mapres}`}
+                          className="h-full w-full bg-black/10 object-contain brightness-70 transition-brightness duration-300 group-hover:brightness-100 rounded-lg"
+                          preserveAspectRatio
+                        />
+                      ) : (
+                        <div
+                          aria-hidden="true"
+                          className="flex h-full w-full items-end justify-center overflow-hidden rounded-lg bg-brand-blue"
+                        >
+                          <svg
+                            viewBox="0 0 100 100"
+                            className="h-4/5 w-4/5 fill-brand-yellow/60"
+                          >
+                            <circle cx="50" cy="34" r="20" />
+                            <path d="M10 100c0-24 18-40 40-40s40 16 40 40z" />
+                          </svg>
+                        </div>
+                      )}
                       <div className="absolute inset-x-0 bottom-0 bg-linear-to-t from-black/85 via-black/45 to-transparent px-4 pb-4 pt-16 rounded-lg">
                         <h3 className="text-depth font-bold text-white text-sm">
                           {item.nama_mapres}
                         </h3>
+                        <p className="text-white/80 text-xs mt-1">
+                          {item.studyProgram} {item.cohortYear}
+                        </p>
                         {item.achievementTitle && (
                           <p className="text-white text-xs mt-1 line-clamp-5">
                             {item.achievementTitle}
+                            {item.achievementYear && ` (${item.achievementYear})`}
                           </p>
                         )}
                       </div>

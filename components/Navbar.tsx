@@ -41,7 +41,7 @@ export default function Navbar() {
               href={item.href}
               target={item.external ? "_blank" : undefined}
               rel={item.external ? "noopener noreferrer" : undefined}
-              className="text-md font-bold text-white/80 hover:text-white hover:underline transition-all duration-300"
+              className="text-base font-bold text-white/80 hover:text-white hover:underline transition-all duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-yellow"
             >
               {item.label}
             </Link>
@@ -50,7 +50,7 @@ export default function Navbar() {
 
         <button
           type="button"
-          className="relative h-9 w-9 p-1 md:hidden text-white"
+          className="relative h-9 w-9 p-1 md:hidden text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-yellow"
           onClick={() => setMenuOpen(!menuOpen)}
           aria-label="Toggle navigation menu"
           aria-expanded={menuOpen}
@@ -94,26 +94,24 @@ export default function Navbar() {
         </button>
       </div>
 
-      <div
-        className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${
-          menuOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
-        }`}
-      >
-        <div className="flex flex-col px-6 py-3 gap-0 border-t border-b border-b-white border-t-white/10">
-          {navItems.map((item) => (
-            <Link
-              key={item.label}
-              href={item.href}
-              target={item.external ? "_blank" : undefined}
-              rel={item.external ? "noopener noreferrer" : undefined}
-              className="text-md font-medium text-white/80 hover:text-white transition-colors py-2.5"
-              onClick={() => setMenuOpen(false)}
-            >
-              {item.label}
-            </Link>
-          ))}
+      {menuOpen && (
+        <div className="md:hidden overflow-hidden border-t border-b border-white/10">
+          <div className="flex flex-col px-6 py-3">
+            {navItems.map((item) => (
+              <Link
+                key={item.label}
+                href={item.href}
+                target={item.external ? "_blank" : undefined}
+                rel={item.external ? "noopener noreferrer" : undefined}
+                className="text-base font-medium text-white/80 hover:text-white transition-colors py-2.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-yellow"
+                onClick={() => setMenuOpen(false)}
+              >
+                {item.label}
+              </Link>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
     </nav>
   );
 }

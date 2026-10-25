@@ -60,6 +60,7 @@ export default async function AboutPage() {
       <MeshBackground />
 
       {/* SECTION 1 - Logo Philosophy */}
+      <h1 className="sr-only">BEM FISIP Unpad 2026</h1>
       <LogoSection />
 
       {/* SECTION 2 - Visi */}
@@ -92,9 +93,9 @@ export default async function AboutPage() {
         <PimpinanDepartemenBiroSection members={members} />
       </div>
 
-      <main className="relative z-10 mx-auto max-w-6xl px-6 py-24">
+      <div className="relative z-10 mx-auto max-w-6xl px-6 py-24">
         <DepartemenBiroSection units={units} />
-      </main>
+      </div>
 
       <Footer settings={settings} />
     </div>

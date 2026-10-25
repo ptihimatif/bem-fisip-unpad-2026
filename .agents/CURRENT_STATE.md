@@ -1,8 +1,12 @@
 # Current state
 
-Last updated: 2026-10-22
+Last updated: 2026-10-25
 
-## Latest milestone: Mapres and proker imported from client document
+## Latest milestone: audit fixes and website documentation
+
+Locally (uncommitted): Sanity images now load directly from the Sanity CDN (`unoptimized`), Mapres cards render study program/cohort/optional achievement with a silhouette placeholder, and a whole-repo audit was fixed. The production CSP previously blocked Next.js inline scripts (no hydration); it now follows the Next.js "without nonces" policy and allows the Studio's Sanity CDN script/font and realtime socket. Fake placeholder programs were removed from unit pages, post dates use `Asia/Jakarta`, `ProgramList` re-measures on resize, the revalidate webhook has tests, and dead code/`build.log` were removed. Complete Indonesian documentation now lives in `docs/panduan/` and the root README points to it. Typecheck, lint, tests (4/4), build, and a headless-Chrome production smoke test passed. No Sanity, deployment, or GitHub state changed. See `.agents/tasks/2026-10-25-audit-fixes-and-website-docs.md`.
+
+## Previous milestone: Mapres and proker imported from client document
 
 The maintainer approved publishing client-provided Mapres and program data to `jcpcptq3/production`, excluding "Delegasi FISIP" and leaving images for manual upload. The Mapres schema now models study program, cohort year, and optional rank; portrait and achievement/event details are optional. The query and generated types were updated, and the homepage has a one-line guard for missing portraits. Ten Mapres and 81 new program documents were created. Five existing program documents were patched only in name, owning unit, and order, giving 86 published proker entries across 17 units. Existing descriptions and other fields, other document types, and the one unrelated unnamed Mapres draft were preserved. A targeted pre-write backup and created-ID manifest are kept locally under the ignored `outputs/mapres-proker-2026-10-22/` directory. Independent readback, TypeGen, typecheck, lint, tests, build, and diff checks passed. No photos, deployment, webhook, or other service settings were changed. See `.agents/tasks/2026-10-22-mapres-proker-import.md`.
 

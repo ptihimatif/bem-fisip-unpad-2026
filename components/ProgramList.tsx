@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 /* ------------------------------------------------------------------ */
 /* Program Kerja list: plain names, one visual row per line, and a   */
@@ -56,12 +56,30 @@ export default function ProgramList({ items }: { items: ProgramListItem[] }) {
   const iterations = useRef(0);
   const lastSignature = useRef<string | null>(null);
   const signature = items.map((item) => item.id).join(",");
+  const container = useRef<HTMLDivElement | null>(null);
+
+  // Rows are frozen at the width they were measured at, so a width change
+  // (resize, rotation) starts a fresh measuring pass.
+  useEffect(() => {
+    const node = container.current;
+    if (!node) return;
+    let width = node.clientWidth;
+    const observer = new ResizeObserver(() => {
+      if (node.clientWidth === width) return;
+      width = node.clientWidth;
+      iterations.current = 0;
+      setGroups(null);
+    });
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, []);
 
   // Ref callback: runs after every commit that changes the tree, so the
   // layout can be measured without an effect.
   const measure = useCallback(
     (node: HTMLDivElement | null) => {
       if (!node) return;
+      container.current = node;
 
       // A new set of items invalidates the previous measurement.
       if (lastSignature.current !== signature) {
@@ -159,7 +177,8 @@ export default function ProgramList({ items }: { items: ProgramListItem[] }) {
                 <span
                   key={item.id}
                   data-program-index={itemIndex}
-                  className="inline-flex items-center whitespace-nowrap"
+                  // A lone name wider than the row cannot move anywhere, so let it wrap.
+                  className={`inline-flex items-center ${group.length === 1 ? "min-w-0 whitespace-normal" : "whitespace-nowrap"}`}
                 >
                   {position > 0 && <Divider />}
                   <Item item={item} />
