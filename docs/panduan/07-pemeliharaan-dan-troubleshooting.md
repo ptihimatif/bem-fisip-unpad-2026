@@ -6,6 +6,7 @@
 | --- | --- | --- |
 | Konten baru tidak muncul | Belum di-Publish, term bukan 2026, atau cache belum dibuang | Ikuti checklist di [bab 05](05-panduan-editor-konten.md#konten-tidak-muncul). Cek log webhook ([bab 06](06-deploy-dan-operasional.md#webhook-revalidasi)). |
 | Di localhost konten lama terus | Cache dev | Restart `pnpm dev`. Kalau masih, hentikan server, hapus folder `.next`, jalankan lagi. |
+| Import sudah benar di Sanity, tetapi build lokal masih memuat cover lama | Cache fetch production dari build sebelumnya | Saat tidak ada `pnpm build`/`pnpm start` aktif, bersihkan hanya `.next/cache/fetch-cache` dari root repo lalu build ulang dan periksa HTML. Cache dev ada terpisah di `.next/dev/cache`. Pada hosting, selesaikan webhook/invalidation yang benar; jangan mengandalkan pembersihan manual laptop. |
 | `ENOENT` pada `.next/dev/server/preview-props.json`, terutama setelah upgrade Next.js | Server lama masih aktif dengan versi/dependensi sebelumnya atau artefak dev sudah hilang | Hentikan server proyek dengan Ctrl+C, lalu jalankan `pnpm dev` lagi. Jika masih gagal, hentikan server dan hapus hanya `.next/dev` dari root repo sebelum restart. Jangan membuat `preview-props.json` secara manual. |
 | Menu, carousel, atau modal tidak bisa diklik di production, tapi normal di `pnpm dev` | Script diblokir CSP | Lihat Console browser untuk error `Content-Security-Policy`, tambahkan domain/izin yang kurang di `next.config.ts`, build ulang. |
 | Error CORS di Console, Studio tidak bisa login | Alamat belum terdaftar di CORS origins Sanity | Daftarkan di sanity.io/manage → API → CORS origins ([bab 06](06-deploy-dan-operasional.md#cors-sanity)). |
@@ -27,34 +28,34 @@ Setelah `pnpm install` yang mengubah Next.js, selalu restart server dev. Hot rel
 ### Konten
 
 - 86 program: semua `description` kosong; 81 tanpa `shortDescription` dan `coverImage`.
-- Program unggulan (ORASI, FILS, FISTAORA-ART) adalah sisa data lama dengan cover placeholder yang sama. Daftar unggulan resmi belum dikonfirmasi klien.
+- Lima unggulan sudah dikonfirmasi maintainer dan memiliki cover asli dari folder klien: ORASI, FILS, FISTAORA-ART, Social Camping (SOSCAMP), dan FISIPAW. Lihat [catatan Progul](10-progul-dan-verifikasi.md).
 - Seluruh 10 Mapres punya referensi gambar. Semua penjelasan prestasi Mapres masih kosong.
 - 3 anggota tanpa foto.
 - 5 Bidang, Pengurus Inti, dan Sekretariat Umum belum punya program. Halamannya menampilkan "Belum ada program kerja yang dipublikasikan."
 
 ### Fitur
 
-- Nilai, video, Care Center, sosial, dan kalimat visi sudah membaca CMS. Kartu terstruktur About punya field baru dan fallback salinan saat ini; publikasi manifest empat field menunggu review. Menu dan asset/animasi logo tetap konfigurasi kode. Lihat [bab 09](09-konten-about-dan-favicon.md).
+- Nilai, video, Care Center, sosial, kalimat visi, serta empat field kartu About sudah membaca CMS. Empat field kartu dipublikasikan 2026-10-26 dari salinan halaman yang ada; fallback tetap tersedia. Menu dan asset/animasi logo tetap konfigurasi kode. Lihat [bab 09](09-konten-about-dan-favicon.md).
 - Belum ada halaman detail per program. `PROGRAM_BY_SLUG_QUERY` dan field `slug` program sudah siap untuk itu.
 - Field yang belum ditampilkan: `organizationUnit.coverImage`, `gallery`, `contactLinks`, `abbreviation` di halaman unit; `program.startDate`/`endDate`; `studentAssociation.socialLinks`.
 - Gambar di dalam isi artikel (Portable Text) belum didukung.
 - Gambar Sanity dimuat `unoptimized`: satu ukuran untuk semua layar, tanpa `srcset`. Ukurannya sudah kecil (sekitar 35 KB untuk foto anggota), tapi HP tetap mengunduh versi yang sama dengan desktop.
-- Halaman `/penjelasan/<slug>` yang tidak ada menampilkan isi not-found, tapi kode status awal streaming bisa 200, bukan 404 (dicatat di `.agents/tasks/2026-09-05-integration-hardening-remediation.md`).
+- Halaman `/penjelasan/<slug>` yang tidak ada menampilkan isi not-found, tapi kode status awal streaming bisa 200, bukan 404.
 - Footer dan JSON-LD sudah memakai helper sosial yang sama. Kelengkapan daftar resmi tetap memerlukan konfirmasi klien.
 
 ### Tooling dan dokumen
 
-- Suite Playwright desktop/mobile sudah ada dengan fixture terisolasi. Login Studio, publish webhook pada domain sungguhan, perangkat fisik, pembaca layar, dan acceptance klien masih perlu diuji saat staging.
+- Suite Playwright memiliki 27 pemeriksaan pada desktop Chromium, mobile Chromium, dan mobile WebKit. Fixture mencakup akses carousel/reduced motion, pagination, kegagalan CMS, skip link, urutan publikasi, serta signature dan eksekusi route revalidasi di server Next.js. Login Studio, publish webhook pada domain sungguhan, perangkat fisik, pembaca layar, dan acceptance klien masih perlu diuji saat staging.
 - Quality gates sudah diperbarui untuk unit test, TypeScript, build terisolasi, dan browser suite.
-- Dokumen handover historis tidak tersedia. Dispatcher sekarang menjelaskan ketiadaannya dan mengarahkan operasi 2026 ke panduan ini; jangan mengarang isi dokumen historis.
+- Handover aktif ada di [dokumen deployment hemat](../HANDOVER_DEPLOYMENT_HEMAT_2026.md); riwayat agent lama diarsipkan lokal saat cleanup.
 - Peringatan kecil di Console: font Inter italic di-preload tapi tidak langsung dipakai. Tidak berbahaya.
 
 ## Backlog yang disarankan
 
 Urut dari dampak terbesar:
 
-1. Lengkapi konten program (deskripsi, cover) dan konfirmasi program unggulan dengan klien.
-2. Review dan setujui manifest migrasi empat field About, lalu publikasikan dengan backup/revision guard secara terpisah.
+1. Lengkapi deskripsi program dan tiga foto anggota dari materi yang disetujui klien. Lima cover unggulan sudah selesai.
+2. Tinjau hasil empat field About di Studio; gunakan script verifikasi pada bab 09, jangan mengulang publikasi awal.
 3. Konfirmasi daftar sosial lengkap dan aktifkan penggantian default setelah disetujui; email/alamat belum ditampilkan pada desain footer.
 4. Halaman detail program (`/program/[slug]`) dengan galeri dokumentasi kegiatan. Butuh field galeri baru di schema `program`.
 5. Jalankan tes integrasi pada staging sungguhan: CORS, login Studio, publish webhook tanpa tab Live aktif, serta SEO/domain.
@@ -78,7 +79,7 @@ Cabut akses pengurus lama setelah serah terima selesai.
 
 ### Pindah ke tahun baru (misalnya 2027)
 
-Ini perubahan besar dan harus direncanakan serta disetujui dulu (`.skills/project-planning/SKILL.md`, `.skills/sanity-cms/SKILL.md`). Gambaran tempat yang perlu diubah:
+Ini perubahan besar dan harus direncanakan serta disetujui dulu, dengan target dataset dan backup yang jelas. Gambaran tempat yang perlu diubah:
 
 1. Backup dataset 2026 (`sanity dataset export`, bab 06).
 2. `CONTENT_TERM` didefinisikan di **dua** tempat, keduanya harus diubah:
@@ -86,7 +87,7 @@ Ini perubahan besar dan harus direncanakan serta disetujui dulu (`.skills/projec
    - `sanity/schemaTypes/shared.ts` (juga daftar opsi `term`)
 3. ID singleton tertulis langsung di string GROQ `SITE_SETTINGS_QUERY` (`siteSettings-2026`) dan `CABINET_PROFILE_QUERY` (`cabinetProfile-2026`) di `sanity/lib/queries.ts`. `SITE_SETTINGS_ID` dan `CABINET_PROFILE_ID` di schema ikut `CONTENT_TERM`.
 4. Teks "2026" yang hardcoded: hero beranda (`app/page.tsx`), metadata dan JSON-LD (`app/layout.tsx`), metadata `/article` dan `/hima`.
-5. Konten About yang hardcoded (visi, misi, dan seterusnya), atau pindahkan dulu ke Sanity (backlog nomor 2).
+5. Salin/review field CMS About pada dataset tahun baru. Teks fallback di kode harus ikut direview agar tidak menampilkan identitas kabinet lama ketika CMS kosong.
 6. Buat dataset baru untuk tahun baru sesuai kebijakan maintainer. Isi Site Settings dan Cabinet Profile pada target baru; pertahankan dataset 2026 serta backup-nya.
 7. Aset kabinet di `public/assets/` (logo, dekorasi) untuk kabinet baru.
 8. Ulangi seluruh quality gate dan smoke test.
@@ -95,6 +96,6 @@ Ini perubahan besar dan harus direncanakan serta disetujui dulu (`.skills/projec
 
 - [ ] Frozen install, lint, typecheck, unit/browser test, serta build release lolos pada commit/branch rilis yang disetujui.
 - [ ] Dokumentasi ini diperbarui (tanggal di `docs/panduan/README.md`, jumlah konten di bab 04, keterbatasan di bab ini).
-- [ ] `.agents/CURRENT_STATE.md` mencerminkan kondisi terakhir.
+- [ ] Status layanan, commit rilis, hasil uji, dan pemegang akses dalam handover sudah diperbarui.
 - [ ] Backup dataset terbaru tersimpan di tempat milik organisasi.
 - [ ] Daftar pemilik akses (tabel di atas) sudah diisi nama peran yang bertanggung jawab.

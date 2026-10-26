@@ -4,6 +4,7 @@ import { useState, useRef } from "react";
 import Image from "next/image";
 import { SanityImage } from "@/components/SanityImage";
 import { safeExternalUrl } from "@/sanity/lib/urls";
+import { useReducedMotion } from "@/lib/use-reduced-motion";
 import type { STUDENT_ASSOCIATIONS_QUERY_RESULT } from "@/sanity.types";
 
 interface HimaGalleryProps {
@@ -12,6 +13,7 @@ interface HimaGalleryProps {
 
 export default function HimaGallery({ associations }: HimaGalleryProps) {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+  const reducedMotion = useReducedMotion();
 
   const detailCardRef = useRef<HTMLDivElement>(null);
 
@@ -33,7 +35,7 @@ export default function HimaGallery({ associations }: HimaGalleryProps) {
     if (window.innerWidth < 1024) {
       setTimeout(() => {
         detailCardRef.current?.scrollIntoView({
-          behavior: "smooth",
+          behavior: reducedMotion ? "instant" : "smooth",
           block: "center",
         });
       }, 50);
@@ -50,6 +52,9 @@ export default function HimaGallery({ associations }: HimaGalleryProps) {
         .animate-smooth-appear {
           animation: smoothAppear 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
+        @media (prefers-reduced-motion: reduce) {
+          .animate-smooth-appear { animation: none; }
+        }
       `}</style>
 
       {/* Grid of logos */}
@@ -61,6 +66,8 @@ export default function HimaGallery({ associations }: HimaGalleryProps) {
               <button
                 key={item._id}
                 onClick={() => handleSelect(index)}
+                aria-pressed={isSelected}
+                aria-controls={selectedAssociation ? "hima-detail" : undefined}
                 className={`rounded-lg cursor-pointer relative flex w-full aspect-square items-center justify-center bg-white p-3 transition-all duration-250 hover:brightness-100 brightness-75 focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-brand-yellow sm:p-4 lg:p-5 ${
                   isSelected
                     ? "scale-102 md:scale-105 z-10 brightness-100"
@@ -91,6 +98,9 @@ export default function HimaGallery({ associations }: HimaGalleryProps) {
       {selectedAssociation && (
         <div
           ref={detailCardRef}
+          id="hima-detail"
+          role="region"
+          aria-label={selectedAssociation.officialName}
           key={selectedIndex}
           className="rounded-lg animate-smooth-appear group relative flex w-full flex-col overflow-hidden bg-linear-to-r from-[#001949] to-[#003089] text-white shadow-md md:h-auto md:flex-row scroll-mt-28"
         >

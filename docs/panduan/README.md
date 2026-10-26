@@ -2,7 +2,7 @@
 
 Dokumentasi ini menjelaskan cara kerja, cara menjalankan, cara mengisi konten, dan cara merawat website resmi BEM FISIP Unpad 2026 (Kabinet Pendar Mentari).
 
-Status dokumen: diperbarui 2026-10-26 untuk perbaikan lokal prarilis. Angka konten adalah snapshot audit; hosting dan domain belum dipilih, dan dokumen ini tidak menyatakan deployment sudah dilakukan.
+Status dokumen: dirapikan 2026-10-27 untuk handover pradeployment. Angka konten adalah snapshot sebelumnya. Anggaran domain maksimal Rp300.000 dan hosting ditargetkan gratis; pemilihan akun, checkout, domain aktif, dan deployment tetap dicatat saat pelaksanaan. Mulai dari [handover deployment hemat](../HANDOVER_DEPLOYMENT_HEMAT_2026.md).
 
 ## Pilih sesuai peranmu
 
@@ -25,15 +25,16 @@ Status dokumen: diperbarui 2026-10-26 untuk perbaikan lokal prarilis. Angka kont
 6. [Deploy dan operasional](06-deploy-dan-operasional.md) — environment production, keamanan (CSP), webhook, CORS, SEO, rollback.
 7. [Pemeliharaan dan troubleshooting](07-pemeliharaan-dan-troubleshooting.md) — masalah umum, keterbatasan yang diketahui, backlog, serah terima tahunan.
 8. [Checklist rilis](08-checklist-rilis.md) — keputusan staging/production, otoritas, verifikasi, dan rollback.
-9. [Konten About dan favicon](09-konten-about-dan-favicon.md) — field CMS baru, manifest yang belum dipublikasikan, dan icon browser.
+9. [Konten About dan favicon](09-konten-about-dan-favicon.md) — field CMS yang dipublikasikan, verifikasi/pemulihan, dan icon browser.
+10. [Progul dan verifikasi](10-progul-dan-verifikasi.md) — lima cover klien, batas perubahan, backup, dan bukti pemeriksaan.
 
 ## Dokumen lain di repositori
 
-- `docs/AGENTIC_DEVELOPMENT_BRIEF_2026.md` — brief produk dan teknis yang disetujui (bahasa Inggris). Sumber kebenaran untuk scope.
-- `docs/SANITY_REVALIDATION.md` — detail teknis webhook revalidasi (bahasa Inggris). Ringkasannya ada di bab 06.
-- `PRODUCT.md`, `DESIGN.md` — prinsip produk dan fondasi desain (warna, font).
-- `AGENTS.md` dan folder `.agents/` — aturan kerja berbasis rencana dan persetujuan, catatan task, dan status terkini (`.agents/CURRENT_STATE.md`).
-- `.skills/` — prosedur kerja per jenis tugas (perencanaan, desain, Sanity, fitur Next.js, review, rilis).
+- [Handover deployment hemat](../HANDOVER_DEPLOYMENT_HEMAT_2026.md) — anggaran, pilihan hosting/domain, transfer domain, admin, dan rollback.
+- `docs/SANITY_REVALIDATION.md` — detail teknis webhook revalidasi; ringkasannya ada di bab 06.
+- `docs/DEPENDENCY_SECURITY_2026-10-26.md` — alasan override dependency dan bukti audit versi saat remediation.
+- `AGENTS.md` — aturan maintenance ringkas. Tooling agent dan rencana historis dikeluarkan dari working tree setelah diarsipkan lokal; tidak diperlukan untuk menjalankan website.
+- [Panduan admin singkat di Google Docs](https://docs.google.com/document/d/1WUWX1EqEH65x5WhbnqzRFuC-HRcywVLblcPnjKbZ-Fo) — login, tambah/edit publikasi, unpublish/delete, dan kontak bantuan.
 
 ## Istilah singkat
 

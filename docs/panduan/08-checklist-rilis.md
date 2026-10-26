@@ -36,6 +36,23 @@ Setiap tahun memakai dataset baru, sesuai keputusan maintainer. Untuk latihan pu
 5. Uji create/update/delete, signature salah, dan payload tidak valid tanpa mengubah dokumen klien yang tidak terkait.
 6. Periksa tautan resmi dan gambar social preview. Persetujuan klien saat audit masih parsial; minta konfirmasi program unggulan dan kelengkapan konten.
 
+Pemeriksaan HTTP/SEO baca-saja yang dapat diulang:
+
+```sh
+node scripts/verify_deployment.mjs https://DOMAIN-STAGING --environment staging --post SLUG-PUBLISHED --unit SLUG-UNIT
+```
+
+Gunakan `--environment production` untuk rilis resmi. Script sengaja menolak fixture yang terdeploy. Hasil lolos tidak menggantikan login admin, pemeriksaan media pihak ketiga asli, uji CRUD, atau Attempts webhook.
+
+## SEO saat peluncuran
+
+- [ ] `NEXT_PUBLIC_SITE_URL` berisi origin kanonis HTTPS sebenarnya, dan production memakai `NEXT_PUBLIC_SITE_ENV=production`.
+- [ ] Canonical archive mempertahankan kategori/halaman yang berbeda, membuang parameter tracking/default, dan membatasi nomor halaman sesuai konten. Urutan alternatif `terlama` memakai noindex untuk menghindari duplikasi.
+- [ ] Post memiliki judul/deskripsi, tanggal asli, metadata social, serta JSON-LD Article dan BreadcrumbList; jangan mengarang penulis atau foto untuk melengkapi field opsional.
+- [ ] Sitemap memuat post/unit published, tidak memuat Studio/API, dan tidak mempertahankan post yang ditarik.
+- [ ] Preview berbagi menampilkan gambar CMS atau fallback logo yang sudah ada; validasi satu post dan domain produksi di Google Rich Results Test.
+- [ ] Setelah domain aktif, pemilik memverifikasi properti Google Search Console, mengirim `/sitemap.xml`, dan memeriksa satu URL. Ini konfigurasi akun setelah deploy, bukan jaminan ranking atau indexing seketika.
+
 ## Backup dan rollback 2026
 
 - [ ] Export 2026 terkini tersimpan di lokasi organisasi dengan pemilik dan tanggal yang jelas.

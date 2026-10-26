@@ -1,12 +1,12 @@
 # 06 – Deploy dan operasional
 
-> Hosting, domain, DNS, dan pemilik akses production **belum dicatat secara resmi** (lihat `.agents/PROJECT_CONTEXT.md`, tabel ownership). Brief merekomendasikan Vercel. Langkah di bawah ditulis untuk Vercel, tapi berlaku juga untuk hosting Node.js lain yang menjalankan `pnpm build` dan `pnpm start`.
+> Panduan utama: [handover deployment hemat](../HANDOVER_DEPLOYMENT_HEMAT_2026.md). Anggaran domain maksimal Rp300.000; hosting ditargetkan gratis. Akun/operator, domain aktif, dan commit rilis dicatat saat pelaksanaan. Instruksi ini menjelaskan runtime Next.js, bukan unggah website statis.
 >
 > Setiap perubahan pada deployment, domain, DNS, pengaturan Sanity, atau konten production butuh persetujuan pemilik akses dan rencana rollback.
 
 ## Checklist deploy pertama
 
-1. Pilih hosting dan branch rilis yang disetujui. Pada audit 2026-10-26, `main` masih scaffold awal; jangan deploy otomatis sebelum review. Isi [checklist rilis](08-checklist-rilis.md).
+1. Pilih hosting dan commit/branch rilis yang disetujui; jangan memakai branch tanpa memastikan perubahan yang dimaksud sudah masuk. Isi [checklist rilis](08-checklist-rilis.md).
 2. Build command `pnpm build`, install command `pnpm install --frozen-lockfile`, Node.js 22.
 3. Isi environment variable production (lihat [bab 02](02-setup-dan-menjalankan.md#environment-variable)):
    - `NEXT_PUBLIC_SANITY_PROJECT_ID=jcpcptq3`
@@ -115,7 +115,7 @@ Langkah 1–3 juga bisa diuji lokal dengan `pnpm build && pnpm start`.
 | Deploy baru rusak | Di Vercel: Deployments → pilih deploy terakhir yang sehat → **Promote to Production**. Lalu `git revert` commit penyebabnya lewat PR. |
 | Konten salah ter-publish | Studio → dokumen → **History** → pilih versi sebelumnya → Restore → Publish. |
 | Dokumen terhapus | Studio History tidak bisa memulihkan dokumen yang dihapus. Pulihkan dari backup dataset. |
-| Webhook bermasalah | Nonaktifkan webhook di Sanity. Situs tetap jalan; konten diperbarui lewat Sanity Live dan deploy berikutnya. |
+| Webhook bermasalah | Perbaiki URL, secret, dataset, dan trigger, lalu uji lagi. Menonaktifkan webhook tidak menjamin cache segar; lihat handover untuk pemulihan. |
 
 ## Backup konten
 

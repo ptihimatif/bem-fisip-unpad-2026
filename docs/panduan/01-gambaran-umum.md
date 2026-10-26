@@ -88,6 +88,6 @@ Hasil `pnpm build` pada 2026-10-25:
 
 ## Riwayat singkat
 
-- Website 2025 adalah referensi perilaku, bukan template kode. Versi 2026 dibangun ulang dari awal (lihat `docs/AGENTIC_DEVELOPMENT_BRIEF_2026.md`).
+- Website 2025 menjadi referensi perilaku. Pertahankan identitas, data, dan desain 2026 yang telah disetujui; perubahan baru mengikuti keputusan maintainer/klien.
 - Repositori: `github.com/ptihimatif/bem-fisip-unpad-2026`. Branch utama `main`, integrasi di `dev`, fitur di branch pendek (misalnya `page/about`, `feat/members`) lewat pull request.
-- Catatan setiap pekerjaan besar ada di `.agents/tasks/`, status terkini di `.agents/CURRENT_STATE.md`.
+- Status handover dan langkah rilis terkini ada di [handover deployment](../HANDOVER_DEPLOYMENT_HEMAT_2026.md). Riwayat kerja lama dapat dipulihkan dari Git atau arsip cleanup lokal.

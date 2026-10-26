@@ -4,15 +4,15 @@ import ErrorBoundary from "@/components/ErrorBoundary";
 
 export default function Error({
   error,
-  reset,
+  retry,
 }: {
-  error: Error & { digest?: string };
-  reset: () => void;
+  error: unknown;
+  retry: () => void;
 }) {
   return (
     <ErrorBoundary
       error={error}
-      reset={reset}
+      retry={retry}
       message="Maaf, halaman artikel tidak dapat dimuat saat ini."
     />
   );

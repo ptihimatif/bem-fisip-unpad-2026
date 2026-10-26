@@ -1,6 +1,6 @@
 # 05 – Panduan editor konten
 
-Bab ini untuk pengurus yang mengisi konten. Tidak perlu bisa coding.
+Bab ini untuk pengurus yang mengisi konten. Cukup browser dan akun Sanity yang telah diundang; tidak perlu GitHub, clone repo, pnpm, atau terminal. Versi singkat: [panduan admin](https://docs.google.com/document/d/1WUWX1EqEH65x5WhbnqzRFuC-HRcywVLblcPnjKbZ-Fo).
 
 ## Masuk ke Studio
 
@@ -50,7 +50,7 @@ Format JPG atau PNG. Sanity mengecilkan dan mengonversi gambar otomatis, jadi ti
    - **SEO Title / SEO Description** (opsional): judul dan deskripsi untuk Google dan preview link. Kalau kosong, memakai judul dan excerpt.
 3. **Publish**.
 
-Artikel muncul di `/article`, di detail `/post/<slug>`, dan di beranda (3 terbaru, kajian didahulukan).
+Artikel muncul di `/article`, di detail `/post/<slug>`, dan di beranda jika termasuk tiga publikasi terbaru lintas kategori. `Published At` mengatur tanggal/urutan, bukan penjadwalan publish otomatis.
 
 ### Menambah atau mengubah Mahasiswa Berprestasi
 
@@ -62,7 +62,7 @@ Artikel muncul di `/article`, di detail `/post/<slug>`, dan di beranda (3 terbar
 6. **Approved Profile URL** (opsional): kartu jadi bisa diklik ke profil.
 7. **Publish**.
 
-Saat ini (2026-10-25) foto Muhammad Adryan Rusdiana belum ada, dan semua field prestasi masih kosong.
+Snapshot verifikasi 26 Oktober 2026: seluruh 10 Mapres memiliki referensi gambar. Periksa kelengkapan prestasi melalui dokumen yang bersangkutan di Studio.
 
 ### Mengatur Program Unggulan di beranda
 
@@ -73,7 +73,7 @@ Saat ini (2026-10-25) foto Muhammad Adryan Rusdiana belum ada, dan semua field p
 5. **Publish**.
 6. Hilangkan centang **Featured** di program yang bukan unggulan, lalu Publish.
 
-Beranda menampilkan maksimal 6 program unggulan. Saat ini yang Featured adalah ORASI, FILS, dan FISTAORA-ART, ketiganya sisa data lama dengan cover placeholder. Konfirmasi daftar unggulan ke klien.
+Beranda menampilkan maksimal 6 program unggulan. Lima program yang telah disetujui dan diberi cover klien: ORASI, FILS, FISTAORA-ART (Seni Budaya), Social Camping (SOSCAMP), dan FISIPAW. Jangan mengubah daftar tersebut tanpa arahan klien.
 
 ### Menambah program kerja ke sebuah unit
 
@@ -121,7 +121,7 @@ Hanya unit dengan **Unit Kind** Departemen atau Biro yang muncul sebagai tombol 
 - **Cabinet Profile** → **Cabinet Name** (hero beranda) dan **Overview** (bagian "Mengapa Pendar Mentari?").
 - **Site Settings** → **Default SEO Title** (maks 60 karakter) dan **Default SEO Description** (maks 160 karakter).
 
-Visi, misi, budaya kerja, nilai, filosofi logo, video profil, dan link media sosial **belum** bisa diubah dari Studio. Mengisinya di Cabinet Profile atau Site Settings tidak mengubah website. Minta developer mengubah kodenya (lihat bab 04).
+Visi dan penjabaran, kartu misi, budaya kerja, nilai, penjelasan logo, dan video membaca field aktif **Cabinet Profile**. Care Center dan sosial membaca **Site Settings**; daftar sosial lama tetap dipakai sampai penggantian lengkap diaktifkan. Nama field aktif dan fallback dijelaskan di [bab 09](09-konten-about-dan-favicon.md). Menu dan animasi tetap dikelola developer.
 
 ## Konten tidak muncul
 

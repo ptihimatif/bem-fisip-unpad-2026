@@ -843,33 +843,69 @@ export type PUBLICATION_CARDS_QUERY_RESULT = Array<{
 
 // Source: sanity/lib/queries.ts
 // Variable: PUBLICATION_PAGE_QUERY
-// Query: *[_type == "post" && term == $term && defined(slug.current)]  | order(publishedAt desc){    _id, judul, "slug": slug.current, postCategory, publishedAt, excerpt,    image {  asset->{_id, url, metadata {lqip, dimensions {width, height}}},  alt,  attribution,  crop,  hotspot}, instagramUrl  }
-export type PUBLICATION_PAGE_QUERY_RESULT = Array<{
-  _id: string;
-  judul: string;
-  slug: string;
-  postCategory: "artikel" | "kajian";
-  publishedAt: string;
-  excerpt: string | null;
-  image: {
-    asset: {
-      _id: string;
-      url: string;
-      metadata: {
-        lqip: string | null;
-        dimensions: {
-          width: number;
-          height: number;
+// Query: {  "total": count(*[_type == "post" && term == $term && defined(slug.current) && ($category == "semua" || postCategory == $category)]),  "posts": *[_type == "post" && term == $term && defined(slug.current) && ($category == "semua" || postCategory == $category)]  | order(publishedAt desc, _id asc)[$start...$end]{    _id, judul, "slug": slug.current, postCategory, publishedAt, excerpt,    image {  asset->{_id, url, metadata {lqip, dimensions {width, height}}},  alt,  attribution,  crop,  hotspot}, instagramUrl  }}
+export type PUBLICATION_PAGE_QUERY_RESULT = {
+  total: number;
+  posts: Array<{
+    _id: string;
+    judul: string;
+    slug: string;
+    postCategory: "artikel" | "kajian";
+    publishedAt: string;
+    excerpt: string | null;
+    image: {
+      asset: {
+        _id: string;
+        url: string;
+        metadata: {
+          lqip: string | null;
+          dimensions: {
+            width: number;
+            height: number;
+          } | null;
         } | null;
       } | null;
+      alt: string;
+      attribution: string | null;
+      crop: SanityImageCrop | null;
+      hotspot: SanityImageHotspot | null;
     } | null;
-    alt: string;
-    attribution: string | null;
-    crop: SanityImageCrop | null;
-    hotspot: SanityImageHotspot | null;
-  } | null;
-  instagramUrl: string | null;
-}>;
+    instagramUrl: string | null;
+  }>;
+};
+
+// Source: sanity/lib/queries.ts
+// Variable: PUBLICATION_PAGE_ASC_QUERY
+// Query: {  "total": count(*[_type == "post" && term == $term && defined(slug.current) && ($category == "semua" || postCategory == $category)]),  "posts": *[_type == "post" && term == $term && defined(slug.current) && ($category == "semua" || postCategory == $category)]  | order(publishedAt asc, _id asc)[$start...$end]{    _id, judul, "slug": slug.current, postCategory, publishedAt, excerpt,    image {  asset->{_id, url, metadata {lqip, dimensions {width, height}}},  alt,  attribution,  crop,  hotspot}, instagramUrl  }}
+export type PUBLICATION_PAGE_ASC_QUERY_RESULT = {
+  total: number;
+  posts: Array<{
+    _id: string;
+    judul: string;
+    slug: string;
+    postCategory: "artikel" | "kajian";
+    publishedAt: string;
+    excerpt: string | null;
+    image: {
+      asset: {
+        _id: string;
+        url: string;
+        metadata: {
+          lqip: string | null;
+          dimensions: {
+            width: number;
+            height: number;
+          } | null;
+        } | null;
+      } | null;
+      alt: string;
+      attribution: string | null;
+      crop: SanityImageCrop | null;
+      hotspot: SanityImageHotspot | null;
+    } | null;
+    instagramUrl: string | null;
+  }>;
+};
 
 // Source: sanity/lib/queries.ts
 // Variable: SITEMAP_POSTS_QUERY
@@ -983,9 +1019,10 @@ export type ORGANIZATION_UNIT_BY_SLUG_QUERY_RESULT = {
 
 // Source: sanity/lib/queries.ts
 // Variable: POST_BY_SLUG_QUERY
-// Query: *[_type == "post" && term == $term && slug.current == $slug][0]{    _id, judul, "slug": slug.current, postCategory, publishedAt, excerpt, image {  asset->{_id, url, metadata {lqip, dimensions {width, height}}},  alt,  attribution,  crop,  hotspot},    body, instagramUrl, seoTitle, seoDescription, seoImage {  asset->{_id, url, metadata {lqip, dimensions {width, height}}},  alt,  attribution,  crop,  hotspot}  }
+// Query: *[_type == "post" && term == $term && slug.current == $slug][0]{    _id, _updatedAt, judul, "slug": slug.current, postCategory, publishedAt, excerpt, image {  asset->{_id, url, metadata {lqip, dimensions {width, height}}},  alt,  attribution,  crop,  hotspot},    body, instagramUrl, seoTitle, seoDescription, seoImage {  asset->{_id, url, metadata {lqip, dimensions {width, height}}},  alt,  attribution,  crop,  hotspot}  }
 export type POST_BY_SLUG_QUERY_RESULT = {
   _id: string;
+  _updatedAt: string;
   judul: string;
   slug: string;
   postCategory: "artikel" | "kajian";
@@ -1143,6 +1180,32 @@ export type MEMBERS_QUERY_RESULT = Array<{
 }>;
 
 // Source: sanity/lib/queries.ts
+// Variable: LEADERSHIP_MEMBERS_QUERY
+// Query: *[_type == "member" && term == $term && organizationUnit->term == $term &&    (role in ["Ketua", "Wakil Ketua", "Sekretaris Umum"] || role match "Kepala*")]  | order(isLeader desc, displayOrder asc, name asc){    _id, name, role, photo {  asset->{_id, url, metadata {lqip, dimensions {width, height}}},  alt,  attribution,  crop,  hotspot}  }
+export type LEADERSHIP_MEMBERS_QUERY_RESULT = Array<{
+  _id: string;
+  name: string;
+  role: string;
+  photo: {
+    asset: {
+      _id: string;
+      url: string;
+      metadata: {
+        lqip: string | null;
+        dimensions: {
+          width: number;
+          height: number;
+        } | null;
+      } | null;
+    } | null;
+    alt: string;
+    attribution: string | null;
+    crop: SanityImageCrop | null;
+    hotspot: SanityImageHotspot | null;
+  } | null;
+}>;
+
+// Source: sanity/lib/queries.ts
 // Variable: STUDENT_ASSOCIATIONS_QUERY
 // Query: *[_type == "studentAssociation" && term == $term]  | order(displayOrder asc, officialName asc){    _id, officialName, abbreviation, studyProgram, cabinetName, description, logo {  asset->{_id, url, metadata {lqip, dimensions {width, height}}},  alt,  attribution,  crop,  hotspot}, officialLink, socialLinks[]{platform, url}  }
 export type STUDENT_ASSOCIATIONS_QUERY_RESULT = Array<{
@@ -1191,14 +1254,16 @@ declare global {
     '\n  *[_type == "program" && term == $term && isFeatured == true && organizationUnit->term == $term]\n  | order(displayOrder asc, name asc)[0...6]{\n    _id, name, "slug": slug.current, shortDescription, description, coverImage {\n  asset->{_id, url, metadata {lqip, dimensions {width, height}}},\n  alt,\n  attribution,\n  crop,\n  hotspot\n},\n    externalLink, "organizationUnit": organizationUnit->{_id, officialName, abbreviation, "slug": slug.current}\n  }\n': FEATURED_PROGRAMS_QUERY_RESULT;
     '\n  *[_type == "program" && term == $term && slug.current == $slug && organizationUnit->term == $term][0]{\n    _id, name, "slug": slug.current, shortDescription, description, coverImage {\n  asset->{_id, url, metadata {lqip, dimensions {width, height}}},\n  alt,\n  attribution,\n  crop,\n  hotspot\n},\n    startDate, endDate, externalLink,\n    "organizationUnit": organizationUnit->{_id, officialName, abbreviation, "slug": slug.current}\n  }\n': PROGRAM_BY_SLUG_QUERY_RESULT;
     '\n  *[_type == "post" && term == $term && defined(slug.current)]\n  | order(publishedAt desc)[0...6]{\n    _id, judul, "slug": slug.current, postCategory, publishedAt, excerpt,\n    image {\n  asset->{_id, url, metadata {lqip, dimensions {width, height}}},\n  alt,\n  attribution,\n  crop,\n  hotspot\n}, instagramUrl\n  }\n': PUBLICATION_CARDS_QUERY_RESULT;
-    '\n  *[_type == "post" && term == $term && defined(slug.current)]\n  | order(publishedAt desc){\n    _id, judul, "slug": slug.current, postCategory, publishedAt, excerpt,\n    image {\n  asset->{_id, url, metadata {lqip, dimensions {width, height}}},\n  alt,\n  attribution,\n  crop,\n  hotspot\n}, instagramUrl\n  }\n': PUBLICATION_PAGE_QUERY_RESULT;
+    '\n  {\n  "total": count(*[_type == "post" && term == $term && defined(slug.current) && ($category == "semua" || postCategory == $category)]),\n  "posts": *[_type == "post" && term == $term && defined(slug.current) && ($category == "semua" || postCategory == $category)]\n  | order(publishedAt desc, _id asc)[$start...$end]{\n    _id, judul, "slug": slug.current, postCategory, publishedAt, excerpt,\n    image {\n  asset->{_id, url, metadata {lqip, dimensions {width, height}}},\n  alt,\n  attribution,\n  crop,\n  hotspot\n}, instagramUrl\n  }}\n': PUBLICATION_PAGE_QUERY_RESULT;
+    '\n  {\n  "total": count(*[_type == "post" && term == $term && defined(slug.current) && ($category == "semua" || postCategory == $category)]),\n  "posts": *[_type == "post" && term == $term && defined(slug.current) && ($category == "semua" || postCategory == $category)]\n  | order(publishedAt asc, _id asc)[$start...$end]{\n    _id, judul, "slug": slug.current, postCategory, publishedAt, excerpt,\n    image {\n  asset->{_id, url, metadata {lqip, dimensions {width, height}}},\n  alt,\n  attribution,\n  crop,\n  hotspot\n}, instagramUrl\n  }}\n': PUBLICATION_PAGE_ASC_QUERY_RESULT;
     '\n  *[_type == "post" && term == $term && defined(slug.current)]{\n    "slug": slug.current, publishedAt, _updatedAt\n  }\n': SITEMAP_POSTS_QUERY_RESULT;
     '\n  *[_type == "organizationUnit" && term == $term && defined(slug.current)]{\n    "slug": slug.current, _updatedAt\n  }\n': SITEMAP_UNITS_QUERY_RESULT;
     '\n  *[_type == "organizationUnit" && term == $term && slug.current == $slug][0]{\n    _id, officialName, abbreviation, "slug": slug.current, unitKind, description,\n    coverImage {\n  asset->{_id, url, metadata {lqip, dimensions {width, height}}},\n  alt,\n  attribution,\n  crop,\n  hotspot\n}, gallery[]{_key, alt, caption, asset->{_id, url, metadata {lqip, dimensions {width, height}}}},\n    "programs": *[_type == "program" && term == $term && references(^._id)]\n      | order(displayOrder asc, name asc){_id, name, "slug": slug.current, shortDescription, coverImage {\n  asset->{_id, url, metadata {lqip, dimensions {width, height}}},\n  alt,\n  attribution,\n  crop,\n  hotspot\n}, externalLink},\n    "members": *[_type == "member" && term == $term && references(^._id)]\n      | order(isLeader desc, displayOrder asc, name asc){_id, name, role, photo {\n  asset->{_id, url, metadata {lqip, dimensions {width, height}}},\n  alt,\n  attribution,\n  crop,\n  hotspot\n}, socialLink, isLeader}\n  }\n': ORGANIZATION_UNIT_BY_SLUG_QUERY_RESULT;
-    '\n  *[_type == "post" && term == $term && slug.current == $slug][0]{\n    _id, judul, "slug": slug.current, postCategory, publishedAt, excerpt, image {\n  asset->{_id, url, metadata {lqip, dimensions {width, height}}},\n  alt,\n  attribution,\n  crop,\n  hotspot\n},\n    body, instagramUrl, seoTitle, seoDescription, seoImage {\n  asset->{_id, url, metadata {lqip, dimensions {width, height}}},\n  alt,\n  attribution,\n  crop,\n  hotspot\n}\n  }\n': POST_BY_SLUG_QUERY_RESULT;
+    '\n  *[_type == "post" && term == $term && slug.current == $slug][0]{\n    _id, _updatedAt, judul, "slug": slug.current, postCategory, publishedAt, excerpt, image {\n  asset->{_id, url, metadata {lqip, dimensions {width, height}}},\n  alt,\n  attribution,\n  crop,\n  hotspot\n},\n    body, instagramUrl, seoTitle, seoDescription, seoImage {\n  asset->{_id, url, metadata {lqip, dimensions {width, height}}},\n  alt,\n  attribution,\n  crop,\n  hotspot\n}\n  }\n': POST_BY_SLUG_QUERY_RESULT;
     '\n  *[_type == "mapres" && term == $term]\n  | order(displayOrder asc, rank asc, nama_mapres asc)[0...12]{\n    _id, nama_mapres, studyProgram, cohortYear, rank, achievementTitle, achievementYear,\n    image {\n  asset->{_id, url, metadata {lqip, dimensions {width, height}}},\n  alt,\n  attribution,\n  crop,\n  hotspot\n}, instagramUrl\n  }\n': MAPRES_QUERY_RESULT;
     '\n  *[_type == "organizationUnit" && term == $term && defined(slug.current)]\n  | order(displayOrder asc, officialName asc){\n    _id, officialName, abbreviation, "slug": slug.current, unitKind, description,\n    coverImage {\n  asset->{_id, url, metadata {lqip, dimensions {width, height}}},\n  alt,\n  attribution,\n  crop,\n  hotspot\n}\n  }\n': ORGANIZATION_UNITS_QUERY_RESULT;
     '\n  *[_type == "member" && term == $term && organizationUnit->term == $term]\n  | order(isLeader desc, displayOrder asc, name asc){\n    _id, name, role, photo {\n  asset->{_id, url, metadata {lqip, dimensions {width, height}}},\n  alt,\n  attribution,\n  crop,\n  hotspot\n}, socialLink, isLeader,\n    "organizationUnit": organizationUnit->{_id, officialName, abbreviation, "slug": slug.current}\n  }\n': MEMBERS_QUERY_RESULT;
+    '\n  *[_type == "member" && term == $term && organizationUnit->term == $term &&\n    (role in ["Ketua", "Wakil Ketua", "Sekretaris Umum"] || role match "Kepala*")]\n  | order(isLeader desc, displayOrder asc, name asc){\n    _id, name, role, photo {\n  asset->{_id, url, metadata {lqip, dimensions {width, height}}},\n  alt,\n  attribution,\n  crop,\n  hotspot\n}\n  }\n': LEADERSHIP_MEMBERS_QUERY_RESULT;
     '\n  *[_type == "studentAssociation" && term == $term]\n  | order(displayOrder asc, officialName asc){\n    _id, officialName, abbreviation, studyProgram, cabinetName, description, logo {\n  asset->{_id, url, metadata {lqip, dimensions {width, height}}},\n  alt,\n  attribution,\n  crop,\n  hotspot\n}, officialLink, socialLinks[]{platform, url}\n  }\n': STUDENT_ASSOCIATIONS_QUERY_RESULT;
   }
 }

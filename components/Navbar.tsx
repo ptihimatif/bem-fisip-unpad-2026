@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { getCareCenterUrl } from "@/lib/site-content";
@@ -19,6 +19,19 @@ const navItems = [
 
 export default function Navbar({ careCenterUrl }: { careCenterUrl?: string | null }) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const toggleRef = useRef<HTMLButtonElement>(null);
+  const menuId = useId();
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setMenuOpen(false);
+        toggleRef.current?.focus();
+      }
+    };
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [menuOpen]);
   const links = navItems.map((item) => item.external ? { ...item, href: getCareCenterUrl({ fisipCareCenterUrl: careCenterUrl }) } : item);
 
   return (
@@ -51,11 +64,13 @@ export default function Navbar({ careCenterUrl }: { careCenterUrl?: string | nul
         </div>
 
         <button
+          ref={toggleRef}
           type="button"
-          className="relative h-9 w-9 p-1 md:hidden text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-yellow"
+          className="relative h-11 w-11 p-1 md:hidden text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-yellow"
           onClick={() => setMenuOpen(!menuOpen)}
           aria-label="Toggle navigation menu"
           aria-expanded={menuOpen}
+          aria-controls={menuId}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -97,7 +112,7 @@ export default function Navbar({ careCenterUrl }: { careCenterUrl?: string | nul
       </div>
 
       {menuOpen && (
-        <div className="md:hidden overflow-hidden border-t border-b border-white/10">
+        <div id={menuId} className="md:hidden overflow-hidden border-t border-b border-white/10">
           <div className="flex flex-col px-6 py-3">
             {links.map((item) => (
               <Link

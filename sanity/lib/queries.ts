@@ -52,11 +52,23 @@ export const PUBLICATION_CARDS_QUERY = defineQuery(`
 `);
 
 export const PUBLICATION_PAGE_QUERY = defineQuery(`
-  *[_type == "post" && term == $term && defined(slug.current)]
-  | order(publishedAt desc){
+  {
+  "total": count(*[_type == "post" && term == $term && defined(slug.current) && ($category == "semua" || postCategory == $category)]),
+  "posts": *[_type == "post" && term == $term && defined(slug.current) && ($category == "semua" || postCategory == $category)]
+  | order(publishedAt desc, _id asc)[$start...$end]{
     _id, judul, "slug": slug.current, postCategory, publishedAt, excerpt,
     image {${IMAGE_FIELDS}}, instagramUrl
-  }
+  }}
+`);
+
+export const PUBLICATION_PAGE_ASC_QUERY = defineQuery(`
+  {
+  "total": count(*[_type == "post" && term == $term && defined(slug.current) && ($category == "semua" || postCategory == $category)]),
+  "posts": *[_type == "post" && term == $term && defined(slug.current) && ($category == "semua" || postCategory == $category)]
+  | order(publishedAt asc, _id asc)[$start...$end]{
+    _id, judul, "slug": slug.current, postCategory, publishedAt, excerpt,
+    image {${IMAGE_FIELDS}}, instagramUrl
+  }}
 `);
 
 export const SITEMAP_POSTS_QUERY = defineQuery(`
@@ -84,7 +96,7 @@ export const ORGANIZATION_UNIT_BY_SLUG_QUERY = defineQuery(`
 
 export const POST_BY_SLUG_QUERY = defineQuery(`
   *[_type == "post" && term == $term && slug.current == $slug][0]{
-    _id, judul, "slug": slug.current, postCategory, publishedAt, excerpt, image {${IMAGE_FIELDS}},
+    _id, _updatedAt, judul, "slug": slug.current, postCategory, publishedAt, excerpt, image {${IMAGE_FIELDS}},
     body, instagramUrl, seoTitle, seoDescription, seoImage {${IMAGE_FIELDS}}
   }
 `);
@@ -110,6 +122,14 @@ export const MEMBERS_QUERY = defineQuery(`
   | order(isLeader desc, displayOrder asc, name asc){
     _id, name, role, photo {${IMAGE_FIELDS}}, socialLink, isLeader,
     "organizationUnit": organizationUnit->{_id, officialName, abbreviation, "slug": slug.current}
+  }
+`);
+
+export const LEADERSHIP_MEMBERS_QUERY = defineQuery(`
+  *[_type == "member" && term == $term && organizationUnit->term == $term &&
+    (role in ["Ketua", "Wakil Ketua", "Sekretaris Umum"] || role match "Kepala*")]
+  | order(isLeader desc, displayOrder asc, name asc){
+    _id, name, role, photo {${IMAGE_FIELDS}}
   }
 `);
 

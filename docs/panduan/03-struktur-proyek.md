@@ -37,7 +37,6 @@ scripts/                  Script impor data satu kali (lihat di bawah)
 tests/                    Unit test
 public/                   Aset statis (logo, gambar dekorasi, font)
 docs/                     Dokumentasi (folder ini)
-.agents/, .skills/        Aturan kerja, catatan task, prosedur
 next.config.ts            Header keamanan (CSP), remotePatterns gambar Sanity
 ```
 
@@ -45,7 +44,7 @@ next.config.ts            Header keamanan (CSP), remotePatterns gambar Sanity
 
 | Route | File | Data dari Sanity | Isi |
 | --- | --- | --- | --- |
-| `/` | `app/page.tsx` | siteSettings, cabinetProfile, program unggulan, publikasi terbaru, mapres | Hero, "Mengapa Pendar Mentari?" (overview + video YouTube), Program Kami, Mahasiswa Berprestasi, Siaran Pers (embed Instagram), Artikel dan Kajian (3 terbaru, kajian didahulukan) |
+| `/` | `app/page.tsx` | siteSettings, cabinetProfile, program unggulan, publikasi terbaru, mapres | Hero, "Mengapa Pendar Mentari?" (overview + video YouTube), Program Kami, Mahasiswa Berprestasi, Siaran Pers (embed Instagram), Artikel dan Kajian (3 terbaru lintas kategori menurut tanggal) |
 | `/about` | `app/about/page.tsx` | siteSettings, organizationUnit, member | Filosofi logo, Visi, Misi, Budaya Kerja, Nilai, Ketua & Wakil, Sekretariat & Kepala Bidang, Pimpinan Departemen & Biro, tombol ke 17 Departemen/Biro |
 | `/article` | `app/article/page.tsx` | post | Arsip artikel & kajian. Filter `?category=semua|artikel|kajian`, urut `?sort=terbaru|terlama`, halaman `?page=` (5 per halaman) |
 | `/post/[slug]` | `app/post/[slug]/page.tsx` | post, siteSettings | Detail artikel/kajian: judul, kategori, tanggal (WIB), gambar, isi, link Instagram |
@@ -83,11 +82,11 @@ next.config.ts            Header keamanan (CSP), remotePatterns gambar Sanity
 
 | Komponen | Fungsi | Sumber isi |
 | --- | --- | --- |
-| `LogoSection.tsx` + `logo-section.ts` | Filosofi logo: pecahan logo yang dijelaskan satu per satu saat scroll | Hardcoded di `logo-section.ts` |
-| `VisiSection.tsx` | Visi + penjabaran | Hardcoded (`VISI_PARTS`, `PENJABARAN`) |
-| `MisiSection.tsx` | Misi | Hardcoded (`MISI`) |
-| `BudayaKerjaSection.tsx` | Budaya kerja | Hardcoded (`BUDAYA`) |
-| `NilaiSection.tsx` | Nilai kabinet | Hardcoded (`NILAI`) |
+| `LogoSection.tsx` + `logo-section.ts` | Filosofi logo: pecahan logo yang dijelaskan satu per satu saat scroll | Sanity `cabinetProfile.logoExplanationItems`, fallback di `logo-section.ts` |
+| `VisiSection.tsx` | Visi + penjabaran | Sanity `cabinetProfile.vision` dan `visionHighlights`, fallback di kode |
+| `MisiSection.tsx` | Misi | Sanity `cabinetProfile.missionItems`, fallback di kode |
+| `BudayaKerjaSection.tsx` | Budaya kerja | Sanity `cabinetProfile.workCultureItems`, fallback di kode |
+| `NilaiSection.tsx` | Nilai kabinet | Sanity `cabinetProfile.values`, fallback di kode |
 | `KetuaWakilSection.tsx` | Ketua & Wakil Ketua | Sanity `member`, role tepat `Ketua` / `Wakil Ketua` |
 | `PetinggiCarouselSections.tsx` | Dua carousel: Sekretaris Umum + Kepala Bidang; Kepala/Wakil Kepala Departemen & Biro | Sanity `member`, dicocokkan dengan pola role (lihat bab 04) |
 | `LeadershipCard.tsx` | Kartu foto pimpinan/anggota, placeholder inisial jika tanpa foto | — |
@@ -110,7 +109,7 @@ Nama folder yang mengandung spasi harus ditulis dengan `%20` di URL, misalnya `/
 
 ## Script (`scripts/`)
 
-Script ini dipakai sekali untuk mengimpor data dari dokumen klien. Semuanya menulis ke **production**, jadi jangan dijalankan tanpa rencana yang disetujui dan backup.
+Script impor dipertahankan untuk verifikasi/pemulihan data klien. Mode tulis menyentuh **production**; jalankan hanya dengan otoritas dan backup. Preflight, dry run, dan verify harus dibedakan dari apply/rollback. `check_browser.mjs` hanya menjalankan fixture lokal/CI.
 
 | Script | Fungsi |
 | --- | --- |
@@ -118,6 +117,8 @@ Script ini dipakai sekali untuk mengimpor data dari dokumen klien. Semuanya menu
 | `import_members.mjs` | Mengimpor daftar anggota 2026 dan foto ID card (`--dry-run`, `--apply`, `--verify`) |
 | `update_cabinet_values.mjs` | Mengisi 4 nilai kabinet beserta penjelasannya |
 | `import_mapres_proker.mjs` + `mapres-proker-source.json` | Mengimpor 10 mapres dan 86 proker |
-| `nuke.ts` | Sengaja dinonaktifkan; selalu melempar error |
+| `import_progul_covers.mjs` | Impor/verify/pemulihan lima cover yang disetujui; lihat bab 10 |
+| `prepare_about_content.mjs`, `apply_about_content.mjs` | Menyiapkan, memverifikasi, dan memulihkan empat field About; lihat bab 09 |
+| `check_browser.mjs` | Build dan browser test fixture tanpa mengakses data klien |
 
 Cara menjalankan (contoh): `pnpm exec sanity exec scripts/import_members.mjs --with-user-token -- --dry-run`. Hasil backup dan daftar ID yang dibuat disimpan di folder `outputs/` yang diabaikan git.

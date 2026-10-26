@@ -40,7 +40,7 @@ Untuk development lokal, origin default adalah `http://localhost:3000`. Untuk re
 | `pnpm build` | Build aplikasi sungguhan; konfigurasi release harus lengkap. |
 | `pnpm start` | Menjalankan hasil build; `pnpm start -p 3123` untuk port lain. |
 | `pnpm build:check` | Build production-mode dengan fixture di `.next-check`, terpisah dari hasil build aplikasi sungguhan di `.next`. |
-| `pnpm test:browser` | Build fixture lalu delapan pemeriksaan Chromium desktop/mobile. Tidak membaca atau menulis dataset klien. |
+| `pnpm test:browser` | Build fixture lalu 27 pemeriksaan: desktop Chromium, mobile Chromium, dan mobile WebKit. Tidak membaca atau menulis dataset klien. |
 | `pnpm test:browser:built` | Ulangi suite pada hasil build fixture terakhir di `.next-check`. |
 | `pnpm lint` | ESLint. |
 | `pnpm typecheck` | Pemeriksaan TypeScript tanpa emit. |
@@ -48,7 +48,7 @@ Untuk development lokal, origin default adalah `http://localhost:3000`. Untuk re
 | `pnpm typegen` | Ekstrak schema dan hasilkan ulang `sanity.types.ts` setelah perubahan schema/query. |
 | `pnpm audit --prod` | Laporan advisori saat ini; tinjau relevansi setiap laporan. |
 
-Pasang browser sekali sebelum suite: `pnpm exec playwright install chromium`. Di Linux CI, workflow memakai `--with-deps`.
+Pasang browser sekali sebelum suite: `pnpm exec playwright install chromium webkit`. Di Linux CI, workflow memakai `--with-deps`. WebKit menguji engine terkait Safari; pengujian perangkat iPhone fisik tetap terpisah.
 
 ## Quality gate
 

@@ -8,48 +8,14 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 <!-- END:nextjs-agent-rules -->
 
-# BEM FISIP Unpad 2026 agent instructions
+# BEM FISIP Unpad 2026 maintenance
 
-This repository uses a plan-first workflow. Approval for one task does not authorize unrelated work or external changes.
-
-## Required reading order
-
-Before planning or changing the repository, read:
-
-1. docs/AGENTIC_DEVELOPMENT_BRIEF_2026.md
-2. .agents/PLANNING_AND_APPROVAL.md
-3. .agents/CURRENT_STATE.md
-4. The relevant approved record under .agents/tasks/, when one exists
-5. Only the project skills relevant to the task, selected from .skills/README.md
-
-For frontend or UI work, also load the repository-local Impeccable skill at `.agents/skills/impeccable/SKILL.md`. Its broad UI-focused description enables implicit Codex discovery; explicit `$impeccable` commands remain available when a particular playbook is wanted.
-
-The historical `docs/2026_PREPARATION_AND_HANDOVER.md` is not present in this checkout. For current 2026 operations use `docs/panduan/` and approved task history. If work actually requires inherited implementation details, obtain the original handover instead of assuming its contents.
-
-## Operating rules
-
-- Perform read-only discovery and present a written task breakdown before making changes.
-- Wait for explicit human approval before editing files, installing packages, or mutating any service.
-- Implement only the approved scope. Re-plan when a discovery materially changes architecture, scope, data, cost, security, external state, or the approved steps.
-- Preserve unrelated working-tree changes and report existing failures separately from failures introduced by the task.
-- Never expose credentials or mutate production Sanity, GitHub settings, deployments, domains, DNS, or production content without the relevant explicit authority and a rollback plan.
-- Treat the 2025 application and content as recoverable reference material. Never overwrite them as part of the 2026 migration.
-- Update the applicable task record and .agents/CURRENT_STATE.md after material milestones.
-
-## Project skill routing
-
-- Planning or scoping repository work: .skills/project-planning/SKILL.md
-- UI, Figma, branding, or design tokens: .skills/design-system/SKILL.md plus .agents/skills/impeccable/SKILL.md
-- Sanity schemas, content, queries, preview, or revalidation: .skills/sanity-cms/SKILL.md
-- Next.js routes, components, or feature slices: .skills/nextjs-feature/SKILL.md
-- Verification, audit, or review: .skills/quality-review/SKILL.md
-- Preview, production release, rollback, or handover: .skills/release-handover/SKILL.md
-
-Load the smallest applicable set. A skill is a procedure, not permission to bypass the approval gate.
-
-## Impeccable UI workflow
-
-- Apply Impeccable automatically whenever a task creates, changes, redesigns, critiques, audits, polishes, or otherwise evaluates frontend UI. Do not invoke it for backend-only or documentation-only work.
-- Run `node .agents/skills/impeccable/scripts/context.mjs` once at the start of each applicable session and follow the routed playbook before editing UI.
-- The product brief, client-approved Figma/assets, `PRODUCT.md`, `DESIGN.md`, and the project design-system skill remain authoritative. Impeccable may raise the craft bar but may not replace approved brand or product truth.
-- The project-local hook scans relevant UI edits and runs a deeper Stop pass after the user trusts `.codex/hooks.json` through Codex `/hooks` or Settings. Hook output is a quality signal, not permission to bypass review or the plan-first gate.
+- Start with README.md, docs/HANDOVER_DEPLOYMENT_HEMAT_2026.md, and the relevant docs/panduan/ chapter.
+- Preserve unrelated working-tree changes and the existing client-approved UI, copy, photos, routes, and carousel preferences.
+- Keep Inter, brand blue #003089, and brand yellow #FFBA3A. Obtain approval before changing the frontend design.
+- Use pnpm 11.1.2 and the committed lockfile. Read .env.example for the environment contract; never print or commit secrets.
+- Current content source is Sanity project jcpcptq3, dataset production, term 2026. Do not mutate content, datasets, access, webhooks, hosting, DNS, or GitHub settings without explicit authority and a recovery plan.
+- Public data uses published queries and signed /api/revalidate. Do not ship SANITY_TEST_MODE=true or fixture builds.
+- Before release, run the applicable lint, type, behavior, browser, and production-build checks. Report unavailable deployed checks separately from code defects.
+- Changes must stay within the maintainer's approved scope. Do not commit, push, merge, or deploy unless requested.
+- Previous agent tooling and planning records were removed from the handover tree at the maintainer's request; restore only if needed from Git history or the ignored local cleanup archive.

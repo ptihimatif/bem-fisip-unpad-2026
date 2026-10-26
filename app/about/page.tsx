@@ -16,7 +16,7 @@ import {
 import { sanityFetch } from "@/sanity/lib/live";
 import {
   CONTENT_TERM,
-  MEMBERS_QUERY,
+  LEADERSHIP_MEMBERS_QUERY,
   CABINET_PROFILE_QUERY,
   ORGANIZATION_UNITS_QUERY,
   SITE_SETTINGS_QUERY,
@@ -45,7 +45,7 @@ export default async function AboutPage() {
       stega: false,
     }),
     sanityFetch({
-      query: MEMBERS_QUERY,
+      query: LEADERSHIP_MEMBERS_QUERY,
       params,
       perspective: "published",
       stega: false,

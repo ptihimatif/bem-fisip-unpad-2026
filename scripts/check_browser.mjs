@@ -8,6 +8,7 @@ const env = {
   NEXT_PUBLIC_SITE_URL: "http://127.0.0.1:3123",
   NEXT_PUBLIC_SANITY_PROJECT_ID: "ci-placeholder",
   NEXT_PUBLIC_SANITY_DATASET: "ci-placeholder",
+  SANITY_REVALIDATE_SECRET: "isolated-browser-webhook-secret",
 };
 if (env.VERCEL || env.NETLIFY) throw new Error("Run isolated checks in local/CI environments, not a deployment build");
 

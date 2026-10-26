@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import Image from "next/image";
 import ParallaxImage from "@/components/ParallaxImage";
+import { useReducedMotion } from "@/lib/use-reduced-motion";
 
 import {
   type Explanation,
@@ -140,6 +141,7 @@ function LogoDisplay({ parts, cycle }: Pick<Explanation, "parts" | "cycle">) {
 }
 
 export default function LogoSection({ copy }: { copy?: { elementKey: string; title: string; description: string }[] | null }) {
+  const reducedMotion = useReducedMotion();
   const explanations = fallbackExplanations.map((entry, index) => {
     const replacement = copy?.find((item) => item.elementKey === ELEMENT_KEYS[index]);
     return replacement ? { ...entry, title: replacement.title, description: replacement.description } : entry;
@@ -155,7 +157,7 @@ export default function LogoSection({ copy }: { copy?: { elementKey: string; tit
     const section = sectionRef.current;
     const sticky = stickyRef.current;
     const track = trackRef.current;
-    if (!section || !sticky || !track) return;
+    if (reducedMotion || !section || !sticky || !track) return;
 
     const desktop = window.matchMedia("(min-width: 1024px)");
 
@@ -284,10 +286,24 @@ export default function LogoSection({ copy }: { copy?: { elementKey: string; tit
       sticky.removeEventListener("touchmove", onTouchMove);
       clearTimeout(timer);
     };
-  }, []);
+  }, [reducedMotion]);
 
   const current = settled === null ? undefined : explanations[settled];
   const active = settled ?? 0; // card shown on mobile
+
+  if (reducedMotion) {
+    return (
+      <section aria-label="Filosofi logo Pendar Mentari" className="relative mx-auto max-w-6xl px-6 pb-16 pt-28">
+        <div className="mb-16 flex flex-col items-center gap-8 sm:flex-row sm:justify-center">
+          <div className="h-64 w-64"><LogoDisplay /></div>
+          <Wordmark className="h-auto w-64 max-w-full" />
+        </div>
+        <div className="grid gap-12 lg:grid-cols-2">
+          {explanations.slice(1).map(({ title, description }) => <CardText key={title} title={title} description={description} />)}
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section

@@ -35,6 +35,18 @@ export function SanityImage({
     ? imageBuilder.auto("format").url()
     : imageBuilder.height(height).fit(fit).auto("format").url();
   const dimensions = value.asset.metadata?.dimensions;
+  // Sanity serves these variants directly. `sizes` alone has no effect when
+  // Next Image is unoptimized, so a picture source supplies actual candidates.
+  const maxWidth = Math.min(width * 2, dimensions?.width ?? width * 2);
+  const widths = [...new Set([320, 480, 640, 800, 960, 1200, 1600, maxWidth])]
+    .filter((candidate) => candidate > 0 && candidate <= maxWidth).sort((a, b) => a - b);
+  const srcSet = widths.map((candidate) => {
+    const variant = urlFor(value).width(candidate);
+    const url = preserveAspectRatio
+      ? variant.auto("format").url()
+      : variant.height(Math.max(1, Math.round(candidate * height / width))).fit(fit).auto("format").url();
+    return `${url} ${candidate}w`;
+  }).join(", ");
 
   // Calculate aspect ratio to prevent CLS on lazy-loaded images
   const aspectRatio =
@@ -43,6 +55,8 @@ export function SanityImage({
       : `${width} / ${height}`;
 
   return (
+    <picture className="contents">
+      <source srcSet={srcSet} sizes={sizes} />
     <Image
       src={src}
       alt={value.alt || fallbackAlt}
@@ -57,5 +71,6 @@ export function SanityImage({
       blurDataURL={value.asset.metadata?.lqip ?? undefined}
       style={{ aspectRatio }}
     />
+    </picture>
   );
 }

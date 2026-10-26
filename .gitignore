@@ -45,10 +45,16 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# Impeccable local hook state
-/.impeccable/config.local.json
-/.impeccable/hook.cache.json
-/.impeccable/hook.pending.json
+# Local coding-agent tooling and workspace state (not needed by the website)
+/.agents/
+/.skills/
+/.codex/
+/.impeccable/
+/.esper/
+
+# Recoverable local copies retained before repository cleanup
+/outputs/repo-cleanup-*/
+/outputs/predeployment-improvements-*/
 
 .lighthouse
 
@@ -61,6 +67,7 @@ docs/Booklet Rekrutmen Staf.pdf
 /outputs/cabinet-values-2026-10-08/
 /outputs/mapres-proker-2026-10-22/
 /outputs/pre-release-cms/
+/outputs/progul-2026-10-26/
 /docs/Part 1/
 /docs/Part 2/
 /docs/Part 3/

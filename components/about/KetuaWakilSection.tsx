@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 
 import { LeadershipCard } from "@/components/about/LeadershipCard";
-import type { MEMBERS_QUERY_RESULT } from "@/sanity.types";
+import type { LEADERSHIP_MEMBERS_QUERY_RESULT } from "@/sanity.types";
 
 /* ------------------------------------------------------------------ */
 /* Copy: edit the heading here                                         */
@@ -15,7 +15,7 @@ const ROLE_ORDER = ["Ketua", "Wakil Ketua"];
 const ROLES = new Set(ROLE_ORDER);
 
 interface KetuaWakilSectionProps {
-  members: MEMBERS_QUERY_RESULT;
+  members: LEADERSHIP_MEMBERS_QUERY_RESULT;
 }
 
 export default function KetuaWakilSection({ members }: KetuaWakilSectionProps) {

@@ -164,12 +164,13 @@ Urutan di beranda: `displayOrder`, lalu `rank`, lalu nama. Maksimal 12.
 | `FEATURED_PROGRAMS_QUERY` | beranda | Program `isFeatured`, urut `displayOrder` lalu nama, maks 6 |
 | `PROGRAM_BY_SLUG_QUERY` | belum dipakai | Disiapkan untuk halaman detail program |
 | `PUBLICATION_CARDS_QUERY` | beranda | 6 post terbaru |
-| `PUBLICATION_PAGE_QUERY` | `/article` | Semua post, terbaru dulu |
+| `PUBLICATION_PAGE_QUERY`, `PUBLICATION_PAGE_ASC_QUERY` | `/article` | Filter kategori, hitung total, dan maksimal 5 kartu per halaman; urut terbaru/terlama |
 | `POST_BY_SLUG_QUERY` | `/post/[slug]` | Satu post lengkap |
 | `MAPRES_QUERY` | beranda | Maks 12 mapres |
 | `ORGANIZATION_UNITS_QUERY` | `/about` | Semua unit |
 | `ORGANIZATION_UNIT_BY_SLUG_QUERY` | `/penjelasan/[slug]` | Satu unit + program + anggota yang mereferensikannya |
-| `MEMBERS_QUERY` | `/about` | Semua anggota dari unit 2026 |
+| `LEADERSHIP_MEMBERS_QUERY` | `/about` | Hanya pimpinan yang ditampilkan (46 pada snapshot verifikasi) |
+| `MEMBERS_QUERY` | Query umum yang tersedia | Semua anggota dari unit 2026; tidak dipakai untuk memuat About |
 | `STUDENT_ASSOCIATIONS_QUERY` | `/hima` | Semua Hima/Huria |
 | `SITEMAP_POSTS_QUERY`, `SITEMAP_UNITS_QUERY` | sitemap | Slug dan tanggal update |
 
@@ -182,11 +183,11 @@ Urutan di beranda: `displayOrder`, lalu `rank`, lalu nama. Maksimal 12.
 5. Studio di production baru menampilkan field baru setelah kode di-deploy.
 6. Menghapus atau mengganti nama field **tidak** menghapus data lama di Sanity. Data lama tetap ada sampai dimigrasi.
 
-Perubahan schema yang menyentuh data production termasuk perubahan berisiko. Ikuti `.skills/sanity-cms/SKILL.md` dan buat rencana + backup sebelum menulis ke dataset.
+Perubahan schema yang memerlukan penulisan data production harus mendapat otoritas dan memiliki backup/pemulihan. Ikuti batas target project, dataset, term, ID, dan field yang disetujui dalam handover.
 
 ## Konten yang masih hardcoded
 
-Per 2026-10-26, komponen sudah membaca field aktif di bawah. Salinan statis menjadi fallback untuk field terstruktur yang belum diisi; manifest migrasi empat field disiapkan tetapi belum dipublikasikan. Lihat [bab 09](09-konten-about-dan-favicon.md). Menu navigasi dan asset/animasi logo tetap menjadi konfigurasi kode.
+Per 2026-10-26, komponen sudah membaca field aktif di bawah. Salinan statis menjadi fallback untuk field terstruktur yang belum diisi; empat field kartu About telah dipublikasikan dari salinan yang disetujui pada 26 Oktober 2026. Lihat [bab 09](09-konten-about-dan-favicon.md). Menu navigasi dan asset/animasi logo tetap menjadi konfigurasi kode.
 
 | Konten | Lokasi kode | Field Sanity yang sebenarnya sudah ada |
 | --- | --- | --- |

@@ -1,90 +1,65 @@
 import type { Metadata } from "next";
+import { cache } from "react";
 import { getPageMetadata } from "@/lib/page-metadata";
 import Link from "next/link";
 import ArticleCard from "@/components/ArticleCard";
 import ArticleFilterSort from "@/components/ArticleFilterSort";
 import Footer from "@/components/Footer";
+import { publicationCanonical, publicationFilters, PUBLICATIONS_PER_PAGE } from "@/lib/publications";
+import { resolveSiteConfig } from "@/lib/site-config";
 import { sanityFetch } from "@/sanity/lib/live";
 import {
   CONTENT_TERM,
   PUBLICATION_PAGE_QUERY,
+  PUBLICATION_PAGE_ASC_QUERY,
   SITE_SETTINGS_QUERY,
 } from "@/sanity/lib/queries";
 
-// Mendukung tipe searchParams untuk Next.js 14 maupun 15
-export async function generateMetadata(): Promise<Metadata> { return getPageMetadata({
-  path: "/article",
-  title: "Artikel dan Kajian — BEM FISIP Unpad 2026",
-  description:
-    "Baca artikel dan kajian terbaru dari BEM FISIP Unpad 2026. Publikasi resmi, kebijakan, dan pemikiran kritis dari kabinet Pendar Mentari.",
-}); }
-
-export default async function ArticlePage(props: {
+type ArticleProps = {
   searchParams?:
     | Promise<{ [key: string]: string | string[] | undefined }>
     | { [key: string]: string | string[] | undefined };
-}) {
-  const params = { term: CONTENT_TERM };
-  const [settingsResult, postsResult] = await Promise.all([
-    sanityFetch({
-      query: SITE_SETTINGS_QUERY,
-      params,
-      perspective: "published",
-      stega: false,
-    }),
-    sanityFetch({
-      query: PUBLICATION_PAGE_QUERY,
-      params,
-      perspective: "published",
-      stega: false,
-    }),
+};
+
+// Share the bounded result between metadata and rendering in the same request.
+const getPublicationPage = cache(async (category: string, sort: string, requestedPage: number) => {
+  const query = sort === "terlama" ? PUBLICATION_PAGE_ASC_QUERY : PUBLICATION_PAGE_QUERY;
+  const fetchPage = (page: number) => sanityFetch({
+    query,
+    params: { term: CONTENT_TERM, category, start: (page - 1) * PUBLICATIONS_PER_PAGE, end: page * PUBLICATIONS_PER_PAGE },
+    perspective: "published",
+    stega: false,
+  });
+  const firstResult = await fetchPage(requestedPage);
+  const totalPages = Math.max(1, Math.ceil((firstResult.data?.total ?? 0) / PUBLICATIONS_PER_PAGE));
+  const validCurrentPage = Math.min(requestedPage, totalPages);
+  const postsResult = validCurrentPage === requestedPage ? firstResult : await fetchPage(validCurrentPage);
+  return { totalPages, validCurrentPage, posts: postsResult.data?.posts ?? [] };
+});
+
+export async function generateMetadata(props: ArticleProps): Promise<Metadata> {
+  const filters = publicationFilters((await props.searchParams) || {});
+  const { validCurrentPage } = await getPublicationPage(filters.category, filters.sort, filters.page);
+  const heading = filters.category === "semua" ? "Artikel dan Kajian" : filters.category === "kajian" ? "Kajian" : "Artikel";
+  const metadata = await getPageMetadata({
+    path: publicationCanonical({ ...filters, page: validCurrentPage }),
+    title: `${heading}${validCurrentPage > 1 ? ` — Halaman ${validCurrentPage}` : ""} — BEM FISIP Unpad 2026`,
+    description: "Baca artikel dan kajian terbaru dari BEM FISIP Unpad 2026. Publikasi resmi, kebijakan, dan pemikiran kritis dari kabinet Pendar Mentari.",
+  });
+  // Alternative sort orders remain usable without competing in search results.
+  if (filters.sort !== "terbaru") metadata.robots = { index: false, follow: resolveSiteConfig().indexable };
+  return metadata;
+}
+
+export default async function ArticlePage(props: ArticleProps) {
+  const filters = publicationFilters((await props.searchParams) || {});
+  const currentCategory = filters.category;
+  const currentSort = filters.sort;
+  const [settingsResult, result] = await Promise.all([
+    sanityFetch({ query: SITE_SETTINGS_QUERY, params: { term: CONTENT_TERM }, perspective: "published", stega: false }),
+    getPublicationPage(currentCategory, currentSort, filters.page),
   ]);
-
-  const rawPosts = postsResult.data ?? [];
-
-  // 1. Mengambil parameter URL (Aman untuk Next.js 14 & 15)
-  const searchParams = (await props.searchParams) || {};
-  const currentCategory = (
-    typeof searchParams.category === "string" ? searchParams.category : "semua"
-  ).toLowerCase();
-  const currentSort = (
-    typeof searchParams.sort === "string" ? searchParams.sort : "terbaru"
-  ).toLowerCase();
-  const requestedPage =
-    typeof searchParams.page === "string"
-      ? Number.parseInt(searchParams.page, 10)
-      : 1;
-  const currentPage = Number.isFinite(requestedPage)
-    ? Math.max(1, requestedPage)
-    : 1;
-
-  // 2. Logika Filter Berdasarkan Kategori
-  const filteredPosts = rawPosts.filter((post) => {
-    const isKajian = post.postCategory?.toLowerCase().includes("kajian");
-    if (currentCategory === "artikel") return !isKajian;
-    if (currentCategory === "kajian") return isKajian;
-    return true; // "semua"
-  });
-
-  // 3. Logika Sorting (Terbaru / Terlama)
-  filteredPosts.sort((a, b) => {
-    const dateA = new Date(a.publishedAt || 0).getTime();
-    const dateB = new Date(b.publishedAt || 0).getTime();
-    return currentSort === "terlama" ? dateA - dateB : dateB - dateA;
-  });
-
-  // 4. Logika Paginasi (5 Item per Halaman)
-  const ITEMS_PER_PAGE = 5;
-  const totalPages = Math.max(
-    1,
-    Math.ceil(filteredPosts.length / ITEMS_PER_PAGE),
-  );
-  const validCurrentPage = Math.min(currentPage, totalPages);
-
-  const paginatedPosts = filteredPosts.slice(
-    (validCurrentPage - 1) * ITEMS_PER_PAGE,
-    validCurrentPage * ITEMS_PER_PAGE,
-  );
+  const { totalPages, validCurrentPage, posts: paginatedPosts } = result;
 
   // Helper function untuk membuat URL saat tombol di-klik
   const buildUrl = (updates: {

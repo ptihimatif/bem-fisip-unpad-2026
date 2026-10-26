@@ -42,7 +42,7 @@ export default function ArticleCard({ post }: ArticleCardProps) {
       <div className="flex min-w-0 flex-1 flex-col justify-between p-4 sm:p-5 order-2 md:order-1">
         <div>
           {/* Judul: Lebih kecil di hp/tablet (text-lg/xl), normal kembali di md/lg ([24px]) */}
-          <h2 className="text-lg sm:text-xl md:text-[24px] line-clamp-2 font-bold group-hover:text-brand-yellow transition-colors leading-snug">
+          <h2 className="text-lg sm:text-xl md:text-[24px] line-clamp-2 font-bold group-hover:text-brand-blue group-focus-visible:text-brand-blue transition-colors leading-snug">
             {post.judul}
           </h2>
           {post.excerpt && (

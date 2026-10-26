@@ -2,9 +2,9 @@ import type { ReactNode } from "react";
 
 import InfiniteCarousel from "@/components/InfiniteCarousel";
 import { LeadershipCard } from "@/components/about/LeadershipCard";
-import type { MEMBERS_QUERY_RESULT } from "@/sanity.types";
+import type { LEADERSHIP_MEMBERS_QUERY_RESULT } from "@/sanity.types";
 
-type Member = MEMBERS_QUERY_RESULT[number];
+type Member = LEADERSHIP_MEMBERS_QUERY_RESULT[number];
 
 /* ------------------------------------------------------------------ */
 /* Copy: edit the headings here                                        */
@@ -34,7 +34,7 @@ const CAROUSEL_SECONDS_PER_CARD = 80 / 39;
 export function SekretariatBidangSection({
   members,
 }: {
-  members: MEMBERS_QUERY_RESULT;
+  members: LEADERSHIP_MEMBERS_QUERY_RESULT;
 }) {
   const sectionMembers = members.filter((member) => {
     const role = member.role.trim();
@@ -59,7 +59,7 @@ export function SekretariatBidangSection({
 export function PimpinanDepartemenBiroSection({
   members,
 }: {
-  members: MEMBERS_QUERY_RESULT;
+  members: LEADERSHIP_MEMBERS_QUERY_RESULT;
 }) {
   const sectionMembers = members.filter((member) =>
     UNIT_LEAD_ROLE.test(member.role.trim()),

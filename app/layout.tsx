@@ -7,6 +7,7 @@ import Navbar from "@/components/Navbar";
 import { getSiteSettings } from "@/sanity/lib/settings";
 import { resolveSiteConfig } from "@/lib/site-config";
 import { getSocialLinks } from "@/lib/site-content";
+import { DEFAULT_SOCIAL_IMAGE, serializeJsonLd } from "@/lib/seo";
 
 const inter = localFont({
   src: [
@@ -34,7 +35,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const description =
     settings?.seoDescription ?? "Official Website of BEM FISIP Unpad 2026";
   const { origin: baseUrl, indexable } = resolveSiteConfig();
-  const images = settings?.ogImage?.asset?.url ? [settings.ogImage.asset.url] : undefined;
+  const images = [settings?.ogImage?.asset?.url || DEFAULT_SOCIAL_IMAGE];
 
   return {
     metadataBase: new URL(baseUrl),
@@ -69,6 +70,7 @@ export default async function RootLayout({
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Organization",
+    "@id": `${baseUrl}/#organization`,
     name: settings?.organizationName ?? "BEM FISIP Unpad 2026",
     url: baseUrl,
     logo: `${baseUrl}/assets/LOGO%20KABINET/logo-full.png`,
@@ -80,13 +82,13 @@ export default async function RootLayout({
       <head>
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }}
+          dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
         />
       </head>
       <body className="min-h-full flex flex-col font-sans bg-[#000c23] text-white">
         <a
           href="#main-content"
-          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[998] focus:rounded-md focus:bg-brand-yellow focus:px-4 focus:py-2 focus:font-bold focus:text-brand-blue"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[1000] focus:rounded-md focus:bg-brand-yellow focus:px-4 focus:py-2 focus:font-bold focus:text-brand-blue"
         >
           Lewati ke konten
         </a>

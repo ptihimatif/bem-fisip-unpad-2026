@@ -28,7 +28,7 @@ body {
 }
 
 .infinite-carousel-track {
-  animation: infinite-carousel-scroll var(--infinite-carousel-duration, 48s) linear infinite;
+  animation: infinite-carousel-scroll calc(var(--infinite-carousel-duration, 48s) * 1.15) linear infinite;
   backface-visibility: hidden;
   will-change: transform;
 }
@@ -57,6 +57,15 @@ body {
 .infinite-carousel--always-moving:hover .infinite-carousel-track,
 .infinite-carousel--always-moving:focus-within .infinite-carousel-track {
   animation-play-state: running;
+}
+
+.infinite-carousel--manual .infinite-carousel-track {
+  animation: none;
+  will-change: auto;
+}
+
+.infinite-carousel--manual .infinite-carousel-copy {
+  display: none;
 }
 
 @keyframes fadeInUp {
@@ -99,6 +108,15 @@ html {
 
   .infinite-carousel-track {
     animation: none;
+    will-change: auto;
+  }
+
+  .infinite-carousel {
+    overflow-x: auto;
+  }
+
+  .infinite-carousel-copy {
+    display: none;
   }
 }
 

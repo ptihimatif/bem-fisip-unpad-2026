@@ -4,8 +4,8 @@ import { useEffect } from "react";
 import Link from "next/link";
 
 interface ErrorBoundaryProps {
-  error: Error & { digest?: string };
-  reset: () => void;
+  error: unknown;
+  retry: () => void;
   title?: string;
   message?: string;
   backLink?: string;
@@ -14,7 +14,7 @@ interface ErrorBoundaryProps {
 
 export default function ErrorBoundary({
   error,
-  reset,
+  retry,
   title = "Terjadi Kesalahan",
   message = "Maaf, halaman ini tidak dapat dimuat saat ini.",
   backLink = "/",
@@ -31,7 +31,7 @@ export default function ErrorBoundary({
         <p className="mb-8 text-white/80">{message}</p>
         <div className="flex gap-4 justify-center">
           <button
-            onClick={reset}
+            onClick={retry}
             className="rounded-lg bg-brand-yellow px-6 py-3 font-bold text-brand-blue transition-colors hover:bg-brand-yellow/90"
           >
             Coba Lagi

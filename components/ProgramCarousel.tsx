@@ -1,11 +1,12 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useLayoutEffect, useCallback } from "react";
 import gsap from "gsap";
 import { createPortal } from "react-dom";
 import { SanityImage } from "@/components/SanityImage";
 import { SanityPortableText } from "@/components/SanityPortableText";
 import type { FEATURED_PROGRAMS_QUERY_RESULT } from "@/sanity.types";
+import { useHydrated } from "@/lib/use-hydrated";
 
 type Program = FEATURED_PROGRAMS_QUERY_RESULT[number];
 
@@ -14,6 +15,7 @@ interface ProgramCarouselProps {
 }
 
 export default function ProgramCarousel({ programs }: ProgramCarouselProps) {
+  const hydrated = useHydrated();
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const selectedProgram = programs.find((p) => p._id === selectedId);
   const triggerRef = useRef<HTMLButtonElement | null>(null);
@@ -21,142 +23,71 @@ export default function ProgramCarousel({ programs }: ProgramCarouselProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const itemRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
-  // Duplicate the programs array to create a track long enough to fake an
-  // infinite loop. Lowered from 15 -> 7: still plenty of buffer for arrow
-  // clicks and normal swipe momentum, but ~55% fewer DOM nodes/images.
-  const MULTIPLIER = 7;
+  // A full group on either side is enough for the normal 4–6 program set.
+  // Short sets retain a wider buffer so desktop viewports are still filled.
+  const MULTIPLIER = programs.length >= 4 ? 3 : 7;
   const infinitePrograms = Array(MULTIPLIER).fill(programs).flat();
   const middleCopyIndex = Math.floor(MULTIPLIER / 2);
 
-  const jumpToMiddle = () => {
-    const middleIndex = Math.floor((programs.length * MULTIPLIER) / 2);
-    const target = itemRefs.current[middleIndex];
+  useLayoutEffect(() => {
     const container = scrollRef.current;
-    if (!target || !container) return;
+    const target = itemRefs.current[middleCopyIndex * programs.length + Math.floor(programs.length / 2)];
+    if (!container || !target) return;
     container.scrollLeft =
       target.offsetLeft - container.clientWidth / 2 + target.clientWidth / 2;
-  };
 
-  const wrapIfNeeded = () => {
-    if (!scrollRef.current) return;
-    const { scrollLeft, scrollWidth } = scrollRef.current;
-    const threshold = scrollWidth / MULTIPLIER;
-    if (scrollLeft < threshold || scrollLeft > scrollWidth - threshold * 2) {
-      jumpToMiddle();
-    }
-  };
+    const wrapIfNeeded = () => {
+      // Do not move a keyboard user's focused canonical card out of view.
+      if (container.contains(document.activeElement) || container.matches(":active")) return;
+      const first = itemRefs.current[0];
+      const nextGroup = itemRefs.current[programs.length];
+      if (!first || !nextGroup) return;
+      const groupWidth = nextGroup.offsetLeft - first.offsetLeft;
+      if (groupWidth <= 0) return;
+      const middleStart = groupWidth * middleCopyIndex;
+      const groupsAway = Math.round((container.scrollLeft - middleStart) / groupWidth);
+      if (groupsAway !== 0) {
+        // Move by whole groups, preserving the visible program and swipe offset.
+        container.scrollTo({ left: container.scrollLeft - groupsAway * groupWidth, behavior: "instant" });
+      }
+    };
 
-  useEffect(() => {
-    jumpToMiddle();
-    const container = scrollRef.current;
-    if (!container) return;
-
-    // `scrollend` isn't supported on every browser in the wild yet (older
-    // Safari in particular). Without it wrapIfNeeded() never runs there,
-    // so the loop silently breaks once a user scrolls past the buffer.
-    const supportsScrollEnd = "onscrollend" in window;
-
-    if (supportsScrollEnd) {
-      container.addEventListener("scrollend", wrapIfNeeded);
-      return () => container.removeEventListener("scrollend", wrapIfNeeded);
-    }
-
-    // Debounced-scroll fallback for browsers without native `scrollend`.
+    // Also debounce scroll on browsers without reliable native scrollend.
     let debounceTimer: ReturnType<typeof setTimeout>;
     const handleScroll = () => {
       clearTimeout(debounceTimer);
       debounceTimer = setTimeout(wrapIfNeeded, 120);
     };
+    const observer = new ResizeObserver(wrapIfNeeded);
+    observer.observe(container);
+    container.addEventListener("scrollend", wrapIfNeeded);
     container.addEventListener("scroll", handleScroll, { passive: true });
     return () => {
       clearTimeout(debounceTimer);
+      observer.disconnect();
+      container.removeEventListener("scrollend", wrapIfNeeded);
       container.removeEventListener("scroll", handleScroll);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [programs.length]);
+  }, [programs, middleCopyIndex]);
 
-  const handleNext = () => {
-    if (scrollRef.current) {
-      const card = scrollRef.current.querySelector(
-        '[data-card="true"]',
-      ) as HTMLElement;
-      if (card) {
-        const gap = 24; // gap-6 equals 24px
-        const scrollAmount = card.offsetWidth + gap;
-        scrollRef.current.scrollBy({ left: scrollAmount, behavior: "smooth" });
-      }
-    }
-  };
-
-  const handlePrev = () => {
-    if (scrollRef.current) {
-      const card = scrollRef.current.querySelector(
-        '[data-card="true"]',
-      ) as HTMLElement;
-      if (card) {
-        const gap = 24;
-        const scrollAmount = card.offsetWidth + gap;
-        scrollRef.current.scrollBy({ left: -scrollAmount, behavior: "smooth" });
-      }
-    }
-  };
-
-  const openProgram = (id: string, el: HTMLButtonElement | null) => {
-    triggerRef.current = el;
+  const openProgram = (id: string) => {
+    const index = programs.findIndex((program) => program._id === id);
+    // Visual copies must restore focus to the accessible instance of that card.
+    triggerRef.current = itemRefs.current[middleCopyIndex * programs.length + index];
     setSelectedId(id);
   };
 
-  const closeProgram = () => {
+  const closeProgram = useCallback(() => {
     setSelectedId(null);
-    // Return focus to whatever card opened the modal.
-    triggerRef.current?.focus();
-  };
+  }, []);
+  const restoreFocus = useCallback(() => {
+    const target = triggerRef.current?.isConnected ? triggerRef.current : scrollRef.current;
+    target?.focus({ preventScroll: true });
+    triggerRef.current?.scrollIntoView({ block: "nearest", inline: "nearest", behavior: "instant" });
+  }, []);
 
   return (
     <div className="relative mx-auto w-full max-w-7xl">
-      {/* Desktop Navigation Buttons - Hidden on sm and md */}
-      <button
-        onClick={handlePrev}
-        className="absolute -left-12 top-1/2 z-10 -translate-y-1/2 hidden lg:flex cursor-pointer items-center justify-center text-white transition-transform hover:scale-110 hover:text-brand-yellow focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-yellow"
-        aria-label="Previous programs"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          strokeWidth={3}
-          stroke="currentColor"
-          className="h-10 w-10"
-        >
-          <path
-            strokeLinecap="square"
-            strokeLinejoin="miter"
-            d="M15.75 19.5L8.25 12l7.5-7.5"
-          />
-        </svg>
-      </button>
-
-      <button
-        onClick={handleNext}
-        className="absolute -right-12 top-1/2 z-10 -translate-y-1/2 hidden lg:flex cursor-pointer items-center justify-center text-white transition-transform hover:scale-110 hover:text-brand-yellow focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-yellow"
-        aria-label="Next programs"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          strokeWidth={3}
-          stroke="currentColor"
-          className="h-10 w-10"
-        >
-          <path
-            strokeLinecap="square"
-            strokeLinejoin="miter"
-            d="M8.25 4.5l7.5 7.5-7.5 7.5"
-          />
-        </svg>
-      </button>
-
       {/*
         Snap Carousel Track:
         - Native swipe support (overflow-x-auto, snap-x)
@@ -164,6 +95,9 @@ export default function ProgramCarousel({ programs }: ProgramCarouselProps) {
       */}
       <div
         ref={scrollRef}
+        tabIndex={-1}
+        aria-label="Program unggulan"
+        aria-busy={!hydrated}
         className="flex gap-6 overflow-x-auto snap-x snap-mandatory [&::-webkit-scrollbar]:hidden"
         style={{ scrollbarWidth: "none" }}
       >
@@ -182,9 +116,11 @@ export default function ProgramCarousel({ programs }: ProgramCarouselProps) {
               }}
               data-card="true"
               type="button"
+              aria-label={program.name}
+              disabled={!hydrated}
               tabIndex={isCanonical ? 0 : -1}
               aria-hidden={!isCanonical}
-              onClick={(e) => openProgram(program._id, e.currentTarget)}
+              onClick={() => openProgram(program._id)}
               /*
                 Responsive Layout:
                 Default (Mobile): ~75vw (1 card centered + edges peeking)
@@ -217,7 +153,7 @@ export default function ProgramCarousel({ programs }: ProgramCarouselProps) {
 
       {/* GSAP 3D Modal */}
       {selectedProgram && createPortal(
-        <ProgramModal program={selectedProgram} onClose={closeProgram} />, document.body,
+        <ProgramModal program={selectedProgram} onClose={closeProgram} restoreFocus={restoreFocus} />, document.body,
       )}
     </div>
   );
@@ -226,20 +162,27 @@ export default function ProgramCarousel({ programs }: ProgramCarouselProps) {
 function ProgramModal({
   program,
   onClose,
+  restoreFocus,
 }: {
   program: Program;
   onClose: () => void;
+  restoreFocus: () => void;
 }) {
   const overlayRef = useRef<HTMLDivElement>(null);
   const cardContainerRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const reducedMotionRef = useRef(false);
   const closingRef = useRef(false);
+  const closingTimelineRef = useRef<gsap.core.Timeline | null>(null);
 
   useEffect(() => {
     reducedMotionRef.current = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
+    const background = Array.from(document.body.children).filter(
+      (element): element is HTMLElement => element instanceof HTMLElement && element !== overlayRef.current,
+    ).map((element) => ({ element, inert: element.inert }));
+    background.forEach(({ element }) => { element.inert = true; });
     closeButtonRef.current?.focus();
 
     const ctx = gsap.context(() => {
@@ -264,26 +207,27 @@ function ProgramModal({
 
     return () => {
       ctx.revert();
+      closingTimelineRef.current?.kill();
       document.body.style.overflow = previousOverflow;
+      background.forEach(({ element, inert }) => { element.inert = inert; });
+      restoreFocus();
     };
-  }, []);
+  }, [restoreFocus]);
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     if (closingRef.current) return;
     closingRef.current = true;
     if (reducedMotionRef.current) { onClose(); return; }
-    gsap.to(cardContainerRef.current, {
+    closingTimelineRef.current = gsap.timeline({ onComplete: onClose }).to(cardContainerRef.current, {
       rotationY: 180,
       scale: 0.5,
       opacity: 0,
       duration: 0.4,
-    });
-    gsap.to(overlayRef.current, {
+    }, 0).to(overlayRef.current, {
       opacity: 0,
       duration: 0.4,
-      onComplete: onClose,
-    });
-  };
+    }, 0);
+  }, [onClose]);
 
   // Escape-to-close + a minimal focus trap so keyboard users can't tab out
   // of the modal into the carousel behind it.
@@ -313,8 +257,7 @@ function ProgramModal({
 
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [handleClose]);
 
   return (
     <div

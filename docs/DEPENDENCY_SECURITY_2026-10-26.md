@@ -33,4 +33,4 @@ Owner: backend maintainer. Recheck on Sanity/TypeID updates and before release. 
 - [Next.js use-cache advisory](https://github.com/advisories/GHSA-673q-mjm6-r5xr).
 - [pnpm 11 build-script permissions](https://pnpm.io/11.x/cli/approve-builds).
 
-Verification results for the full change belong in `.agents/tasks/2026-10-26-pre-release-improvements.md`.
+Current release checks and operating status are recorded in `docs/HANDOVER_DEPLOYMENT_HEMAT_2026.md`. Earlier task records were archived during the maintainer-approved repository cleanup; Git history preserves committed records.

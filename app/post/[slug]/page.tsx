@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { cache } from "react";
 import type { PortableTextBlock } from "next-sanity";
 import { notFound } from "next/navigation";
 import Link from "next/link";
@@ -14,8 +15,9 @@ import {
 import { safeExternalUrl } from "@/sanity/lib/urls";
 import { resolveSiteConfig } from "@/lib/site-config";
 import { getSiteSettings } from "@/sanity/lib/settings";
+import { DEFAULT_ORGANIZATION_NAME, DEFAULT_SOCIAL_IMAGE, publicationDescription, publicationStructuredData, serializeJsonLd } from "@/lib/seo";
 
-async function getPost(slug: string) {
+const getPost = cache(async (slug: string) => {
   const result = await sanityFetch({
     query: POST_BY_SLUG_QUERY,
     params: { term: CONTENT_TERM, slug },
@@ -23,7 +25,7 @@ async function getPost(slug: string) {
     stega: false,
   });
   return result.data;
-}
+});
 
 export async function generateMetadata({
   params,
@@ -33,28 +35,31 @@ export async function generateMetadata({
   const { slug } = await params;
   const post = await getPost(slug);
   if (!post) {
-    return { title: "Publikasi tidak ditemukan" };
+    return { title: "Publikasi tidak ditemukan", robots: { index: false, follow: false } };
   }
 
   const title = post.seoTitle ?? post.judul;
-  const description = post.seoDescription ?? post.excerpt ?? undefined;
+  const description = publicationDescription(post);
   const { origin: baseUrl } = resolveSiteConfig();
   const settings = await getSiteSettings();
-  const image = post.seoImage?.asset?.url ?? post.image?.asset?.url ?? settings?.ogImage?.asset?.url;
-  const images = image ? [image] : undefined;
+  const image = post.seoImage?.asset?.url ?? post.image?.asset?.url ?? settings?.ogImage?.asset?.url ?? DEFAULT_SOCIAL_IMAGE;
+  const images = [image];
 
   return {
     title,
     description,
     alternates: {
-      canonical: `${baseUrl}/post/${slug}`,
+      canonical: `${baseUrl}/post/${encodeURIComponent(slug)}`,
     },
     openGraph: {
       title,
       description,
       type: "article",
-      url: `${baseUrl}/post/${slug}`,
+      url: `${baseUrl}/post/${encodeURIComponent(slug)}`,
       publishedTime: post.publishedAt ?? undefined,
+      modifiedTime: post._updatedAt ?? undefined,
+      locale: "id_ID",
+      siteName: settings?.organizationName ?? DEFAULT_ORGANIZATION_NAME,
       images,
     },
     twitter: {
@@ -83,6 +88,11 @@ export default async function PostPage({
   ]);
   if (!post) notFound();
   const socialLink = safeExternalUrl(post.instagramUrl);
+  const structuredData = publicationStructuredData({
+    origin: resolveSiteConfig().origin,
+    post,
+    organizationName: settingsResult.data?.organizationName ?? DEFAULT_ORGANIZATION_NAME,
+  });
 
   const isKajian = post.postCategory?.toLowerCase().includes("kajian");
   const categoryLabel = isKajian ? "Kajian" : "Artikel";
@@ -111,6 +121,7 @@ export default async function PostPage({
   `,
       }}
     >
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(structuredData) }} />
       <div className="relative z-10 mx-auto max-w-6xl px-6 py-12">
         {/* BREADCRUMB / BACK LINK */}
         <div className="mb-8">

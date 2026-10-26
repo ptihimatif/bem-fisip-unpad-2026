@@ -13,6 +13,7 @@ export default defineConfig({
   projects: [
     { name: "desktop", use: { ...devices["Desktop Chrome"], viewport: { width: 1280, height: 900 } } },
     { name: "mobile", use: { ...devices["iPhone 13"], defaultBrowserType: "chromium" } },
+    { name: "webkit", use: { ...devices["iPhone 13"], defaultBrowserType: "webkit" } },
   ],
   webServer: { command: "node node_modules/next/dist/bin/next start -p 3123", url: "http://127.0.0.1:3123", reuseExistingServer: false, timeout: 30_000 },
 });

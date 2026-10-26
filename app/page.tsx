@@ -11,6 +11,7 @@ import dynamic from "next/dynamic";
 const ProgramCarousel = dynamic(() => import("@/components/ProgramCarousel"));
 const InstagramEmbed = dynamic(() => import("@/components/InstagramEmbed"));
 import ScrollToSectionButton from "@/components/ScrollToSectionButton";
+import DeferredIframe from "@/components/DeferredIframe";
 import type { PortableTextBlock } from "next-sanity";
 import { sanityFetch } from "@/sanity/lib/live";
 import { safeExternalUrl } from "@/sanity/lib/urls";
@@ -79,15 +80,8 @@ export default async function Home() {
   const posts = postsResult.data ?? [];
   const mapres = mapresResult.data ?? [];
 
-  const kajianPosts = posts.filter(
-    (post: PUBLICATION_CARDS_QUERY_RESULT[number]) =>
-      post.postCategory.toLowerCase().includes("kajian"),
-  );
-  const artikelPosts = posts.filter(
-    (post: PUBLICATION_CARDS_QUERY_RESULT[number]) =>
-      !post.postCategory.toLowerCase().includes("kajian"),
-  );
-  const allArticles = [...kajianPosts, ...artikelPosts].slice(0, 3);
+  // The query already orders publications newest first, regardless of category.
+  const allArticles = posts.slice(0, 3);
 
   return (
     <div
@@ -173,7 +167,7 @@ export default async function Home() {
 
         {/* Video YouTube (Urutan kedua di sm/md, urutan kanan di lg) */}
         <div className="relative z-10 w-full aspect-video overflow-hidden border border-white/15 lg:h-80 lg:w-[84%] lg:justify-self-start lg:aspect-auto order-2 lg:order-2">
-          {videoUrl && <iframe
+          {videoUrl && <DeferredIframe
             className="absolute inset-0 z-10 h-full w-full"
             src={videoUrl}
             title="Video profil BEM FISIP UNPAD"

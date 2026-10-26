@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { cache } from "react";
 import { getPageMetadata } from "@/lib/page-metadata";
 import { notFound } from "next/navigation";
 import Footer from "@/components/Footer";
@@ -14,7 +15,7 @@ import {
 } from "@/sanity/lib/queries";
 import { safeExternalUrl } from "@/sanity/lib/urls";
 
-async function getUnit(slug: string) {
+const getUnit = cache(async (slug: string) => {
   const result = await sanityFetch({
     query: ORGANIZATION_UNIT_BY_SLUG_QUERY,
     params: { term: CONTENT_TERM, slug },
@@ -22,7 +23,7 @@ async function getUnit(slug: string) {
     stega: false,
   });
   return result.data;
-}
+});
 
 
 
@@ -34,7 +35,7 @@ export async function generateMetadata({
   const unit = await getUnit((await params).birdep);
   return unit
     ? getPageMetadata({ title: unit.officialName, description: unit.description, path: `/penjelasan/${(await params).birdep}` })
-    : { title: "Bidang tidak ditemukan" };
+    : { title: "Bidang tidak ditemukan", robots: { index: false, follow: false } };
 }
 
 export default async function DepartmentPage({

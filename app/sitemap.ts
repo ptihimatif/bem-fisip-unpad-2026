@@ -56,7 +56,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // Dynamic post routes
   const postRoutes = (posts ?? []).map((post) => ({
-    url: `${baseUrl}/post/${post.slug}`,
+    url: `${baseUrl}/post/${encodeURIComponent(post.slug ?? "")}`,
     lastModified: post._updatedAt || post.publishedAt || undefined,
     changeFrequency: "weekly" as const,
     priority: 0.6,
@@ -64,7 +64,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // Dynamic birdep routes
   const unitRoutes = (units ?? []).map((unit) => ({
-    url: `${baseUrl}/penjelasan/${unit.slug}`,
+    url: `${baseUrl}/penjelasan/${encodeURIComponent(unit.slug ?? "")}`,
     lastModified: unit._updatedAt || undefined,
     changeFrequency: "monthly" as const,
     priority: 0.5,

@@ -6,7 +6,7 @@ Nilai memakai `cabinetProfile.values` (title/description), dan video profil mema
 
 Daftar sosial lama dipertahankan sebagai fallback untuk platform yang belum dimasukkan ke CMS, karena data saat audit hanya berisi tiga dari lima platform yang ada di halaman. Untuk membuat daftar CMS menjadi satu-satunya sumber, isi daftar lengkap lalu aktifkan **Use only the social links above** (`replaceDefaultSocialLinks`). Setelah aktif, menghapus item benar-benar menghapus link itu dari footer dan JSON-LD.
 
-## Field terstruktur baru: kode siap, publikasi konten belum dijalankan
+## Field terstruktur baru: sudah dipublikasikan pada 2026-10-26
 
 | Field pada `cabinetProfile-2026` | Isi yang disiapkan | Sumber salinan saat ini |
 | --- | --- | --- |
@@ -27,7 +27,15 @@ pnpm exec sanity exec scripts/prepare_about_content.mjs --with-user-token
 
 Script tersebut **hanya membaca Sanity** dan menulis `outputs/pre-release-cms/about-content-plan.json` yang diabaikan Git. Manifest memuat target satu dokumen, revision, empat field yang akan diisi, hash sumber, draft/conflict status, dan semua teks usulan. Script tidak memiliki mode publish.
 
-Preflight pertama menemukan 0 konflik field terstruktur dan tidak ada draft pada singleton. Minta persetujuan field/teks pada manifest sebelum membuat transaksi production. Langkah publikasi berikutnya harus mengecek ulang revision dan backup, hanya mengisi empat field tersebut, serta membandingkan readback. Schema baru tampil di Studio setelah kode aplikasi di-deploy.
+Publikasi yang disetujui hanya mengisi empat field di atas, memakai teks persis dari kartu yang sudah ada. Preflight menemukan 0 konflik dan tidak ada draft. `scripts/apply_about_content.mjs` menyimpan backup eksklusif, memeriksa revision dan hash sumber, lalu membandingkan seluruh field lain serta query published. Nilai, visi utama, nama kabinet, dan array legacy tidak diubah. Bukti/backup ada di `outputs/pre-release-cms/` yang diabaikan Git. Schema baru tampil di Studio setelah kode aplikasi di-deploy.
+
+Untuk pemeriksaan ulang tanpa mengubah data:
+
+```bash
+pnpm exec sanity exec scripts/apply_about_content.mjs --with-user-token -- --verify
+```
+
+Mode `--rollback` tersedia untuk pemulihan empat field itu saja setelah operator memperoleh persetujuan. Script menolak rollback jika field sudah diedit lagi sejak publikasi; jangan menimpa perubahan editor.
 
 ## Favicon browser
 
