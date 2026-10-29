@@ -116,12 +116,117 @@ test("carousels have no visible controls and mobile-menu Escape works", async ({
   await expect(region).toHaveAttribute("aria-busy", "false");
   await region.locator(".infinite-carousel").focus();
   await expect(region.locator(".infinite-carousel-track")).toHaveCSS("animation-name", "none");
+  await page.waitForTimeout(1800);
+  await expect(region.locator(".infinite-carousel-track")).toHaveCSS("animation-name", "none");
+  await page.keyboard.press("End");
+  await expect(region.getByText("Mahasiswa Uji 5", { exact: true }).first()).toBeInViewport();
+  await region.locator(".infinite-carousel").blur();
+  await expect(region.locator(".infinite-carousel-track")).toHaveCSS("animation-play-state", "running");
+  await expect(region.locator(".infinite-carousel-track")).toHaveCSS("animation-name", "infinite-carousel-scroll");
   if (isMobile) {
     const toggle = page.getByRole("button", { name: "Toggle navigation menu" });
     await toggle.click();
     await page.keyboard.press("Escape");
     await expect(toggle).toHaveAttribute("aria-expanded", "false");
     await expect(toggle).toBeFocused();
+  }
+});
+
+for (const [path, label] of [
+  ["/", "Mahasiswa berprestasi"],
+  ["/about", "Sekretariat Umum dan Kepala Bidang"],
+  ["/about", "Kepala dan Wakil Kepala Departemen & Biro"],
+]) {
+  test(`carousel resumes from the swiped position: ${label}`, async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: "no-preference" });
+    await page.goto(path);
+    const region = page.getByRole("region", { name: label, exact: true }).and(page.locator('[aria-roledescription="carousel"]'));
+    const viewport = region.locator(".infinite-carousel");
+    const track = region.locator(".infinite-carousel-track");
+    await region.scrollIntoViewIfNeeded();
+    await expect(region).toHaveAttribute("aria-busy", "false");
+    await viewport.dispatchEvent("pointerdown", { pointerType: "touch", pointerId: 1 });
+    await expect(viewport).toHaveCSS("overflow-x", "auto");
+    await viewport.evaluate((element) => { element.scrollLeft += 180; });
+    // Autoplay must not resume while the finger is still held down.
+    await page.waitForTimeout(1800);
+    await expect(track).toHaveCSS("animation-name", "none");
+    const offset = await viewport.evaluate((element) => element.scrollLeft);
+    expect(offset).toBeGreaterThan(150);
+    // Capture the transition in the browser, independent of test-runner latency.
+    await viewport.evaluate((element) => {
+      const observer = new MutationObserver(() => {
+        if (element.classList.contains("infinite-carousel--manual")) return;
+        const track = element.querySelector<HTMLElement>(".infinite-carousel-track")!;
+        element.setAttribute("data-resumed-offset", String(Math.abs(new DOMMatrixReadOnly(getComputedStyle(track).transform).m41)));
+        observer.disconnect();
+      });
+      observer.observe(element, { attributes: true, attributeFilter: ["class"] });
+    });
+    await viewport.dispatchEvent("pointerup", { pointerType: "touch", pointerId: 1 });
+    await expect(track).toHaveCSS("animation-name", "infinite-carousel-scroll");
+    await expect(track).toHaveCSS("animation-play-state", "running");
+    const resumedOffset = () => track.evaluate((element) => Math.abs(new DOMMatrixReadOnly(getComputedStyle(element).transform).m41));
+    expect(Math.abs(Number(await viewport.getAttribute("data-resumed-offset")) - offset)).toBeLessThan(3);
+    const start = await resumedOffset();
+    await expect.poll(resumedOffset).toBeGreaterThan(start + 5);
+    await expect(viewport).toHaveCSS("scrollbar-width", "none");
+    await expect(region.locator(".infinite-carousel-copy")).toHaveAttribute("aria-hidden", "true");
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1)).toBe(true);
+  });
+
+  test(`first horizontal wheel gesture works and autoplay resumes: ${label}`, async ({ page, isMobile }) => {
+    test.skip(isMobile, "Desktop trackpad/wheel input");
+    await page.emulateMedia({ reducedMotion: "no-preference" });
+    await page.goto(path);
+    const region = page.getByRole("region", { name: label, exact: true }).and(page.locator('[aria-roledescription="carousel"]'));
+    const viewport = region.locator(".infinite-carousel");
+    const track = region.locator(".infinite-carousel-track");
+    await viewport.scrollIntoViewIfNeeded();
+    await expect(region).toHaveAttribute("aria-busy", "false");
+    await expect(viewport).toHaveCSS("overflow-x", "auto");
+    await viewport.hover();
+    const before = await track.evaluate((element) => Math.abs(new DOMMatrixReadOnly(getComputedStyle(element).transform).m41));
+    await page.mouse.wheel(160, 0);
+    await expect(track).toHaveCSS("animation-name", "none");
+    expect(Math.abs(await viewport.evaluate((element) => element.scrollLeft) - before - 160)).toBeLessThan(4);
+    await expect(track).toHaveCSS("animation-name", "infinite-carousel-scroll");
+    await expect(track).toHaveCSS("animation-play-state", "running");
+    if (path === "/") await expect(track).toHaveCSS("animation-duration", "62.4s");
+    // Returning from keyboard control to a trackpad must not leave focus stuck.
+    await viewport.focus();
+    await page.keyboard.press("ArrowRight");
+    await expect(track).toHaveCSS("animation-name", "none");
+    await page.mouse.wheel(-80, 0);
+    await expect(track).toHaveCSS("animation-name", "infinite-carousel-scroll");
+    await expect(track).toHaveCSS("animation-play-state", "running");
+  });
+}
+
+test("About carousels support mouse dragging and resume after repeated interactions", async ({ page, isMobile }) => {
+  test.skip(isMobile, "Desktop mouse dragging");
+  await page.emulateMedia({ reducedMotion: "no-preference" });
+  await page.goto("/about");
+  const carousels = page.locator('[aria-roledescription="carousel"]');
+  for (const region of await carousels.all()) {
+    const viewport = region.locator(".infinite-carousel");
+    const track = region.locator(".infinite-carousel-track");
+    await viewport.scrollIntoViewIfNeeded();
+    await expect(region).toHaveAttribute("aria-busy", "false");
+    const bounds = (await viewport.boundingBox())!;
+    const x = bounds.x + bounds.width / 2;
+    const y = bounds.y + bounds.height / 2;
+    for (let attempt = 0; attempt < 2; attempt++) {
+      await page.mouse.move(x, y);
+      await page.mouse.down();
+      await expect(track).toHaveCSS("animation-name", "none");
+      const before = await viewport.evaluate((element) => element.scrollLeft);
+      await page.mouse.move(x - 160, y, { steps: 8 });
+      expect(await viewport.evaluate((element) => element.scrollLeft)).toBeGreaterThan(before + 140);
+      await page.mouse.up();
+      await expect(track).toHaveCSS("animation-name", "infinite-carousel-scroll");
+      await expect(track).toHaveCSS("animation-play-state", "running");
+    }
   }
 });
 

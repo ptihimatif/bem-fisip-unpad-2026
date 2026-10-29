@@ -24,9 +24,9 @@ const BIDANG_HEAD_ROLE = /^Kepala Bidang\b/i;
 const UNIT_LEAD_ROLE = /^(?:Wakil )?Kepala (?:Departemen|Biro)\b/i;
 
 // Both carousels share one card width, so matching their visual speed (px/s)
-// means scaling the loop duration with the number of cards. Calibrated so the
-// larger "Kepala & Wakil Kepala Departemen & Biro" carousel keeps its ~80s loop.
-const CAROUSEL_SECONDS_PER_CARD = 80 / 39;
+// means scaling the loop duration with the number of cards. Four base seconds
+// per card keeps the desktop movement around 60px/s after the shared CSS factor.
+const CAROUSEL_SECONDS_PER_CARD = 4;
 
 /* ------------------------------------------------------------------ */
 /* Sekretariat Umum + Kepala Bidang                                    */
@@ -106,7 +106,7 @@ function CarouselSection({
       <div className="relative left-1/2 w-screen -translate-x-1/2">
         <InfiniteCarousel
           ariaLabel={ariaLabel}
-          duration={Math.max(8, Math.round(members.length * CAROUSEL_SECONDS_PER_CARD))}
+          duration={Math.max(16, members.length * CAROUSEL_SECONDS_PER_CARD)}
           gap="gap-6"
         >
           {members.map((member) => (

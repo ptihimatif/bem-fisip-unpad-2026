@@ -10,7 +10,7 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 # BEM FISIP Unpad 2026 maintenance
 
-- Start with README.md, docs/HANDOVER_DEPLOYMENT_HEMAT_2026.md, and the relevant docs/panduan/ chapter.
+- Start with README.md and .env.example, then inspect the source files relevant to the task.
 - Preserve unrelated working-tree changes and the existing client-approved UI, copy, photos, routes, and carousel preferences.
 - Keep Inter, brand blue #003089, and brand yellow #FFBA3A. Obtain approval before changing the frontend design.
 - Use pnpm 11.1.2 and the committed lockfile. Read .env.example for the environment contract; never print or commit secrets.
@@ -18,4 +18,3 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 - Public data uses published queries and signed /api/revalidate. Do not ship SANITY_TEST_MODE=true or fixture builds.
 - Before release, run the applicable lint, type, behavior, browser, and production-build checks. Report unavailable deployed checks separately from code defects.
 - Changes must stay within the maintainer's approved scope. Do not commit, push, merge, or deploy unless requested.
-- Previous agent tooling and planning records were removed from the handover tree at the maintainer's request; restore only if needed from Git history or the ignored local cleanup archive.

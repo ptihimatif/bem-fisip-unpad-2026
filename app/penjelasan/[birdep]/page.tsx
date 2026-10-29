@@ -184,6 +184,7 @@ export default async function DepartmentPage({
                     <div className="relative left-1/2 w-screen -translate-x-1/2">
                       <InfiniteCarousel
                         ariaLabel={`Anggota ${unit.officialName}`}
+                        duration={60}
                         gap="gap-6"
                       >
                         {others.map((member) => (

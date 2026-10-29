@@ -34,7 +34,10 @@ export function fixtureData(query: string, params?: Record<string, unknown>) {
     case queries.ORGANIZATION_UNITS_QUERY: return [unit];
     case queries.ORGANIZATION_UNIT_BY_SLUG_QUERY: return params?.slug === unit.slug ? { ...unit, gallery: [], programs, members: [] } : null;
     case queries.MEMBERS_QUERY: return [];
-    case queries.LEADERSHIP_MEMBERS_QUERY: return Array.from({ length: 5 }, (_, index) => ({ _id: `test-leader-${index}`, name: `Pemimpin Uji ${index + 1}`, role: `Kepala Departemen Uji ${index + 1}`, photo: null }));
+    case queries.LEADERSHIP_MEMBERS_QUERY: return [
+      ...Array.from({ length: 5 }, (_, index) => ({ _id: `test-leader-${index}`, name: `Pemimpin Uji ${index + 1}`, role: `Kepala Departemen Uji ${index + 1}`, photo: null })),
+      ...Array.from({ length: 6 }, (_, index) => ({ _id: `test-secretariat-${index}`, name: `Sekretariat Uji ${index + 1}`, role: index === 0 ? "Sekretaris Umum" : `Kepala Bidang Uji ${index}`, photo: null })),
+    ];
     case queries.STUDENT_ASSOCIATIONS_QUERY: return [{ _id: "test-hima", officialName: "Himpunan Uji", abbreviation: "HIMA", studyProgram: "Program Studi Uji", cabinetName: null, description: "Himpunan pengujian.", logo: null, officialLink: null, socialLinks: [] }];
     case queries.MAPRES_QUERY: return Array.from({ length: 5 }, (_, index) => ({ _id: `test-mapres-${index}`, nama_mapres: index === 0 ? "Mahasiswa Uji" : `Mahasiswa Uji ${index + 1}`, studyProgram: "Ilmu Politik", cohortYear: 2023, rank: null, achievementTitle: "Prestasi Uji", achievementYear: 2026, image: null, instagramUrl: null }));
     case queries.SITEMAP_POSTS_QUERY: return posts.map((post) => ({ slug: post.slug, publishedAt: post.publishedAt, _updatedAt: post.publishedAt }));

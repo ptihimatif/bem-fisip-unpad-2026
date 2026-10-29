@@ -53,10 +53,7 @@ export default function ArticleCard({ post }: ArticleCardProps) {
         </div>
         <div className="mt-auto flex flex-wrap items-center gap-2 text-xs sm:text-sm font-medium">
           <span
-            className="px-2 py-0.5 sm:py-1 font-semibold text-black text-xs"
-            style={{
-              backgroundColor: isKajian ? "var(--color-brand-yellow)" : "#FFBA3A",
-            }}
+            className={`px-2 py-0.5 sm:py-1 font-semibold text-xs ${isKajian ? "bg-brand-yellow text-black" : "bg-brand-blue text-white"}`}
           >
             {categoryLabel}
           </span>

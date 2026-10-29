@@ -161,10 +161,7 @@ export default async function PostPage({
 
             <div className="flex flex-wrap items-center gap-2 text-sm font-medium">
               <span
-                className="px-2 py-1 font-semibold text-black"
-                style={{
-                  backgroundColor: isKajian ? "var(--color-brand-yellow)" : "#FFBA3A",
-                }}
+                className={`px-2 py-1 font-semibold ${isKajian ? "bg-brand-yellow text-black" : "bg-brand-blue text-white"}`}
               >
                 {categoryLabel}
               </span>
