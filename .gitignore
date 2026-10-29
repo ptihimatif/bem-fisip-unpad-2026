@@ -2,6 +2,7 @@
 
 # dependencies
 /node_modules
+/.pnpm-store/
 /.pnp
 .pnp.*
 .yarn/*
@@ -12,9 +13,12 @@
 
 # testing
 /coverage
+/test-results/
+/playwright-report/
 
 # next.js
 /.next/
+/.next-check/
 /out/
 
 # production
@@ -32,6 +36,7 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+!.env.example
 
 # vercel
 .vercel
@@ -39,3 +44,34 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Local coding-agent tooling and workspace state (not needed by the website)
+/.agents/
+/.skills/
+/.codex/
+/.impeccable/
+/.esper/
+
+# Recoverable local copies retained before repository cleanup
+/outputs/repo-cleanup-*/
+/outputs/predeployment-improvements-*/
+
+.lighthouse
+
+docs/Booklet Rekrutmen Staf.pdf
+
+# Client member source and local preflight output
+/docs/data fungsionaris.xlsx
+/docs/~$*.xlsx
+/outputs/member-import-preflight/
+/outputs/cabinet-values-2026-10-08/
+/outputs/mapres-proker-2026-10-22/
+/outputs/pre-release-cms/
+/outputs/progul-2026-10-26/
+/docs/Part 1/
+/docs/Part 2/
+/docs/Part 3/
+/docs/Part 4/
+
+# local build output
+build.log

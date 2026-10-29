@@ -1,36 +1,45 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# BEM FISIP Unpad 2026
 
-## Getting Started
+Website Kabinet Pendar Mentari, menggunakan Next.js dan Sanity. Halaman admin tersedia di `/studio`.
 
-First, run the development server:
+## Menjalankan lokal
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
+Gunakan Node.js 22.x dan pnpm 11.1.2. Salin [.env.example](.env.example) menjadi `.env.local`, lalu isi konfigurasinya.
+
+```sh
+pnpm install --frozen-lockfile
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Buka `http://localhost:3000`. Konten memakai Sanity project `jcpcptq3`, dataset `production`, term `2026`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Pemeriksaan
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```sh
+pnpm lint
+pnpm typecheck
+pnpm test
+pnpm audit --prod --audit-level high
+```
 
-## Learn More
+Untuk tes browser, jalankan `pnpm exec playwright install chromium webkit`, lalu `pnpm test:browser`. Fixture tes berada di `.next-check` dan tidak boleh di-deploy.
 
-To learn more about Next.js, take a look at the following resources:
+## Deployment
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Import branch/commit rilis ke Vercel dengan preset Next.js dan Node 22.x. Install: `pnpm install --frozen-lockfile`. Build: `pnpm build`. Output directory mengikuti default Next.js.
+- Isi environment sesuai `.env.example`. Production memakai `NEXT_PUBLIC_SITE_ENV=production`, `NEXT_PUBLIC_SITE_URL=https://bemfisipunpad.com`, dan `SANITY_TEST_MODE=false`. Preview memakai `staging` agar tidak diindeks.
+- Tambahkan domain di Vercel dan pasang record DNS sesuai dashboard project. Pilih satu alamat utama dan pastikan HTTPS aktif.
+- Di Sanity, daftarkan origin pada CORS dengan credentials untuk Studio. Buat webhook POST ke `https://bemfisipunpad.com/api/revalidate`, dataset `production`, event Create/Update/Delete untuk konten published, projection `{_type}`, dan secret yang sama dengan `SANITY_REVALIDATE_SECRET` di hosting.
+- Setelah deploy, cek halaman publik, login Studio, serta perubahan konten melalui webhook saat tab Live ditutup. Perubahan environment memerlukan redeploy.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Pemeriksaan HTTP/SEO setelah deploy:
 
-## Deploy on Vercel
+```sh
+node scripts/verify_deployment.mjs https://bemfisipunpad.com --environment production
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Pemeliharaan
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Simpan export Sanity beserta asset di penyimpanan privat sebelum perubahan besar. Jangan commit secret, data sumber klien, atau backup.
+
+Jika rilis bermasalah, kembalikan deployment sehat. Konten Sanity dipulihkan melalui revisi yang tersedia atau backup; rollback kode tidak mengembalikan data. Catat pemilik akun dan tanggal renewal domain.
