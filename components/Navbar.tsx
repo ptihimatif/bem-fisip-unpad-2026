@@ -3,6 +3,7 @@
 import { useEffect, useId, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { getCareCenterUrl } from "@/lib/site-content";
 
 const navItems = [
@@ -18,6 +19,7 @@ const navItems = [
 ];
 
 export default function Navbar({ careCenterUrl }: { careCenterUrl?: string | null }) {
+  const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
   const toggleRef = useRef<HTMLButtonElement>(null);
   const menuId = useId();
@@ -32,6 +34,7 @@ export default function Navbar({ careCenterUrl }: { careCenterUrl?: string | nul
     document.addEventListener("keydown", onKeyDown);
     return () => document.removeEventListener("keydown", onKeyDown);
   }, [menuOpen]);
+  if (pathname === "/studio" || pathname.startsWith("/studio/")) return null;
   const links = navItems.map((item) => item.external ? { ...item, href: getCareCenterUrl({ fisipCareCenterUrl: careCenterUrl }) } : item);
 
   return (
