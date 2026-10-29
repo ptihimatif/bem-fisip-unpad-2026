@@ -53,6 +53,20 @@ test("navigation and structured CMS copy are usable on About", async ({ page, is
   await page.screenshot({ path: info.outputPath("about.png"), fullPage: false });
 });
 
+test("public navbar is absent from Studio and returns on public pages", async ({ page }) => {
+  await page.goto("/about");
+  await expect(page.locator("body > nav")).toBeVisible();
+  for (const path of ["/studio", "/studio/structure"]) {
+    const response = await page.goto(path);
+    await expect(page.locator("body > nav")).toHaveCount(0);
+    expect(await response!.text()).not.toContain('aria-label="Toggle navigation menu"');
+    await expect(page.locator('meta[name="robots"]').first()).toHaveAttribute("content", /noindex/);
+  }
+  await page.goBack();
+  await page.goBack();
+  await expect(page.locator("body > nav")).toBeVisible();
+});
+
 test("program modal supports reduced motion, Escape, and focus restoration", async ({ page }, info) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
