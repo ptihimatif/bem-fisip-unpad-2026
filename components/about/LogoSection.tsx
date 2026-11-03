@@ -125,9 +125,9 @@ function LogoDisplay({ parts, cycle }: Pick<Explanation, "parts" | "cycle">) {
             sizes={SIZES}
             loading="eager"
             aria-hidden
-            // Phones only animate opacity + transform; animating the glow
-            // filter on six large layers makes scrolling stutter.
-            className="object-contain transition-[opacity,transform] duration-300 ease-out lg:transition-all"
+            // Only animate opacity + transform; animating the glow filter on
+            // six large layers makes scrolling stutter (desktop included).
+            className="object-contain transition-[opacity,transform] duration-300 ease-out"
             style={{
               opacity: on ? 1 : "var(--dim)",
               transform: `scale(${on ? LIT_SCALE : 1})`,
@@ -164,6 +164,15 @@ export default function LogoSection({ copy }: { copy?: { elementKey: string; tit
     let locked = false; // true while a snap (desktop) or step (mobile) animates
     let index = 0; // mobile: the card currently shown
     let timer: ReturnType<typeof setTimeout>;
+    let frame = 0; // pending rAF for update(), so it runs at most once per frame
+    let shown: number | null | undefined; // last value passed to setSettled
+
+    // Scroll fires many times per frame; only re-render when the card changes.
+    const settle = (value: number | null) => {
+      if (value === shown) return;
+      shown = value;
+      setSettled(value);
+    };
 
     const measure = () => {
       const { top } = section.getBoundingClientRect();
@@ -191,7 +200,7 @@ export default function LogoSection({ copy }: { copy?: { elementKey: string; tit
       // Skipped while a swipe is animating, which already chose the card.
       if (!desktop.matches && !locked) {
         index = Math.round(pos);
-        setSettled(index);
+        settle(index);
       }
     };
 
@@ -215,16 +224,16 @@ export default function LogoSection({ copy }: { copy?: { elementKey: string; tit
       timer = setTimeout(() => {
         locked = false;
         update();
-        setSettled(nearest);
+        settle(nearest);
       }, SNAP_SETTLE_MS);
     };
 
     const onScroll = () => {
-      update();
+      if (!frame) frame = requestAnimationFrame(() => { frame = 0; update(); });
       if (locked || !desktop.matches) return;
 
       // Desktop: any scroll clears the highlight, then snaps once scrolling stops.
-      setSettled(null);
+      settle(null);
       clearTimeout(timer);
       timer = setTimeout(snap, SNAP_DELAY_MS);
     };
@@ -238,7 +247,7 @@ export default function LogoSection({ copy }: { copy?: { elementKey: string; tit
 
     const goTo = (i: number) => {
       index = i;
-      setSettled(i);
+      settle(i);
       locked = true;
       scrollToCard(i); // keeps the page scroll in step with the card
       clearTimeout(timer);
@@ -285,6 +294,7 @@ export default function LogoSection({ copy }: { copy?: { elementKey: string; tit
       sticky.removeEventListener("touchstart", onTouchStart);
       sticky.removeEventListener("touchmove", onTouchMove);
       clearTimeout(timer);
+      cancelAnimationFrame(frame);
     };
   }, [reducedMotion]);
 

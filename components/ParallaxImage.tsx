@@ -26,16 +26,28 @@ export default function ParallaxImage({
     let frame = 0;
 
     const tick = () => {
+      frame = 0;
       const rect = el.getBoundingClientRect();
       // Distance from the viewport centre, normalised to the viewport height.
       // Goes -1 (below) -> 0 (centred) -> 1 (above) as the page scrolls.
       const offset = (rect.top + rect.height / 2 - innerHeight / 2) / innerHeight;
       el.style.transform = `translate3d(0, ${(-offset * speed * 100).toFixed(2)}px, 0)`;
-      frame = requestAnimationFrame(tick);
     };
 
-    frame = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(frame);
+    // Only recompute when the page moves, at most once per frame. A permanent
+    // rAF loop kept the main thread busy even while the page sat idle.
+    const schedule = () => {
+      if (!frame) frame = requestAnimationFrame(tick);
+    };
+
+    schedule();
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", schedule);
+      window.removeEventListener("resize", schedule);
+    };
   }, [speed]);
 
   return (

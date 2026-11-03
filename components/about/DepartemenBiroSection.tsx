@@ -81,7 +81,7 @@ export default function DepartemenBiroSection({
           <Link
             key={unit._id}
             href={`/penjelasan/${unit.slug}`}
-            className="group relative flex aspect-video items-center justify-center overflow-hidden rounded border border-white/20 bg-white/5 backdrop-blur-md shadow-[0_8px_32px_-8px_rgba(255,255,255,0.12)] ring-1 ring-inset ring-white/10 transition-all duration-300 hover:border-white/40 hover:bg-white/10 hover:shadow-[0_12px_40px_-8px_rgba(255,255,255,0.2)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-yellow motion-reduce:transition-none"
+            className="group relative flex aspect-video items-center justify-center overflow-hidden rounded border border-white/20 bg-white/5 lg:backdrop-blur-md shadow-[0_8px_32px_-8px_rgba(255,255,255,0.12)] ring-1 ring-inset ring-white/10 transition-all duration-300 hover:border-white/40 hover:bg-white/10 hover:shadow-[0_12px_40px_-8px_rgba(255,255,255,0.2)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-yellow motion-reduce:transition-none"
           >
             <Image
               src={backgroundFor(index)}
