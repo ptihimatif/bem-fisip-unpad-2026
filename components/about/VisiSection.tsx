@@ -132,7 +132,7 @@ export default function VisiSection({ vision, highlights }: { vision?: string | 
               onBlur={() => setActive(null)}
               tabIndex={0}
               className={[
-                "rounded border p-5 backdrop-blur-sm sm:p-6 transition-colors duration-300 motion-reduce:transition-none",
+                "rounded border p-5 lg:backdrop-blur-sm sm:p-6 transition-colors duration-300 motion-reduce:transition-none",
                 isActive
                   ? "border-white/20 bg-brand-yellow/10"
                   : "border-white/10 bg-white/5",

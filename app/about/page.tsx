@@ -81,10 +81,12 @@ export default async function AboutPage() {
 
       {/* SECTION 6-8 - Petinggi (with hierarchy connector) */}
       <div className="relative">
-        {/* Vertical hierarchy spine connecting the leadership sections */}
+        {/* Vertical hierarchy spine connecting the leadership sections.
+            will-change keeps the drop-shadow on its own layer, so scrolling
+            reuses it instead of re-filtering it every frame. */}
         <div
           aria-hidden
-          className="pointer-events-none absolute left-1/2 top-[60vh] bottom-[-2rem] w-3 -z-5 -translate-x-1/2 bg-gradient-to-b from-white/0 via-white/40 via-5% via-white/15 via-85% to-white/0"
+          className="pointer-events-none absolute left-1/2 top-[60vh] bottom-[-2rem] w-3 -z-5 -translate-x-1/2 will-change-transform bg-gradient-to-b from-white/0 via-white/40 via-5% via-white/15 via-85% to-white/0"
           style={{ filter: "drop-shadow(0 0 14px rgba(255,255,255,0.4))" }}
         />
         {/* SECTION 6 - Petinggi */}

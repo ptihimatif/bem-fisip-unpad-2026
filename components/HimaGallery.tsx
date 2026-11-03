@@ -81,7 +81,9 @@ export default function HimaGallery({ associations }: HimaGalleryProps) {
                     height={200}
                     sizes="(min-width: 640px) 200px, 150px"
                     fallbackAlt={`Logo ${item.officialName}`}
-                    className="mx-auto h-auto max-w-[80%] object-contain"
+                    // Logos are never cropped to a square; tall ones are capped by height instead.
+                    className="mx-auto h-auto max-h-[80%] w-auto max-w-[80%] object-contain"
+                    preserveAspectRatio
                   />
                 ) : (
                   <span className="font-bold text-brand-blue text-center text-sm md:text-base">
@@ -115,6 +117,7 @@ export default function HimaGallery({ associations }: HimaGalleryProps) {
                 fallbackAlt={`Logo ${selectedAssociation.officialName}`}
                 className="mx-auto h-auto max-h-40 w-auto max-w-[85%] object-contain transition-transform duration-250 md:max-h-52 lg:max-h-60"
                 priority={true}
+                preserveAspectRatio
               />
             ) : (
               <span className="font-bold text-brand-blue text-3xl text-center">
