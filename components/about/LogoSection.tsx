@@ -18,7 +18,9 @@ import {
 
 const TOTAL = fallbackExplanations.length;
 const ELEMENT_KEYS = ["intro", "wave", "pendar", "mentari", "rays", "sun", "yellow", "blue", "synergy"];
-const SNAP_DELAY_MS = 80; // desktop only: idle time before snapping to a card
+// Desktop only: idle time before snapping to a card. Must exceed the gap between
+// mouse-wheel notches (~100-200ms), or the snap pulls the page back mid-scroll.
+const SNAP_DELAY_MS = 250;
 const SNAP_SETTLE_MS = 600; // desktop only: roughly how long the smooth snap takes
 const SWIPE_PX = 24; // mobile: how far a finger must move to count as a swipe
 const STEP_LOCK_MS = 450; // mobile: new swipes are ignored while a step animates
