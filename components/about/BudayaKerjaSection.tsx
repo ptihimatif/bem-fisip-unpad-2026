@@ -38,7 +38,7 @@ export default function BudayaKerjaSection({ items }: { items?: ContentCard[] | 
         {cards.map((b) => (
           <article
             key={b.title}
-            className="rounded border border-white/10 bg-white/5 p-5 backdrop-blur-md shadow-[0_8px_32px_-8px_rgba(255,255,255,0.12)] ring-1 ring-inset ring-white/10 transition-all duration-300 hover:border-white/25 hover:bg-white/15 hover:shadow-[0_12px_40px_-8px_rgba(255,255,255,0.2)] motion-reduce:transition-none sm:p-6"
+            className="rounded border border-white/10 bg-white/5 p-5 lg:backdrop-blur-md shadow-[0_8px_32px_-8px_rgba(255,255,255,0.12)] ring-1 ring-inset ring-white/10 transition-all duration-300 hover:border-white/25 hover:bg-white/15 hover:shadow-[0_12px_40px_-8px_rgba(255,255,255,0.2)] motion-reduce:transition-none sm:p-6"
           >
             {/* Title styled like Misi's card titles. */}
             <h3 className="text-xl font-bold text-white">{b.title}</h3>

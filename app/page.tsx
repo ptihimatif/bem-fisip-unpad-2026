@@ -98,6 +98,8 @@ export default async function Home() {
           alt=""
           width={800}
           height={800}
+          sizes="(min-width: 1024px) 71vh, (min-width: 640px) 59vh, 50vh"
+          fetchPriority="high"
           speed={0.12}
           className="pointer-events-none absolute right-[-50vw] top-1/2 z-0 h-[58vh] w-auto -translate-y-1/2 object-contain opacity-20 sm:right-[-25vw] sm:h-[68vh] md:right-[-30vw] lg:right-[-18vw] lg:h-[82vh]"
           style={{ width: "auto" }}
