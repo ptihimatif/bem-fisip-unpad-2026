@@ -4,21 +4,25 @@ import { useEffect, useId, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { getCareCenterUrl } from "@/lib/site-content";
 
 const navItems = [
   { href: "/", label: "Beranda" },
   { href: "/about", label: "Tentang" },
+  {
+    href: "https://dashboardbemfisipunpad2026.carrd.co/",
+    label: "Dashboard",
+    external: true
+  },
   { href: "/article", label: "Artikel dan Kajian" },
   { href: "/hima", label: "Hima/Huria" },
   {
     href: "https://www.instagram.com/fisipcarecenter/",
     label: "Fisip Care Center",
-    external: true,
-  },
+    external: true
+  }
 ];
 
-export default function Navbar({ careCenterUrl }: { careCenterUrl?: string | null }) {
+export default function Navbar() {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
   const toggleRef = useRef<HTMLButtonElement>(null);
@@ -35,7 +39,7 @@ export default function Navbar({ careCenterUrl }: { careCenterUrl?: string | nul
     return () => document.removeEventListener("keydown", onKeyDown);
   }, [menuOpen]);
   if (pathname === "/studio" || pathname.startsWith("/studio/")) return null;
-  const links = navItems.map((item) => item.external ? { ...item, href: getCareCenterUrl({ fisipCareCenterUrl: careCenterUrl }) } : item);
+  const links = navItems;
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-998 w-full bg-[#000c23]/25 backdrop-blur-lg">
@@ -115,7 +119,10 @@ export default function Navbar({ careCenterUrl }: { careCenterUrl?: string | nul
       </div>
 
       {menuOpen && (
-        <div id={menuId} className="md:hidden overflow-hidden border-t border-b border-white/10">
+        <div
+          id={menuId}
+          className="md:hidden overflow-hidden border-t border-b border-white/10"
+        >
           <div className="flex flex-col px-6 py-3">
             {links.map((item) => (
               <Link
