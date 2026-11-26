@@ -18,7 +18,9 @@ import {
 
 const TOTAL = fallbackExplanations.length;
 const ELEMENT_KEYS = ["intro", "wave", "pendar", "mentari", "rays", "sun", "yellow", "blue", "synergy"];
-const SNAP_DELAY_MS = 80; // desktop only: idle time before snapping to a card
+// Desktop only: idle time before snapping to a card. Must exceed the gap between
+// mouse-wheel notches (~100-200ms), or the snap pulls the page back mid-scroll.
+const SNAP_DELAY_MS = 250;
 const SNAP_SETTLE_MS = 600; // desktop only: roughly how long the smooth snap takes
 const SWIPE_PX = 24; // mobile: how far a finger must move to count as a swipe
 const STEP_LOCK_MS = 450; // mobile: new swipes are ignored while a step animates
@@ -89,7 +91,12 @@ function ProgressDots({ active }: { active: number }) {
   );
 }
 
-function LogoDisplay({ parts, cycle }: Pick<Explanation, "parts" | "cycle">) {
+function LogoDisplay({
+  parts,
+  cycle,
+  // Static (reduced-motion) layout passes "h-full" so the logo stays inside its box.
+  size = "h-full max-h-[22rem] lg:h-[480px] lg:max-h-none",
+}: Pick<Explanation, "parts" | "cycle"> & { size?: string }) {
   // Index of the piece currently lit in cycle mode (null = not cycling).
   const [tick, setTick] = useState<number | null>(null);
 
@@ -113,7 +120,7 @@ function LogoDisplay({ parts, cycle }: Pick<Explanation, "parts" | "cycle">) {
   return (
     // Mobile: fills the logo zone (capped at 22rem). Desktop: fixed 480px.
     // --dim is how faint the unlit pieces get; higher on the smaller mobile logo.
-    <div className="relative aspect-square h-full max-h-[22rem] [--dim:0.15] lg:h-[480px] lg:max-h-none lg:[--dim:0.08]">
+    <div className={`relative aspect-square ${size} [--dim:0.15] lg:[--dim:0.08]`}>
       {PARTS.map((id) => {
         const on = !lit || lit.includes(id);
         return (
@@ -305,7 +312,7 @@ export default function LogoSection({ copy }: { copy?: { elementKey: string; tit
     return (
       <section aria-label="Filosofi logo Pendar Mentari" className="relative mx-auto max-w-6xl px-6 pb-16 pt-28">
         <div className="mb-16 flex flex-col items-center gap-8 sm:flex-row sm:justify-center">
-          <div className="h-64 w-64"><LogoDisplay /></div>
+          <div className="h-64 w-64"><LogoDisplay size="h-full" /></div>
           <Wordmark className="h-auto w-64 max-w-full" />
         </div>
         <div className="grid gap-12 lg:grid-cols-2">
