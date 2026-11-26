@@ -4,6 +4,7 @@ import "./globals.css";
 import { SanityLive } from "@/sanity/lib/live";
 import { isSanityConfigured } from "@/sanity/env";
 import Navbar from "@/components/Navbar";
+import CanonicalMetadataGuard from "@/components/CanonicalMetadataGuard";
 import { getSiteSettings } from "@/sanity/lib/settings";
 import { resolveSiteConfig } from "@/lib/site-config";
 import { getSocialLinks } from "@/lib/site-content";
@@ -93,6 +94,7 @@ export default async function RootLayout({
           Lewati ke konten
         </a>
         <Navbar />
+        <CanonicalMetadataGuard />
         <main id="main-content" className="flex-1">{children}</main>
         {isSanityConfigured && <SanityLive includeDrafts={false} />}
       </body>

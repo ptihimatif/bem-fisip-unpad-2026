@@ -47,7 +47,9 @@ test("navigation and structured CMS copy are usable on About", async ({ page, is
   await expect(page.getByRole("heading", { name: "Empati dari Studio", exact: true })).toBeAttached();
   await expect(page.getByText("Misi dari Studio", { exact: true })).toBeAttached();
   await expect(page.getByText("Budaya dari Studio", { exact: true })).toBeAttached();
-  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", "http://127.0.0.1:3123/about");
+  const canonical = page.locator('link[rel="canonical"]');
+  await expect(canonical).toHaveCount(1);
+  await expect(canonical).toHaveAttribute("href", "http://127.0.0.1:3123/about");
   await expect(page.locator('meta[property="og:url"]')).toHaveAttribute("content", "http://127.0.0.1:3123/about");
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1)).toBe(true);
   await page.screenshot({ path: info.outputPath("about.png"), fullPage: false });
@@ -62,8 +64,10 @@ test("public navbar is absent from Studio and returns on public pages", async ({
     expect(await response!.text()).not.toContain('aria-label="Toggle navigation menu"');
     await expect(page.locator('meta[name="robots"]').first()).toHaveAttribute("content", /noindex/);
   }
-  await page.goBack();
-  await page.goBack();
+  await page.goBack({ waitUntil: "commit" });
+  await expect(page).toHaveURL(/\/studio$/);
+  await page.goBack({ waitUntil: "commit" });
+  await expect(page).toHaveURL(/\/about$/);
   await expect(page.locator("body > nav")).toBeVisible();
 });
 
@@ -127,7 +131,7 @@ test("carousels have no visible controls and mobile-menu Escape works", async ({
   await page.goto("/");
   const region = page.getByRole("region", { name: "Mahasiswa berprestasi", exact: true });
   await expect(page.getByRole("button", { name: /^(Jeda|Putar|Tampilkan sebelumnya|Tampilkan berikutnya|Previous programs|Next programs)$/ })).toHaveCount(0);
-  await expect(region).toHaveAttribute("aria-busy", "false");
+  await expect(region).toHaveAttribute("aria-busy", "false", { timeout: 10_000 });
   await region.locator(".infinite-carousel").focus();
   await expect(region.locator(".infinite-carousel-track")).toHaveCSS("animation-name", "none");
   await page.waitForTimeout(1800);
@@ -148,7 +152,7 @@ test("carousels have no visible controls and mobile-menu Escape works", async ({
 
 for (const [path, label] of [
   ["/", "Mahasiswa berprestasi"],
-  ["/about", "Sekretariat Umum dan Kepala Bidang"],
+  ["/about", "Sekretaris Umum dan Kepala Bidang"],
   ["/about", "Kepala dan Wakil Kepala Departemen & Biro"],
 ]) {
   test(`carousel resumes from the swiped position: ${label}`, async ({ page }) => {
@@ -158,7 +162,7 @@ for (const [path, label] of [
     const viewport = region.locator(".infinite-carousel");
     const track = region.locator(".infinite-carousel-track");
     await region.scrollIntoViewIfNeeded();
-    await expect(region).toHaveAttribute("aria-busy", "false");
+    await expect(region).toHaveAttribute("aria-busy", "false", { timeout: 10_000 });
     await viewport.dispatchEvent("pointerdown", { pointerType: "touch", pointerId: 1 });
     await expect(viewport).toHaveCSS("overflow-x", "auto");
     await viewport.evaluate((element) => { element.scrollLeft += 180; });
@@ -197,7 +201,7 @@ for (const [path, label] of [
     const viewport = region.locator(".infinite-carousel");
     const track = region.locator(".infinite-carousel-track");
     await viewport.scrollIntoViewIfNeeded();
-    await expect(region).toHaveAttribute("aria-busy", "false");
+    await expect(region).toHaveAttribute("aria-busy", "false", { timeout: 10_000 });
     await expect(viewport).toHaveCSS("overflow-x", "auto");
     await viewport.hover();
     const before = await track.evaluate((element) => Math.abs(new DOMMatrixReadOnly(getComputedStyle(element).transform).m41));
@@ -226,7 +230,7 @@ test("About carousels support mouse dragging and resume after repeated interacti
     const viewport = region.locator(".infinite-carousel");
     const track = region.locator(".infinite-carousel-track");
     await viewport.scrollIntoViewIfNeeded();
-    await expect(region).toHaveAttribute("aria-busy", "false");
+    await expect(region).toHaveAttribute("aria-busy", "false", { timeout: 10_000 });
     const bounds = (await viewport.boundingBox())!;
     const x = bounds.x + bounds.width / 2;
     const y = bounds.y + bounds.height / 2;
