@@ -92,7 +92,7 @@ export default async function RootLayout({
         >
           Lewati ke konten
         </a>
-        <Navbar careCenterUrl={settings?.fisipCareCenterUrl} />
+        <Navbar />
         <main id="main-content" className="flex-1">{children}</main>
         {isSanityConfigured && <SanityLive includeDrafts={false} />}
       </body>

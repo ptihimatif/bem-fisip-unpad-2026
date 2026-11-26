@@ -9,7 +9,7 @@ type Member = LEADERSHIP_MEMBERS_QUERY_RESULT[number];
 /* ------------------------------------------------------------------ */
 /* Copy: edit the headings here                                        */
 /* ------------------------------------------------------------------ */
-const SEKRETARIAT_BIDANG_HEADING = "Sekretariat Umum dan Kepala Bidang";
+const SEKRETARIAT_BIDANG_HEADING = "Sekretaris Umum dan Kepala Bidang";
 const PINIMPINAN_HEADING = "Kepala dan Wakil Kepala Departemen & Biro";
 
 /* ------------------------------------------------------------------ */
@@ -32,7 +32,7 @@ const CAROUSEL_SECONDS_PER_CARD = 4;
 /* Sekretariat Umum + Kepala Bidang                                    */
 /* ------------------------------------------------------------------ */
 export function SekretariatBidangSection({
-  members,
+  members
 }: {
   members: LEADERSHIP_MEMBERS_QUERY_RESULT;
 }) {
@@ -57,12 +57,12 @@ export function SekretariatBidangSection({
 /* Kepala & Wakil Kepala Departemen + Biro                             */
 /* ------------------------------------------------------------------ */
 export function PimpinanDepartemenBiroSection({
-  members,
+  members
 }: {
   members: LEADERSHIP_MEMBERS_QUERY_RESULT;
 }) {
   const sectionMembers = members.filter((member) =>
-    UNIT_LEAD_ROLE.test(member.role.trim()),
+    UNIT_LEAD_ROLE.test(member.role.trim())
   );
 
   if (sectionMembers.length === 0) return null;
@@ -85,7 +85,7 @@ function CarouselSection({
   id,
   heading,
   ariaLabel,
-  members,
+  members
 }: {
   id: string;
   heading: string;
